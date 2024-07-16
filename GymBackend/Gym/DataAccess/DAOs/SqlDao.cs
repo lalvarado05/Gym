@@ -5,7 +5,7 @@ namespace DataAccess.DAOs;
 
 public class SqlDao
 
-    //Clase que se encarga de la comunicaccion a lab ase de datos, solo ejecuta proceddures.
+    //Clase que se encarga de la comunicaccion a la base de datos, solo ejecuta procedures.
     //Utiliza el singleton (Unica instancia)
 {
     //SingleTon
@@ -18,6 +18,7 @@ public class SqlDao
     //Redefinir Constructor como uno privado
     private SqlDao()
     {
+        //ESTE STRING SE DEBE CAMBIAR PARA QUE COINCIDA CON LA BASE DE DATOS QUE ESTEN UTILIZANDO
         _connectionString = "Data Source=ANDRESPC;Initial Catalog=sc_db;Integrated Security=True;Encrypt=False";
     }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-
 namespace DataAccess.DAOs;
 
 public class SqlOperation
