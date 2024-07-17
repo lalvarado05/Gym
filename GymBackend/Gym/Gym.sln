@@ -9,19 +9,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_DataAccess", "1_DataAccess", "{E607D629-8758-4472-8CDE-993FE44272C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{1F2CEB94-4513-4C8E-B72E-9223DCA837CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{1F2CEB94-4513-4C8E-B72E-9223DCA837CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2_CoreApp", "2_CoreApp", "{2DB5803F-EB22-4E95-818F-2F290F0B3B04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreApp", "CoreApp\CoreApp.csproj", "{E3DC4F38-7408-4EB4-B208-3116DF923442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreApp", "CoreApp\CoreApp.csproj", "{E3DC4F38-7408-4EB4-B208-3116DF923442}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_WebAPI", "3_WebAPI", "{E253A544-CB67-4A4B-96AD-B8E2920914D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{838CA926-F225-4621-B3E2-257E74CCF6F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{838CA926-F225-4621-B3E2-257E74CCF6F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99_Testing", "99_Testing", "{1FFC7C0F-E34B-4DED-9DB6-0F59E3181BBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{7CF1DD70-9B22-4977-AED1-EEF764D9188F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing", "Testing\Testing.csproj", "{7CF1DD70-9B22-4977-AED1-EEF764D9188F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "98_StoreProcedures", "98_StoreProcedures", "{776B4773-FB17-4642-8827-851D3E331921}"
+	ProjectSection(SolutionItems) = preProject
+		SP.txt = SP.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

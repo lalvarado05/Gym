@@ -1,4 +1,5 @@
 ﻿namespace DTOs;
+
 public class UserMembership : BaseDTO
 {
     public int UserId { get; set; }

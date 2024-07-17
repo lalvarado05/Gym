@@ -1,4 +1,5 @@
 ﻿namespace DTOs;
+
 public class Detail : BaseDTO
 {
     public int InvoiceId { get; set; }

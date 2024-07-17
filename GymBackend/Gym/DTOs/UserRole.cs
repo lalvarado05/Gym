@@ -1,4 +1,5 @@
 ﻿namespace DTOs;
+
 public class UserRole : BaseDTO
 {
     public int UserId { get; set; }
