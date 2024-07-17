@@ -1,8 +1,7 @@
 ﻿namespace DTOs;
-
-public class Password : BaseDTO
+public class UserMembership : BaseDTO
 {
     public int UserId { get; set; }
-    public string PasswordContent { get; set; }
+    public int MembershipId { get; set; }
     public DateTime Created { get; set; }
 }

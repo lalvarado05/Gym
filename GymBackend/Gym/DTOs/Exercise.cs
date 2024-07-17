@@ -2,8 +2,8 @@
 
 public class Exercise : BaseDTO
 {
-    public int EquipmentID { get; set; }
-    public int TypeID { get; set; }
+    public int EquipmentId { get; set; }
+    public string Type { get; set; }
     public string Name { get; set; }
     public int Sets { get; set; }
     public int Weight { get; set; }

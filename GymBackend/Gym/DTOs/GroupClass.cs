@@ -2,7 +2,7 @@
 
 public class GroupClass : BaseDTO
 {
-    public int EmployeeID { get; set; }
+    public int EmployeeId { get; set; }
     public string ClassName { get; set; }
     public int MaxCapacity { get; set; }
     public int CurrentRegistered { get; set; }
