@@ -2,7 +2,7 @@
 
 public class UserGroupClass : BaseDTO
 {
-    public int ClassID { get; set; }
-    public int ClientID { get; set; }
+    public int GroupClassId { get; set; }
+    public int ClientId { get; set; }
     public DateTime Created { get; set; }
 }

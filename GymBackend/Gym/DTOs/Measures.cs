@@ -2,7 +2,7 @@
 
 public class Measures : BaseDTO
 {
-    public int ClientID { get; set; }
+    public int ClientId { get; set; }
     public double Weight { get; set; }
     public double Height { get; set; }
     public double AverageOfFat { get; set; }

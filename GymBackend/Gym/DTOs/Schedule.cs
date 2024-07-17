@@ -2,7 +2,7 @@
 
 public class Schedule : BaseDTO
 {
-    public int EmployeeID { get; set; }
+    public int EmployeeId { get; set; }
     public string DaysOfWeek { get; set; }
     public TimeOnly TimeOfEntry { get; set; }
     public TimeOnly TimeOfExit { get; set; }
