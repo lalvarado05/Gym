@@ -16,5 +16,29 @@ namespace CoreApp
             //Validaciones adicionales
             eCrud.Create(equipment);
         }
+
+        public void Update(Equipment equipment)
+        {
+            var eCrud = new EquipmentCrudFactory();
+            eCrud.Update(equipment);
+        }
+
+        public void Delete(Equipment equipment) 
+        {
+            var eCrud =new EquipmentCrudFactory();
+            eCrud.Delete(equipment);
+        }
+        public List<Equipment> RetrieveAll()
+        {
+            var eCrud = new EquipmentCrudFactory();
+            return eCrud.RetrieveAll<Equipment>();
+        }
+
+
+        //Aqui irian las validaciones
+
+        #region Validations
+        #endregion
+
     }
 }
