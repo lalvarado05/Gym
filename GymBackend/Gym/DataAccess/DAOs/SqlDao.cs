@@ -19,7 +19,7 @@ public class SqlDao
     private SqlDao()
     {
         //ESTE STRING SE DEBE CAMBIAR PARA QUE COINCIDA CON LA BASE DE DATOS QUE ESTEN UTILIZANDO
-        _connectionString = "Data Source=ANDRESPC;Initial Catalog=sc_db;Integrated Security=True;Encrypt=False";
+        _connectionString = "Data Source=.;Initial Catalog=gym_db;Integrated Security=True;Encrypt=False";
     }
 
     //Definir metodo de instancia del sqldao
