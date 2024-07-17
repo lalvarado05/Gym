@@ -17,4 +17,3 @@ public class User : BaseDTO
     public DateTime BirthDate { get; set; }
 
     public DateTime Created { get; set; }
-}
