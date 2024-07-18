@@ -35,8 +35,8 @@ RETURN 0
 -ROLE CRUD-
 -CREATE ROL-
 CREATE PROCEDURE [dbo].[CRE_ROL_PR]
-	@P_Name int,
-	@P_Status int
+	@P_Name nvarchar(50),
+	@P_Status nvarchar(50)
 AS
 	INSERT INTO rol_tbl(name,status)
 	VALUES(@P_Name,@P_Status)

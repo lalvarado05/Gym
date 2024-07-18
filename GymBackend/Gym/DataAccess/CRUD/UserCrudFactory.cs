@@ -35,7 +35,7 @@ public class UserCrudFactory : CrudFactory
         // Crear instructivo para que el dao pueda realizar un create a la base de datos
         var sqlOperation = new SqlOperation();
 
-        sqlOperation.ProcedureName = "RE_USER_BYID_PR";
+        sqlOperation.ProcedureName = "RET_USER_BYID_PR";
         sqlOperation.AddIntParam("P_ID", id);
         var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -60,7 +60,7 @@ public class UserCrudFactory : CrudFactory
         {
             Id = (int)row["id"],
             Name = (string)row["name"],
-            Phone = (int)row["phone"],
+            Phone = (string)row["phone"],
             LastName = (string)row["last_name"],
             Email = (string)row["email"],
             LastLogin = (DateTime)row["last_login"],

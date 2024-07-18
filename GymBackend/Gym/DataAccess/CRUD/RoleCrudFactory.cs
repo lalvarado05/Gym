@@ -22,8 +22,8 @@ public class RoleCrudFactory : CrudFactory
         sqlOperation.ProcedureName = "CRE_ROL_PR";
 
         //Agregamos los parametros
-        sqlOperation.AddStringParam("P_User_ID", rol.Name);
-        sqlOperation.AddStringParam("P_Rol_ID", rol.Status);
+        sqlOperation.AddStringParam("P_Name", rol.Name);
+        sqlOperation.AddStringParam("P_Status", rol.Status);
 
         //Ir al DAO a ejecutor
         _sqlDao.ExecuteProcedure(sqlOperation);
