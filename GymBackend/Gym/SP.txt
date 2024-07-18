@@ -64,3 +64,128 @@ BEGIN
     WHERE id = @P_ID;
     RETURN 0;
 END;
+-----------------------------------------\-EQUIPMENT CRUD-\---------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRE_EQUIPMENT_PR]
+	@P_Name NVARCHAR(50),
+	@P_Location NVARCHAR(150),
+	@P_Description NVARCHAR(50)
+
+AS
+	INSERT INTO equipment_tbl(name,location,description,created)
+	VALUES(@P_Name,@P_Location,@P_Description,GETDATE());
+RETURN 0;
+
+CREATE PROCEDURE [dbo].[DEL_EQUIPMENT_PR]
+	@P_Id int
+AS
+BEGIN
+    -- Verificar que existe product
+    IF EXISTS (SELECT 1 FROM dbo.equipment_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.equipment_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Nice
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Nicen't
+    END
+END;
+
+CREATE PROCEDURE [dbo].[RET_ALL_EQUIPMENTS_PR]
+AS
+	SELECT id,name,description,location,created
+	FROM equipment_tbl;
+RETURN 0
+
+CREATE PROCEDURE [dbo].RET_EQUIPMENT_BY_ID_PR
+	@P_Id INT
+AS
+	SELECT id,name,location,description,created
+	FROM equipment_tbl
+	WHERE id = @P_Id;
+RETURN 0;
+
+CREATE PROCEDURE [dbo].[UPD_EQUIPMENT_PR]
+	@P_Id INT,
+	@P_Name NVARCHAR(50),
+	@P_Description NVARCHAR(200),
+	@P_Location NVARCHAR(150)
+AS
+	UPDATE dbo.equipment_tbl
+    SET 
+        name = @P_Name,
+        description = @P_Description,
+        location = @P_Location
+    WHERE id = @P_Id;
+RETURN 0;
+
+-----------------------------------------\-Schedule CRUD-\---------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRE_SCHEDULE_PR]
+    @P_EmployeeId INT,
+    @P_DaysOfWeek NVARCHAR(50),
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_Created DATETIME
+AS
+BEGIN
+    INSERT INTO schedule_tbl(employee_id, days_of_week, time_of_entry, time_of_exit, created)
+    VALUES(@P_EmployeeId, @P_DaysOfWeek, @P_TimeOfEntry, @P_TimeOfExit, @P_Created);
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[DEL_SCHEDULE_PR]
+    @P_Id INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM dbo.schedule_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.schedule_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Success
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Failure
+    END
+END;
+
+CREATE PROCEDURE [dbo].[RET_ALL_SCHEDULES_PR]
+AS
+BEGIN
+    SELECT id, employee_id, days_of_week, time_of_entry, time_of_exit, created
+    FROM schedule_tbl;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[RET_SCHEDULE_BY_ID_PR]
+    @P_Id INT
+AS
+BEGIN
+    SELECT id, employee_id, days_of_week, time_of_entry, time_of_exit, created
+    FROM schedule_tbl
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[UPD_SCHEDULE_PR]
+    @P_Id INT,
+    @P_EmployeeId INT,
+    @P_DaysOfWeek NVARCHAR(50),
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_Created DATETIME
+AS
+BEGIN
+    UPDATE dbo.schedule_tbl
+    SET 
+        employee_id = @P_EmployeeId,
+        days_of_week = @P_DaysOfWeek,
+        time_of_entry = @P_TimeOfEntry,
+        time_of_exit = @P_TimeOfExit,
+        created = @P_Created
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
+-----------------------------------------\-Otro CRUD-\---------------------------------------------------------------------------
