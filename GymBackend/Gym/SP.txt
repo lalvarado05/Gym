@@ -188,4 +188,78 @@ BEGIN
     RETURN 0;
 END;
 
+-----------------------------------------\-Meeting CRUD-\---------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRE_MEETINGS_PR]
+    @P_ClientId INT,
+    @P_EmployeeId INT,
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_ProgrammedDate DATETIME,
+    @P_IsCancelled NVARCHAR(50),
+    @P_Created DATETIME
+AS
+BEGIN
+    INSERT INTO mettings_tbl(client_id, employee_id, time_of_entry, time_of_exit, programmed_date, is_cancelled, created)
+    VALUES(@P_ClientId, @P_EmployeeId, @P_TimeOfEntry, @P_TimeOfExit, @P_ProgrammedDate, @P_IsCancelled, @P_Created);
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[DEL_MEETINGS_PR]
+    @P_Id INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM dbo.mettings_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.mettings_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Success
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Failure
+    END
+END;
+
+CREATE PROCEDURE [dbo].[RET_ALL_MEETINGS_PR]
+AS
+BEGIN
+    SELECT id, client_id, employee_id, time_of_entry, time_of_exit, programmed_date, is_cancelled, created
+    FROM mettings_tbl;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[RET_MEETING_BY_ID_PR]
+    @P_Id INT
+AS
+BEGIN
+    SELECT id, client_id, employee_id, time_of_entry, time_of_exit, programmed_date, is_cancelled, created
+    FROM mettings_tbl
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[UPD_MEETINGS_PR]
+    @P_Id INT,
+    @P_ClientId INT,
+    @P_EmployeeId INT,
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_ProgrammedDate DATETIME,
+    @P_IsCancelled NVARCHAR(50),
+    @P_Created DATETIME
+AS
+BEGIN
+    UPDATE dbo.mettings_tbl
+    SET 
+        client_id = @P_ClientId,
+        employee_id = @P_EmployeeId,
+        time_of_entry = @P_TimeOfEntry,
+        time_of_exit = @P_TimeOfExit,
+        programmed_date = @P_ProgrammedDate,
+        is_cancelled = @P_IsCancelled,
+        created = @P_Created
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
 -----------------------------------------\-Otro CRUD-\---------------------------------------------------------------------------
