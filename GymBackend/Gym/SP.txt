@@ -1,8 +1,66 @@
 -USER CRUD-
 -SP RETRIEVE BY ID USER-
-CREATE PROCEDURE [dbo].[RE_USER_BYID_PR]
+CREATE PROCEDURE [dbo].[RET_USER_BYID_PR]
 	@P_ID INT
 AS
 	SELECT * FROM user_tbl
 	where id = @P_ID;
 RETURN 0
+
+-User_Role CRUD_
+-SP CREATE USER_ROLE-
+CREATE PROCEDURE [dbo].[CRE_USER_ROL_PR]
+	@P_User_ID int,
+	@P_Rol_ID int
+AS
+	INSERT INTO user_rol_tbl(user_id,rol_id)
+	VALUES(@P_User_ID,@P_Rol_ID)
+RETURN 0
+
+-SP RETRIEVE_ALL USER_ROLE-
+CREATE PROCEDURE [RET_ALL_USER_ROL_PR]
+AS
+	SELECT id,user_id,rol_id FROM 
+	user_rol_tbl
+RETURN 0
+
+-SP RETRIEVE BY ID USER_ROLE-
+CREATE PROCEDURE [dbo].[RET_USER_ROL_BY_ID_PR]
+	@P_ID INT
+AS
+	SELECT * FROM user_rol_tbl
+	where id = @P_ID;
+RETURN 0
+
+-ROLE CRUD-
+-CREATE ROL-
+CREATE PROCEDURE [dbo].[CRE_ROL_PR]
+	@P_Name int,
+	@P_Status int
+AS
+	INSERT INTO rol_tbl(name,status)
+	VALUES(@P_Name,@P_Status)
+RETURN 0
+
+-Retrieve by id-
+CREATE PROCEDURE [dbo].[RET_ROL_BY_ID_PR]
+	@P_ID INT
+AS
+	SELECT * FROM rol_tbl
+	where id = @P_ID;
+RETURN 0
+
+-Update rol-
+CREATE PROCEDURE [dbo].[UPD_ROL_PR]
+	@P_ID INT,
+    @P_Name NVARCHAR(50),
+    @P_Status NVARCHAR(50)
+AS
+BEGIN
+    UPDATE rol_tbl
+    SET 
+		name = @P_Name,
+		status = @P_Status
+    WHERE id = @P_ID;
+    RETURN 0;
+END;
