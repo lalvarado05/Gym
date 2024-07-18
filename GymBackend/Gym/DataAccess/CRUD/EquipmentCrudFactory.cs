@@ -76,7 +76,7 @@ namespace DataAccess.CRUD
         public override T RetrieveById<T>(int id)
         {
             var sqlOperation = new SqlOperation() { ProcedureName = "RET_EQUIPMENT_BY_ID_PR" };
-            sqlOperation.AddIntParam("P_ID", id);
+            sqlOperation.AddIntParam("P_Id", id);
 
             //Ejecutamos contra el DAO
             var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);

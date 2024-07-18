@@ -46,6 +46,22 @@ namespace WebAPI.Controllers
             }
 
         }
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int id)
+        {
+            try
+            {
+                var em = new EquipmentManager();
+                return Ok(em.RetrieveById(id));
+            }
+            catch (Exception ex)
+            {
+                //500 es internal server error
+                return StatusCode(500, ex.Message);
+            }
+
+        }
         #endregion
         #region PUT
         [HttpPut]

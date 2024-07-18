@@ -34,6 +34,12 @@ namespace CoreApp
             return eCrud.RetrieveAll<Equipment>();
         }
 
+        public Equipment RetrieveById(int id)
+        {
+            var eCrud = new EquipmentCrudFactory();
+            return eCrud.RetrieveById<Equipment>(id);
+        }
+
 
         //Aqui irian las validaciones
 
