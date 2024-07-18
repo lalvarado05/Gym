@@ -3,8 +3,13 @@ using DTOs;
 
 namespace DataAccess.CRUD;
 
-internal class UserCrud : CrudFactory
+public class UserCrudFactory : CrudFactory
 {
+    public UserCrudFactory()
+    {
+        _sqlDao = SqlDao.GetInstance();
+    }
+
     public override void Create(BaseDTO baseDto)
     {
         throw new NotImplementedException();
