@@ -1,0 +1,45 @@
+﻿using CoreApp;
+using DTOs;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DiscountController : ControllerBase
+    {
+        #region POSTS
+
+        [HttpPost]
+        [Route("Create")]
+        public ActionResult Create(Discount discount)
+        {
+            try
+            {
+                var dm = new DiscountManager();
+                dm.Create(discount);
+                return Ok(discount);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region PUT
+
+        [HttpPut]
+        [Route("Update")]
+        public ActionResult Update(Discount discount)
+        {
+            try
+            {
+                var dm = new DiscountManager();
+                dm.Update(discount);
+                return Ok(discount);
+            }
+            catch (Exception ex)
+
+

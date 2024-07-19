@@ -1,29 +1,38 @@
 ﻿using DataAccess.CRUD;
 using DTOs;
+using System.Collections.Generic;
 
-namespace CoreApp;
-
-public class UserManager
+namespace CoreApp
 {
-    public void Create(Schedule schedule)
+    public class UserManager
     {
-    }
 
-    public void Update(Schedule schedule)
-    {
-    }
+        public void Create(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            uCrud.Create(user);
+        }
 
-    public void Delete(Schedule schedule)
-    {
-    }
+        public void Update(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            uCrud.Update(user);
+        }
 
-    public List<Schedule> RetrieveAll()
-    {
-        return null;
-    }
+        public void Delete(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            uCrud.Delete(user);
+        }
 
-    public User RetrieveById(int id)
-    {
+        public List<User> RetrieveAll()
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveAll<User>();
+        }
+
+        public User RetrieveById(int id)
+        {
         var rolManager = new RolManager();
 
         var uCrud = new UserCrudFactory();
@@ -31,11 +40,13 @@ public class UserManager
         var listaRolesUsuario = rolManager.RetrieveAllRolesByUserId(userFound.Id);
         userFound.ListaRole = listaRolesUsuario;
         return userFound;
+        }
+
+        // Aquí irían las validaciones
+
+        #region Validations
+
+        #endregion
+
     }
-
-    // Aquí irían las validaciones
-
-    #region Validations
-
-    #endregion
 }
