@@ -262,4 +262,74 @@ BEGIN
     RETURN 0;
 END;
 
+-----------------------------------------\-GroupClass CRUD-\---------------------------------------------------------------------------
+
+CREATE PROCEDURE [dbo].[CRE_GROUP_CLASS_PR]
+    @P_EmployeeId INT,
+    @P_ClassName NVARCHAR(50),
+    @P_MaxCapacity INT,
+    @P_CurrentRegistered INT,
+    @P_ClassDate DATETIME,
+    @P_StartTime TIME(7),
+    @P_EndTime TIME(7)
+AS
+    INSERT INTO group_class_tbl(employee_id, class_name, max_capacity, current_registered, class_time, start_time, end_time)
+    VALUES(@P_EmployeeId, @P_ClassName, @P_MaxCapacity, @P_CurrentRegistered, @P_ClassDate, @P_StartTime, @P_EndTime);
+RETURN 0;
+
+CREATE PROCEDURE [dbo].[DEL_GROUP_CLASS_PR]
+    @P_Id INT
+AS
+BEGIN
+    -- Verificar que existe group class
+    IF EXISTS (SELECT 1 FROM dbo.group_class_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.group_class_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Nice
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Nicen't
+    END
+END;
+
+CREATE PROCEDURE [dbo].[RET_ALL_GROUP_CLASSES_PR]
+AS
+    SELECT id, employee_id, class_name, max_capacity, current_registered, class_time, start_time, end_time
+    FROM group_class_tbl;
+RETURN 0;
+
+CREATE PROCEDURE [dbo].[RET_GROUP_CLASS_BY_ID_PR]
+    @P_Id INT
+AS
+    SELECT id, employee_id, class_name, max_capacity, current_registered, class_time, start_time, end_time
+    FROM group_class_tbl
+    WHERE id = @P_Id;
+RETURN 0;
+
+CREATE PROCEDURE [dbo].[UPD_GROUP_CLASS_PR]
+    @P_Id INT,
+    @P_EmployeeId INT,
+    @P_ClassName NVARCHAR(50),
+    @P_MaxCapacity INT,
+    @P_CurrentRegistered INT,
+    @P_ClassDate DATETIME,
+    @P_StartTime TIME(7),
+    @P_EndTime TIME(7)
+AS
+    UPDATE dbo.group_class_tbl
+    SET 
+        employee_id = @P_EmployeeId,
+        class_name = @P_ClassName,
+        max_capacity = @P_MaxCapacity,
+        current_registered = @P_CurrentRegistered,
+        class_time = @P_ClassDate,
+        start_time = @P_StartTime,
+        end_time = @P_EndTime
+    WHERE id = @P_Id;
+RETURN 0;
+
+
+
 -----------------------------------------\-Otro CRUD-\---------------------------------------------------------------------------
