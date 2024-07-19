@@ -382,16 +382,98 @@ CREATE PROCEDURE [dbo].[UPD_USER_GROUP_CLASS_PR]
     @P_Id INT,
     @P_GroupClassId INT,
     @P_ClientId INT,
-    @P_Created DATETIME
 AS
 BEGIN
     UPDATE dbo.user_group_class_tbl
     SET 
         group_class_id = @P_GroupClassId,
         client_id = @P_ClientId,
-        created = @P_Created
     WHERE id = @P_Id;
     RETURN 0;
 END;
+
+-----------------------------------------\-PersonalTraining CRUD-\---------------------------------------------------------------------------
+-- Crear un nuevo registro en personal_training_tbl
+CREATE PROCEDURE [dbo].[CRE_PERSONAL_TRAINING_PR]
+    @P_ClientId INT,
+    @P_EmployeeId INT,
+    @P_IsCancelled NVARCHAR(50),
+    @P_IsPaid NVARCHAR(50),
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_ProgrammedDate DATETIME,
+    @P_HourlyRate DECIMAL(18, 0)
+AS
+BEGIN
+    INSERT INTO dbo.personal_training_tbl (client_id, employee_id, is_cancelled, is_paid, time_of_entry, time_of_exit, programed_date, hourly_rate)
+    VALUES (@P_ClientId, @P_EmployeeId, @P_IsCancelled, @P_IsPaid, @P_TimeOfEntry, @P_TimeOfExit, @P_ProgrammedDate, @P_HourlyRate);
+    RETURN 0;
+END;
+
+-- Eliminar un registro de personal_training_tbl
+CREATE PROCEDURE [dbo].[DEL_PERSONAL_TRAINING_PR]
+    @P_Id INT
+AS
+BEGIN
+    -- Verificar que existe el registro
+    IF EXISTS (SELECT 1 FROM dbo.personal_training_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.personal_training_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Eliminado exitosamente
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Registro no encontrado
+    END
+END;
+
+-- Recuperar todos los registros de personal_training_tbl
+CREATE PROCEDURE [dbo].[RET_ALL_PERSONAL_TRAININGS_PR]
+AS
+BEGIN
+    SELECT id, client_id, employee_id, is_cancelled, is_paid, time_of_entry, time_of_exit, programed_date, hourly_rate
+    FROM dbo.personal_training_tbl;
+    RETURN 0;
+END;
+
+-- Recuperar un registro por ID de personal_training_tbl
+CREATE PROCEDURE [dbo].[RET_PERSONAL_TRAINING_BY_ID_PR]
+    @P_Id INT
+AS
+BEGIN
+    SELECT id, client_id, employee_id, is_cancelled, is_paid, time_of_entry, time_of_exit, programed_date, hourly_rate
+    FROM dbo.personal_training_tbl
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
+-- Actualizar un registro en personal_training_tbl
+CREATE PROCEDURE [dbo].[UPD_PERSONAL_TRAINING_PR]
+    @P_Id INT,
+    @P_ClientId INT,
+    @P_EmployeeId INT,
+    @P_IsCancelled NVARCHAR(50),
+    @P_IsPaid NVARCHAR(50),
+    @P_TimeOfEntry TIME(7),
+    @P_TimeOfExit TIME(7),
+    @P_ProgrammedDate DATETIME,
+    @P_HourlyRate DECIMAL(18, 0)
+AS
+BEGIN
+    UPDATE dbo.personal_training_tbl
+    SET 
+        client_id = @P_ClientId,
+        employee_id = @P_EmployeeId,
+        is_cancelled = @P_IsCancelled,
+        is_paid = @P_IsPaid,
+        time_of_entry = @P_TimeOfEntry,
+        time_of_exit = @P_TimeOfExit,
+        programed_date = @P_ProgrammedDate,
+        hourly_rate = @P_HourlyRate
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
 
 -----------------------------------------\-Otro CRUD-\---------------------------------------------------------------------------
