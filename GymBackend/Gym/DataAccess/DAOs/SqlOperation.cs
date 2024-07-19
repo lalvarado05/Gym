@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+
 namespace DataAccess.DAOs;
 
 public class SqlOperation
@@ -31,6 +32,7 @@ public class SqlOperation
     {
         Parameters.Add(new SqlParameter(paramName, paramValue));
     }
+
     public void AddTimeParam(string paramName, TimeOnly paramValue)
     {
         Parameters.Add(new SqlParameter(paramName, paramValue));

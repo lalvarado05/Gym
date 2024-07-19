@@ -22,8 +22,8 @@ public class UserRoleFactory : CrudFactory
         sqlOperation.ProcedureName = "CRE_USER_ROL_PR";
 
         //Agregamos los parametros
-        sqlOperation.AddIntParam("P_User_ID", userRole.RoleId);
-        sqlOperation.AddIntParam("P_Rol_ID", userRole.UserId);
+        sqlOperation.AddIntParam("P_User_ID", userRole.UserId);
+        sqlOperation.AddIntParam("P_Rol_ID", userRole.RoleId);
 
         //Ir al DAO a ejecutor
         _sqlDao.ExecuteProcedure(sqlOperation);
@@ -43,7 +43,7 @@ public class UserRoleFactory : CrudFactory
         //Agregamos los parametros
         sqlOperation.AddIntParam("P_Id", rol.Id);
         sqlOperation.AddStringParam("P_Name", rol.Name);
-        sqlOperation.AddStringParam("P_Description", rol.Status);
+        sqlOperation.AddStringParam("P_Status", rol.Status);
 
         //Ir al DAO a ejecutor
         _sqlDao.ExecuteProcedure(sqlOperation);
