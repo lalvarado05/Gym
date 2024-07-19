@@ -330,6 +330,68 @@ AS
     WHERE id = @P_Id;
 RETURN 0;
 
+-----------------------------------------\-User_GroupClass CRUD-\---------------------------------------------------------------------------
 
+CREATE PROCEDURE [dbo].[CRE_USER_GROUP_CLASS_PR]
+    @P_GroupClassId INT,
+    @P_ClientId INT,
+    @P_Created DATETIME
+AS
+BEGIN
+    INSERT INTO user_group_class_tbl(group_class_id, client_id, created)
+    VALUES(@P_GroupClassId, @P_ClientId, @P_Created);
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[DEL_USER_GROUP_CLASS_PR]
+    @P_Id INT
+AS
+BEGIN
+    -- Verificar que existe user group class
+    IF EXISTS (SELECT 1 FROM dbo.user_group_class_tbl WHERE id = @P_Id)
+    BEGIN
+        DELETE FROM dbo.user_group_class_tbl
+        WHERE id = @P_Id;
+        RETURN 0; -- Success
+    END
+    ELSE
+    BEGIN
+        RETURN 1; -- Failure
+    END
+END;
+
+CREATE PROCEDURE [dbo].[RET_ALL_USER_GROUP_CLASSES_PR]
+AS
+BEGIN
+    SELECT id, group_class_id, client_id, created
+    FROM user_group_class_tbl;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[RET_USER_GROUP_CLASS_BY_ID_PR]
+    @P_Id INT
+AS
+BEGIN
+    SELECT id, group_class_id, client_id, created
+    FROM user_group_class_tbl
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
+
+CREATE PROCEDURE [dbo].[UPD_USER_GROUP_CLASS_PR]
+    @P_Id INT,
+    @P_GroupClassId INT,
+    @P_ClientId INT,
+    @P_Created DATETIME
+AS
+BEGIN
+    UPDATE dbo.user_group_class_tbl
+    SET 
+        group_class_id = @P_GroupClassId,
+        client_id = @P_ClientId,
+        created = @P_Created
+    WHERE id = @P_Id;
+    RETURN 0;
+END;
 
 -----------------------------------------\-Otro CRUD-\---------------------------------------------------------------------------
