@@ -23,7 +23,6 @@ public class RoleCrudFactory : CrudFactory
 
         //Agregamos los parametros
         sqlOperation.AddStringParam("P_Name", rol.Name);
-        sqlOperation.AddStringParam("P_Status", rol.Status);
 
         //Ir al DAO a ejecutor
         _sqlDao.ExecuteProcedure(sqlOperation);
@@ -37,6 +36,15 @@ public class RoleCrudFactory : CrudFactory
     public override void Delete(BaseDTO baseDto)
     {
         throw new NotImplementedException();
+    }
+
+    public void DeleteById(int idUsuario, int idRol)
+    {
+        var sqlOperation = new SqlOperation{ ProcedureName = "DEL_ROL_PR" };
+        sqlOperation.AddIntParam("P_IDUsuario", idUsuario);
+        sqlOperation.AddIntParam("P_IDRol", idRol);
+        _sqlDao.ExecuteProcedure(sqlOperation);
+
     }
 
     public override T Retrieve<T>()
@@ -66,13 +74,30 @@ public class RoleCrudFactory : CrudFactory
         throw new NotImplementedException();
     }
 
+    public List<Rol> RetrieveAllRolesByUserId(int idUser)
+    {
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_ROLES_BY_IDUSER_PR" };
+        sqlOperation.AddIntParam("P_ID_User", idUser);
+
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count <= 0) return default;
+        List<Rol> listaDeRolesMapeados = new();
+
+        foreach (var item in lstResults)
+        {
+            var itemMapeado = BuildRol(item);
+            listaDeRolesMapeados.Add(itemMapeado);
+        }
+        return listaDeRolesMapeados;
+
+    }
+
     private Rol BuildRol(Dictionary<string, object> row)
     {
         var rolToReturn = new Rol
         {
             Id = (int)row["id"],
             Name = (string)row["name"],
-            Status = (string)row["status"]
         };
         return rolToReturn;
     }

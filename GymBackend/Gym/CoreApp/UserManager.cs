@@ -24,8 +24,13 @@ public class UserManager
 
     public User RetrieveById(int id)
     {
+        var rolManager = new RolManager();
+
         var uCrud = new UserCrudFactory();
-        return uCrud.RetrieveById<User>(id);
+        var userFound = uCrud.RetrieveById<User>(id);
+        var listaRolesUsuario = rolManager.RetrieveAllRolesByUserId(userFound.Id);
+        userFound.ListaRole = listaRolesUsuario;
+        return userFound;
     }
 
     // Aquí irían las validaciones
