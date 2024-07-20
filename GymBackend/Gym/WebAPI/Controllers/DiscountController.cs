@@ -1,6 +1,7 @@
 ﻿using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebAPI.Controllers
 {
@@ -41,5 +42,65 @@ namespace WebAPI.Controllers
                 return Ok(discount);
             }
             catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
+        #endregion
 
+        #region DELETE
+
+        [HttpDelete]
+        [Route("Delete")]
+        public ActionResult Delete(Discount discount)
+        {
+            try
+            {
+                var dm = new DiscountManager();
+                dm.Delete(discount);
+                return Ok(discount);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region GETS
+
+        [HttpGet]
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
+        {
+            try
+            {
+                var dm = new DiscountManager();
+                return Ok(dm.RetrieveAll());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int id)
+        {
+            try
+            {
+                var dm = new DiscountManager();
+                return Ok(dm.RetrieveById(id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        #endregion
+    }
+}
