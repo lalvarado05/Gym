@@ -6,20 +6,19 @@ namespace WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase
+public class MembershipController : ControllerBase
 {
-
     #region POSTS
 
     [HttpPost]
     [Route("Create")]
-    public ActionResult Create(User user)
+    public ActionResult Create(Membership membership)
     {
         try
         {
-            var um = new UserManager();
-            um.Create(user);
-            return Ok(user);
+            var meCrud = new MembershipManager();
+            meCrud.Create(membership);
+            return Ok(membership);
         }
         catch (Exception ex)
         {
@@ -33,13 +32,13 @@ public class UserController : ControllerBase
 
     [HttpPut]
     [Route("Update")]
-    public ActionResult Update(User user)
+    public ActionResult Update(Membership membership)
     {
         try
         {
-            var um = new UserManager();
-            um.Update(user);
-            return Ok(user);
+            var meCrud = new MembershipManager();
+            meCrud.Update(membership);
+            return Ok(membership);
         }
         catch (Exception ex)
         {
@@ -53,13 +52,13 @@ public class UserController : ControllerBase
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(User user)
+    public ActionResult Delete(Membership membership)
     {
         try
         {
-            var um = new UserManager();
-            um.Delete(user);
-            return Ok(user);
+            var meCrud = new MembershipManager();
+            meCrud.Delete(membership);
+            return Ok(membership);
         }
         catch (Exception ex)
         {
@@ -77,12 +76,11 @@ public class UserController : ControllerBase
     {
         try
         {
-            var um = new UserManager();
-            return Ok(um.RetrieveAll());
+            var meCrud = new MembershipManager();
+            return Ok(meCrud.RetrieveAll());
         }
         catch (Exception ex)
         {
-            // 500 es internal server error
             return StatusCode(500, ex.Message);
         }
     }
@@ -93,12 +91,11 @@ public class UserController : ControllerBase
     {
         try
         {
-            var um = new UserManager();
-            return Ok(um.RetrieveById(id));
+            var meCrud = new MembershipManager();
+            return Ok(meCrud.RetrieveById(id));
         }
         catch (Exception ex)
         {
-            // 500 es internal server error
             return StatusCode(500, ex.Message);
         }
     }
