@@ -2,6 +2,7 @@
 using DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DataAccess.CRUD
 {
@@ -29,7 +30,30 @@ namespace DataAccess.CRUD
             sqlOperation.AddStringParam("P_Gender", user.Gender);
             sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
 
-            _sqlDao.ExecuteProcedure(sqlOperation);
+            // Añadir un parámetro de salida para capturar el ID del nuevo usuario
+            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            // Verificar si se obtuvieron resultados
+            if (result.Count > 0 && result[0].ContainsKey("UserId"))
+            {
+                user.Id = Convert.ToInt32(result[0]["UserId"]);
+            }
+
+            if (user.ListaRole.Count > 0) 
+            {
+                foreach (var role in user.ListaRole)
+                {
+                    var sqlRoleOperation = new SqlOperation
+                    {
+                        ProcedureName = "CRE_USER_ROL_PR"
+                    };
+
+                    sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
+                    sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
+
+                    _sqlDao.ExecuteProcedure(sqlRoleOperation);
+                }
+            }
         }
 
         public override void Delete(BaseDTO baseDto)
@@ -85,7 +109,6 @@ namespace DataAccess.CRUD
             sqlOperation.AddStringParam("P_Status", user.Status);
             sqlOperation.AddStringParam("P_Gender", user.Gender);
             sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
-            sqlOperation.AddDateTimeParam("P_Created", user.Created);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
