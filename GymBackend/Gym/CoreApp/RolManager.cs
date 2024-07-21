@@ -18,8 +18,10 @@ public class RolManager
         rCrud.Update(rol);
     }
 
-    public void Delete()
+    public void Delete(int idUsuario, int idRol)
     {
+        var rCrud = new RoleCrudFactory();
+        rCrud.DeleteById(idUsuario, idRol);
     }
 
     public List<Schedule> RetrieveAll()
@@ -31,6 +33,12 @@ public class RolManager
     {
         var rCrud = new RoleCrudFactory();
         return rCrud.RetrieveById<Rol>(id);
+    }
+
+    public List<Rol> RetrieveAllRolesByUserId(int userId)
+    {
+        var rCrud = new RoleCrudFactory();
+        return rCrud.RetrieveAllRolesByUserId(userId);
     }
 
     // Aquí irían las validaciones

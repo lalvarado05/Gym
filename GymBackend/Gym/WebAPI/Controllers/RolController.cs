@@ -28,6 +28,26 @@ public class RolController : Controller
 
     #endregion
 
+    #region Delete
+
+    [HttpDelete]
+    [Route("Delete")]
+    public ActionResult Delete(int idUsuario, int idRol)
+    {
+        try
+        {
+            var rm = new RolManager();
+            rm.Delete(idUsuario, idRol);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    #endregion
+
     #region GETS
 
     [HttpGet]
@@ -38,6 +58,22 @@ public class RolController : Controller
         {
             var rm = new RolManager();
             return Ok(rm.RetrieveById(id));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+
+    [HttpGet]
+    [Route("RetrieveByIdByUser")]
+    public ActionResult RetrieveByIdUserList(int id)
+    {
+        try
+        {
+            var rm = new RolManager();
+            return Ok(rm.RetrieveAllRolesByUserId(id));
         }
         catch (Exception ex)
         {
