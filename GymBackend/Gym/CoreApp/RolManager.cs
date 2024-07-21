@@ -24,9 +24,10 @@ public class RolManager
         rCrud.DeleteById(idUsuario, idRol);
     }
 
-    public List<Schedule> RetrieveAll()
+    public List<Rol> RetrieveAll()
     {
-        return null;
+        var uRol = new RoleCrudFactory();
+        return uRol.RetrieveAll<Rol>();
     }
 
     public Rol RetrieveById(int id)

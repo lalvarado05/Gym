@@ -25,11 +25,9 @@ namespace DataAccess.CRUD
             sqlOperation.AddStringParam("P_LastName", user.LastName);
             sqlOperation.AddStringParam("P_Phone", user.Phone);
             sqlOperation.AddStringParam("P_Email", user.Email);
-            sqlOperation.AddDateTimeParam("P_LastLogin", user.LastLogin);
             sqlOperation.AddStringParam("P_Status", user.Status);
             sqlOperation.AddStringParam("P_Gender", user.Gender);
             sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
-            sqlOperation.AddDateTimeParam("P_Created", user.Created);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
