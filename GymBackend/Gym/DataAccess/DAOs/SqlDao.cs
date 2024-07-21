@@ -21,7 +21,9 @@ public class SqlDao
     private SqlDao()
     {
         //ESTE STRING SE DEBE CAMBIAR PARA QUE COINCIDA CON LA BASE DE DATOS QUE ESTEN UTILIZANDO
+
         _connectionString = "Data Source = projectcenfotec.database.windows.net; Initial Catalog = gym_db; User ID = cenfotec; Password = Admin1234; Encrypt = False";
+
     }
 
     //Definir metodo de instancia del sqldao
