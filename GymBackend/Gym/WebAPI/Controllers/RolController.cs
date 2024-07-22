@@ -81,5 +81,20 @@ public class RolController : Controller
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveAll")]
+    public ActionResult RetrieveAll()
+    {
+        try
+        {
+            var rm = new RolManager();
+            return Ok(rm.RetrieveAll());
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
     #endregion
 }
