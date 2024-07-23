@@ -70,7 +70,18 @@ public class RoleCrudFactory : CrudFactory
 
     public override List<T> RetrieveAll<T>()
     {
-        throw new NotImplementedException();
+        var lstRoles = new List<T>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_ROLES_PR" };
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            foreach (var row in lstResults)
+            {
+                var role = BuildRol(row);
+                lstRoles.Add((T)Convert.ChangeType(role, typeof(T)));
+            }
+        }
+        return lstRoles;
     }
 
     public List<Rol> RetrieveAllRolesByUserId(int idUser)

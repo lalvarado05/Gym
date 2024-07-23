@@ -16,18 +16,42 @@ public class UserCrudFactory : CrudFactory
 
         var sqlOperation = new SqlOperation
         {
-            ProcedureName = "CRE_USER_PR"
+          ProcedureName = "CRE_USER_PR"
         };
 
-        sqlOperation.AddStringParam("P_Name", user.Name);
-        sqlOperation.AddStringParam("P_LastName", user.LastName);
-        sqlOperation.AddStringParam("P_Phone", user.Phone);
-        sqlOperation.AddStringParam("P_Email", user.Email);
-        sqlOperation.AddStringParam("P_Status", user.Status);
-        sqlOperation.AddStringParam("P_Gender", user.Gender);
-        sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
+            sqlOperation.AddStringParam("P_Name", user.Name);
+            sqlOperation.AddStringParam("P_LastName", user.LastName);
+            sqlOperation.AddStringParam("P_Phone", user.Phone);
+            sqlOperation.AddStringParam("P_Email", user.Email);
+            sqlOperation.AddStringParam("P_Status", user.Status);
+            sqlOperation.AddStringParam("P_Gender", user.Gender);
+            sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
 
-        _sqlDao.ExecuteProcedure(sqlOperation);
+            // Añadir un parámetro de salida para capturar el ID del nuevo usuario
+            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            // Verificar si se obtuvieron resultados
+            if (result.Count > 0 && result[0].ContainsKey("UserId"))
+            {
+                user.Id = Convert.ToInt32(result[0]["UserId"]);
+            }
+
+            if (user.ListaRole.Count > 0) 
+            {
+                foreach (var role in user.ListaRole)
+                {
+                    var sqlRoleOperation = new SqlOperation
+                    {
+                        ProcedureName = "CRE_USER_ROL_PR"
+                    };
+
+                    sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
+                    sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
+
+                    _sqlDao.ExecuteProcedure(sqlRoleOperation);
+                }
+            }
+        
     }
 
 
