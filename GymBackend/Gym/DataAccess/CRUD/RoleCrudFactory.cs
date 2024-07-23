@@ -40,11 +40,10 @@ public class RoleCrudFactory : CrudFactory
 
     public void DeleteById(int idUsuario, int idRol)
     {
-        var sqlOperation = new SqlOperation{ ProcedureName = "DEL_ROL_PR" };
+        var sqlOperation = new SqlOperation { ProcedureName = "DEL_ROL_PR" };
         sqlOperation.AddIntParam("P_IDUsuario", idUsuario);
         sqlOperation.AddIntParam("P_IDRol", idRol);
         _sqlDao.ExecuteProcedure(sqlOperation);
-
     }
 
     public override T Retrieve<T>()
@@ -88,8 +87,8 @@ public class RoleCrudFactory : CrudFactory
             var itemMapeado = BuildRol(item);
             listaDeRolesMapeados.Add(itemMapeado);
         }
-        return listaDeRolesMapeados;
 
+        return listaDeRolesMapeados;
     }
 
     private Rol BuildRol(Dictionary<string, object> row)
@@ -97,7 +96,7 @@ public class RoleCrudFactory : CrudFactory
         var rolToReturn = new Rol
         {
             Id = (int)row["id"],
-            Name = (string)row["name"],
+            Name = (string)row["name"]
         };
         return rolToReturn;
     }
