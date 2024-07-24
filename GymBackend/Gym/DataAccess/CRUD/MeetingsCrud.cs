@@ -30,10 +30,9 @@ public class MeetingsCrudFactory : CrudFactory
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
-    public override void Delete(BaseDTO baseDto)
+  public override void Delete(BaseDTO baseDto)
     {
         var meeting = baseDto as Meetings;
-
         var sqlOperation = new SqlOperation
         {
             ProcedureName = "DEL_MEETINGS_PR"
@@ -82,11 +81,27 @@ public class MeetingsCrudFactory : CrudFactory
             var retMeeting = (T)Convert.ChangeType(BuildMeeting(row), typeof(T));
             return retMeeting;
         }
-
-        return default;
+            return default;
     }
 
-    public override void Update(BaseDTO baseDto)
+  public List<Meetings> RetrieveByUserId(int employeeId)
+  {
+      List<Meetings> lstGroupMeetings = [];
+      var sqlOperation = new SqlOperation() { ProcedureName = "RET_MEETING_BYUSERID_PR" };
+      sqlOperation.AddIntParam("P_Id", employeeId);
+      var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+      if (lstResults.Count > 0)
+      {
+          foreach (var row in lstResults)
+          {
+              var meeting = BuildMeeting(row);
+              lstGroupMeetings.Add(meeting);
+          }
+      }
+      return lstGroupMeetings;
+  }
+
+  public override void Update(BaseDTO baseDto)
     {
         var meeting = baseDto as Meetings;
 

@@ -91,6 +91,22 @@ public class ScheduleCrudFactory : CrudFactory
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
+    public Schedule RetrieveScheduleByUserID(int id)
+    {
+        var sqlOperation = new SqlOperation();
+        sqlOperation.ProcedureName = "RET_SCHEDULE_BYUSERID_PR";
+        sqlOperation.AddIntParam("P_EmployeeId", id);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            var row = lstResults[0];
+            var retSchedule = BuildSchedule(row);
+            return retSchedule;
+        }
+
+        return default;
+    }
+
     #region Funciones extras
 
     private Schedule BuildSchedule(Dictionary<string, object> row)

@@ -110,4 +110,34 @@ public class PersonalTrainingController : ControllerBase
     }
 
     #endregion
+    [HttpGet]
+        [Route("RetrieveByEmployeeId")]
+        public ActionResult RetrieveByEmployeeId(int id)
+        {
+            try
+            {
+                var ptManager = new PersonalTrainingManager();
+                return Ok(ptManager.RetrieveByEmployeeId(id));
+            }
+            catch (Exception ex)
+            {
+                // 500 es internal server error
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpGet]
+        [Route("RetrieveByClientId")]
+        public ActionResult RetrieveByClientId(int id)
+        {
+            try
+            {
+                var ptManager = new PersonalTrainingManager();
+                return Ok(ptManager.RetrieveByClientId(id));
+            }
+            catch (Exception ex)
+            {
+                // 500 es internal server error
+                return StatusCode(500, ex.Message);
+            }
+        }
 }

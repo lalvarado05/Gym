@@ -102,5 +102,36 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveByRole")]
+    public ActionResult RetrieveByRole(int id)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByUserRole(id));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("RetrieveByRoleWithSchedule")]
+    public ActionResult RetrieveByRoleWithSchedule(int id)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByUserRoleWithSchedule(id));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
     #endregion
 }
