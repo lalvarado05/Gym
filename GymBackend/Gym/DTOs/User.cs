@@ -17,4 +17,7 @@ public class User : BaseDTO
     public DateTime BirthDate { get; set; }
 
     public DateTime Created { get; set; }
+
+    public List<Rol> ListaRole { get; set; } = new();
+
 }

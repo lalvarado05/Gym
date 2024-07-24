@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using DTOs;
 using Microsoft.Data.SqlClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataAccess.DAOs;
 
@@ -19,7 +21,9 @@ public class SqlDao
     private SqlDao()
     {
         //ESTE STRING SE DEBE CAMBIAR PARA QUE COINCIDA CON LA BASE DE DATOS QUE ESTEN UTILIZANDO
-        _connectionString = "Data Source=projectcenfotec.database.windows.net;Initial Catalog=gym_db;Persist Security Info=True;User ID=cenfotec;Password=Admin1234;Encrypt=False;Trust Server Certificate=True";
+
+        _connectionString = "Data Source = projectcenfotec.database.windows.net; Initial Catalog = gym_db; User ID = cenfotec; Password = Admin1234; Encrypt = False";
+
     }
 
     //Definir metodo de instancia del sqldao
