@@ -70,23 +70,6 @@ public class PersonalTrainingManager
         return ptCrud.RetrieveById<PersonalTraining>(id);
     }
   
-      public void Update(PersonalTraining personalTraining)
-    {
-        var ptCrud = new PersonalTrainingCrudFactory();
-        ptCrud.Update(personalTraining);
-    }
-
-    public void Delete(PersonalTraining personalTraining)
-    {
-        var ptCrud = new PersonalTrainingCrudFactory();
-        ptCrud.Delete(personalTraining);
-    }
-
-    public List<PersonalTraining> RetrieveAll()
-    {
-        var ptCrud = new PersonalTrainingCrudFactory();
-        return ptCrud.RetrieveAll<PersonalTraining>();
-    }
     public List<PersonalTraining> RetrieveByEmployeeId(int id)
     {
         var ptCrud = new PersonalTrainingCrudFactory();
@@ -98,11 +81,6 @@ public class PersonalTrainingManager
         return ptCrud.RetrieveByClientId(id);
     }
 
-    public PersonalTraining RetrieveById(int id)
-    {
-        var ptCrud = new PersonalTrainingCrudFactory();
-        return ptCrud.RetrieveById<PersonalTraining>(id);
-    }
 
    // Aquí irían las validaciones
 

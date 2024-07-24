@@ -146,7 +146,7 @@ public class UserCrudFactory : CrudFactory
         };
         return userToReturn;
     }
-    
+
     private User BuildUserWithSchedule(Dictionary<string, object> row)
     {
         var userToReturn = new User
@@ -167,23 +167,7 @@ public class UserCrudFactory : CrudFactory
         };
         return userToReturn;
     }
-      private User BuildUser(Dictionary<string, object> row)
-      {
-          var userToReturn = new User
-          {
-              Id = (int)row["id"],
-              Name = (string)row["name"],
-              Phone = (string)row["phone"],
-              LastName = (string)row["last_name"],
-              Email = (string)row["email"],
-              LastLogin = (DateTime)row["last_login"],
-              Status = (string)row["status"],
-              Gender = (string)row["gender"],
-              BirthDate = (DateTime)row["birthdate"],
-              Created = (DateTime)row["created"]
-          };
-          return userToReturn;
-      }
+
       public List<User> RetrieveByRoleWithSchedule(int roleId)
       {
           // Crear instructivo para que el dao pueda realizar un create a la base de datos
