@@ -1,11 +1,11 @@
 ﻿using DataAccess.CRUD;
 using DTOs;
 
-namespace CoreApp
+namespace CoreApp;
+
+public class PersonalTrainingManager
 {
-    public class PersonalTrainingManager
-    {
-        public void Create(PersonalTraining personalTraining)
+   public void Create(PersonalTraining personalTraining)
         {
             var ptCrud = new PersonalTrainingCrudFactory();
             if (WorksDayOfWeek(personalTraining))
@@ -47,43 +47,64 @@ namespace CoreApp
             
         }
 
-        public void Update(PersonalTraining personalTraining)
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            ptCrud.Update(personalTraining);
-        }
+    public void Update(PersonalTraining personalTraining)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        ptCrud.Update(personalTraining);
+    }
 
-        public void Delete(PersonalTraining personalTraining)
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            ptCrud.Delete(personalTraining);
-        }
+    public void Delete(PersonalTraining personalTraining)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        ptCrud.Delete(personalTraining);
+    }
 
-        public List<PersonalTraining> RetrieveAll()
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            return ptCrud.RetrieveAll<PersonalTraining>();
-        }
-        public List<PersonalTraining> RetrieveByEmployeeId(int id)
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            return ptCrud.RetrieveByEmployeeId(id);
-        }
-        public List<PersonalTraining> RetrieveByClientId(int id)
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            return ptCrud.RetrieveByClientId(id);
-        }
+    public List<PersonalTraining> RetrieveAll()
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveAll<PersonalTraining>();
+    }
 
-        public PersonalTraining RetrieveById(int id)
-        {
-            var ptCrud = new PersonalTrainingCrudFactory();
-            return ptCrud.RetrieveById<PersonalTraining>(id);
-        }
+    public PersonalTraining RetrieveById(int id)
+    {        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveById<PersonalTraining>(id);
+    }
+  
+      public void Update(PersonalTraining personalTraining)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        ptCrud.Update(personalTraining);
+    }
 
+    public void Delete(PersonalTraining personalTraining)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        ptCrud.Delete(personalTraining);
+    }
 
+    public List<PersonalTraining> RetrieveAll()
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveAll<PersonalTraining>();
+    }
+    public List<PersonalTraining> RetrieveByEmployeeId(int id)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveByEmployeeId(id);
+    }
+    public List<PersonalTraining> RetrieveByClientId(int id)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveByClientId(id);
+    }
 
-        // Aquí irían las validaciones
+    public PersonalTraining RetrieveById(int id)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        return ptCrud.RetrieveById<PersonalTraining>(id);
+    }
+
+   // Aquí irían las validaciones
 
         #region Validations
         public bool WorksDayOfWeek(PersonalTraining personalTraining)
@@ -241,5 +262,4 @@ namespace CoreApp
             return true;
         }
         #endregion
-    }
 }

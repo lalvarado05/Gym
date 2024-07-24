@@ -1,47 +1,45 @@
 ﻿using DataAccess.CRUD;
 using DTOs;
-using System.Collections.Generic;
 
-namespace CoreApp
+namespace CoreApp;
+
+public class UserManager
 {
-    public class UserManager
+    public void Create(User user)
     {
+        var uCrud = new UserCrudFactory();
+        uCrud.Create(user);
+    }
 
-        public void Create(User user)
-        {
-            var uCrud = new UserCrudFactory();
-            uCrud.Create(user);
-        }
+    public void Update(User user)
+    {
+        var uCrud = new UserCrudFactory();
+        uCrud.Update(user);
+    }
 
-        public void Update(User user)
-        {
-            var uCrud = new UserCrudFactory();
-            uCrud.Update(user);
-        }
+    public void Delete(User user)
+    {
+        var uCrud = new UserCrudFactory();
+        uCrud.Delete(user);
+    }
 
-        public void Delete(User user)
-        {
-            var uCrud = new UserCrudFactory();
-            uCrud.Delete(user);
-        }
+    public List<User> RetrieveAll()
+    {
+        var uCrud = new UserCrudFactory();
+        return uCrud.RetrieveAll<User>();
+    }
 
-        public List<User> RetrieveAll()
-        {
-            var uCrud = new UserCrudFactory();
-            return uCrud.RetrieveAll<User>();
-        }
-
-        public User RetrieveById(int id)
-        {
-            var rolManager = new RolManager();
-            var uCrud = new UserCrudFactory();
-            var userFound = uCrud.RetrieveById<User>(id);
-            var listaRolesUsuario = rolManager.RetrieveAllRolesByUserId(userFound.Id);
-            userFound.ListaRole = listaRolesUsuario;
-            return userFound;
-        }
-
-        public List<User> RetrieveByUserRole(int userId)
+    public User RetrieveById(int id)
+    {
+        var rolManager = new RolManager();
+        var uCrud = new UserCrudFactory();
+        var userFound = uCrud.RetrieveById<User>(id);
+        var listaRolesUsuario = rolManager.RetrieveAllRolesByUserId(userFound.Id);
+        userFound.ListaRole = listaRolesUsuario;
+        return userFound;
+    }
+  
+   public List<User> RetrieveByUserRole(int userId)
         {
             var uCrud = new UserCrudFactory();
             return uCrud.RetrieveByRole(userId);
@@ -53,11 +51,9 @@ namespace CoreApp
             return uCrud.RetrieveByRoleWithSchedule(userId);
         }
 
-        // Aquí irían las validaciones
+    // Aquí irían las validaciones
 
-        #region Validations
+    #region Validations
 
-        #endregion
-
-    }
+    #endregion
 }
