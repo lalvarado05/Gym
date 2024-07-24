@@ -90,22 +90,39 @@ namespace DataAccess.CRUD
             return default;
         }
 
-        public List<PersonalTraining> RetrieveByUserId(int employeeId)
+        public List<PersonalTraining> RetrieveByClientId(int id)
         {
             List<PersonalTraining> lstPT = [];
-            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PERSONAL_TRAINING_BYUSERID_PR" };
-            sqlOperation.AddIntParam("P_Id", employeeId);
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PT_BY_CLIENTID_PR" };
+            sqlOperation.AddIntParam("P_Id", id);
             var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
             if (lstResults.Count > 0)
             {
                 foreach (var row in lstResults)
                 {
-                    var personalTraining = BuildPersonalTraining(row);
+                    var personalTraining = BuildPTWithNames(row);
                     lstPT.Add(personalTraining);
                 }
             }
             return lstPT;
         }
+        public List<PersonalTraining> RetrieveByEmployeeId(int id)
+        {
+            List<PersonalTraining> lstPT = [];
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PT_BY_EMPLOYEEID_PR" };
+            sqlOperation.AddIntParam("P_Id", id);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var personalTraining = BuildPTWithNames(row);
+                    lstPT.Add(personalTraining);
+                }
+            }
+            return lstPT;
+        }
+
 
         public override void Update(BaseDTO baseDto)
         {
@@ -141,6 +158,24 @@ namespace DataAccess.CRUD
                 Id = (int)row["id"],
                 ClientId = (int)row["client_id"],
                 EmployeeId = (int)row["employee_id"],
+                IsCancelled = (string)row["is_cancelled"],
+                IsPaid = (string)row["is_paid"],
+                TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
+                TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
+                ProgrammedDate = (DateTime)row["programed_date"],
+                HourlyRate = (double)(decimal)row["hourly_rate"]
+            };
+            return personalTrainingToReturn;
+        }
+        private PersonalTraining BuildPTWithNames(Dictionary<string, object> row)
+        {
+            var personalTrainingToReturn = new PersonalTraining()
+            {
+                Id = (int)row["id"],
+                ClientId = (int)row["client_id"],
+                ClientName = (string)row["client_full_name"],
+                EmployeeId = (int)row["employee_id"],
+                EmployeeName = (string)row["employee_full_name"],
                 IsCancelled = (string)row["is_cancelled"],
                 IsPaid = (string)row["is_paid"],
                 TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),

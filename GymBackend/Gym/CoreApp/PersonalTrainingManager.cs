@@ -64,12 +64,24 @@ namespace CoreApp
             var ptCrud = new PersonalTrainingCrudFactory();
             return ptCrud.RetrieveAll<PersonalTraining>();
         }
+        public List<PersonalTraining> RetrieveByEmployeeId(int id)
+        {
+            var ptCrud = new PersonalTrainingCrudFactory();
+            return ptCrud.RetrieveByEmployeeId(id);
+        }
+        public List<PersonalTraining> RetrieveByClientId(int id)
+        {
+            var ptCrud = new PersonalTrainingCrudFactory();
+            return ptCrud.RetrieveByClientId(id);
+        }
 
         public PersonalTraining RetrieveById(int id)
         {
             var ptCrud = new PersonalTrainingCrudFactory();
             return ptCrud.RetrieveById<PersonalTraining>(id);
         }
+
+
 
         // Aquí irían las validaciones
 
@@ -206,7 +218,7 @@ namespace CoreApp
         public bool NoPersonalTrainingInterrupt(PersonalTraining personalTraining)
         {
             var ptCrud = new PersonalTrainingCrudFactory();
-            List<PersonalTraining> lstAllPT = ptCrud.RetrieveByUserId(personalTraining.EmployeeId);
+            List<PersonalTraining> lstAllPT = ptCrud.RetrieveByEmployeeId(personalTraining.EmployeeId);
             List<PersonalTraining> lstSameDate = [];
             foreach (PersonalTraining pt in lstAllPT)
             {
