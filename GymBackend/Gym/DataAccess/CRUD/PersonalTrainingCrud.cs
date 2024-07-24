@@ -90,6 +90,23 @@ namespace DataAccess.CRUD
             return default;
         }
 
+        public List<PersonalTraining> RetrieveByUserId(int employeeId)
+        {
+            List<PersonalTraining> lstPT = [];
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PERSONAL_TRAINING_BYUSERID_PR" };
+            sqlOperation.AddIntParam("P_Id", employeeId);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var personalTraining = BuildPersonalTraining(row);
+                    lstPT.Add(personalTraining);
+                }
+            }
+            return lstPT;
+        }
+
         public override void Update(BaseDTO baseDto)
         {
             // Conversión del DTO base a PersonalTraining

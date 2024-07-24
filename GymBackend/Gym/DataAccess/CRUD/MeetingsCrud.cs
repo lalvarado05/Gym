@@ -18,7 +18,7 @@ namespace DataAccess.CRUD
             {
                 ProcedureName = "CRE_MEETINGS_PR"
             };
-            sqlOperation.AddIntParam("P_Id", meeting.Id);
+            
             sqlOperation.AddIntParam("P_ClientId", meeting.ClientId);
             sqlOperation.AddIntParam("P_EmployeeId", meeting.EmployeeId);
             sqlOperation.AddTimeParam("P_TimeOfEntry", meeting.TimeOfEntry);
@@ -84,6 +84,23 @@ namespace DataAccess.CRUD
                 return retMeeting;
             }
             return default;
+        }
+
+        public List<Meetings> RetrieveByUserId(int employeeId)
+        {
+            List<Meetings> lstGroupMeetings = [];
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_MEETING_BYUSERID_PR" };
+            sqlOperation.AddIntParam("P_Id", employeeId);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var meeting = BuildMeeting(row);
+                    lstGroupMeetings.Add(meeting);
+                }
+            }
+            return lstGroupMeetings;
         }
 
         public override void Update(BaseDTO baseDto)

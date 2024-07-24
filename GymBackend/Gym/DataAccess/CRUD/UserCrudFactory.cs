@@ -133,6 +133,45 @@ namespace DataAccess.CRUD
             return default;
         }
 
+        public List<User> RetrieveByRole(int roleId)
+        {
+            // Crear instructivo para que el dao pueda realizar un create a la base de datos
+            var sqlOperation = new SqlOperation();
+
+            sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
+            sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+            var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            List<User> users = new List<User>();
+
+            foreach (var row in listaResultados)
+            {
+                var readUser = BuildUser(row);
+                users.Add(readUser);
+            }
+
+            return users;
+        }
+        public List<User> RetrieveByRoleWithSchedule(int roleId)
+        {
+            // Crear instructivo para que el dao pueda realizar un create a la base de datos
+            var sqlOperation = new SqlOperation();
+
+            sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
+            sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+            var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            List<User> users = new List<User>();
+
+            foreach (var row in listaResultados)
+            {
+                var readUser = BuildUserWithSchedule(row);
+                users.Add(readUser);
+            }
+
+            return users;
+        }
+
         private User BuildUser(Dictionary<string, object> row)
         {
             var userToReturn = new User
@@ -147,6 +186,26 @@ namespace DataAccess.CRUD
                 Gender = (string)row["gender"],
                 BirthDate = (DateTime)row["birthdate"],
                 Created = (DateTime)row["created"]
+            };
+            return userToReturn;
+        }
+        private User BuildUserWithSchedule(Dictionary<string, object> row)
+        {
+            var userToReturn = new User
+            {
+                Id = (int)row["id"],
+                Name = (string)row["name"],
+                Phone = (string)row["phone"],
+                LastName = (string)row["last_name"],
+                Email = (string)row["email"],
+                LastLogin = (DateTime)row["last_login"],
+                Status = (string)row["status"],
+                Gender = (string)row["gender"],
+                BirthDate = (DateTime)row["birthdate"],
+                Created = (DateTime)row["created"],
+                DaysOfWeek = (string)row["days_of_week"],
+                TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
+                TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"])
             };
             return userToReturn;
         }

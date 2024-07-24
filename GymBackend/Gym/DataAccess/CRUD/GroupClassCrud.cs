@@ -101,6 +101,23 @@ namespace DataAccess.CRUD
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
+        public List<GroupClass> RetrieveByUserId(int id)
+        {
+            List<GroupClass> lstGroupClasses = [];
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_GROUP_CLASSES_BYUSERID_PR" };
+            sqlOperation.AddIntParam("P_Id", id);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var groupClass = BuildGroupClass(row);
+                    lstGroupClasses.Add(groupClass);
+                }
+            }
+            return lstGroupClasses;
+        }
+
         #region Funciones extras
         private GroupClass BuildGroupClass(Dictionary<string, object> row)
         {
