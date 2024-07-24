@@ -23,6 +23,8 @@ public class UserRolManager
 
     public void Delete(UserRole userRole)
     {
+        var urCrud = new UserRoleFactory();
+        urCrud.Delete(userRole);
     }
 
     public List<UserRole> RetrieveAll()
