@@ -31,27 +31,30 @@ public class UserRoleFactory : CrudFactory
 
     public override void Update(BaseDTO baseDto)
     {
-        //Conversion del DTO base a equipment
         var rol = baseDto as Rol;
 
-        //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
         var sqlOperation = new SqlOperation();
 
-        //Set del nombre del procedimiento
         sqlOperation.ProcedureName = "UPD_ROL_PR";
-
-        //Agregamos los parametros
         sqlOperation.AddIntParam("P_Id", rol.Id);
         sqlOperation.AddStringParam("P_Name", rol.Name);
-        sqlOperation.AddStringParam("P_Status", rol.Status);
-
-        //Ir al DAO a ejecutor
+        sqlOperation.AddIntParam("P_Id", rol.Id);
+        sqlOperation.AddStringParam("P_Name", rol.Name);
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
     public override void Delete(BaseDTO baseDto)
     {
-        throw new NotImplementedException();
+        var userRol = baseDto as UserRole;
+
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "DEL_USER_ROL_PR"
+        };
+
+        sqlOperation.AddIntParam("P_Id", userRol.Id);
+
+        _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
     public override T Retrieve<T>()
