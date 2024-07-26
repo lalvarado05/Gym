@@ -27,12 +27,12 @@ namespace DataAccess.CRUD
             sqlOperation.ProcedureName = "CRE_EXE_PR";
 
             //Agregamos los parametros
-            sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
-            sqlOperation.AddStringParam("P_Type", exercise.Type);
             sqlOperation.AddStringParam("P_Name", exercise.Name);
+            sqlOperation.AddStringParam("P_Type", exercise.Type);
+            sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
             sqlOperation.AddIntParam("P_Sets", exercise.Sets);
-            sqlOperation.AddIntParam("P_Weight", exercise.Weight);
             sqlOperation.AddIntParam("P_Reps", exercise.Reps);
+            sqlOperation.AddIntParam("P_Weight", exercise.Weight);
             sqlOperation.AddIntParam("P_Duration", exercise.Duration);
 
             //Ir al DAO a ejecutor
@@ -40,7 +40,23 @@ namespace DataAccess.CRUD
         }
         public override void Update(BaseDTO baseDto)
         {
-            throw new NotImplementedException();
+            var exercise = baseDto as Exercise;
+
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "UPD_EXE_PR"
+            };
+
+            sqlOperation.AddIntParam("P_Id", exercise.Id);
+            sqlOperation.AddStringParam("P_Name", exercise.Name);
+            sqlOperation.AddStringParam("P_Type", exercise.Type);
+            sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
+            sqlOperation.AddIntParam("P_Sets", exercise.Sets);
+            sqlOperation.AddIntParam("P_Reps", exercise.Reps);
+            sqlOperation.AddIntParam("P_Weight", exercise.Weight);
+            sqlOperation.AddIntParam("P_Duration", exercise.Duration);
+
+            _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
         public override void Delete(BaseDTO baseDto)

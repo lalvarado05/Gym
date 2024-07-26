@@ -16,6 +16,12 @@ public class ExerciseManager
         eCrud.Create(exercise);
     }
 
+    public void Update(Exercise exercise)
+    {
+        var eCrud = new ExerciseCrudFactory();
+        eCrud.Update(exercise);
+    }
+
     public void Delete(Exercise exercise)
     {
         var eCrud = new ExerciseCrudFactory();
