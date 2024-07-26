@@ -28,6 +28,26 @@ public class ExerciseController : ControllerBase
 
     #endregion
 
+    #region PUT
+
+    [HttpPut]
+    [Route("Update")]
+    public ActionResult Update(Exercise exercise)
+    {
+        try
+        {
+            var em = new ExerciseManager();
+            em.Update(exercise);
+            return Ok(exercise);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    #endregion
+
     #region DELETE
 
     [HttpDelete]
