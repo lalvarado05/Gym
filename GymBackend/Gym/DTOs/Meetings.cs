@@ -9,4 +9,6 @@ public class Meetings : BaseDTO
     public DateTime ProgrammedDate { get; set; }
     public string IsCancelled { get; set; }
     public DateTime Created { get; set; }
+    public string  ClientName { get; set; }
+    public string EmployeeName { get; set; }
 }

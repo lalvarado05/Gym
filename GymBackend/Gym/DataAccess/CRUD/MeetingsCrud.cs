@@ -18,14 +18,14 @@ public class MeetingsCrudFactory : CrudFactory
         {
             ProcedureName = "CRE_MEETINGS_PR"
         };
-        sqlOperation.AddIntParam("P_Id", meeting.Id);
+        
         sqlOperation.AddIntParam("P_ClientId", meeting.ClientId);
         sqlOperation.AddIntParam("P_EmployeeId", meeting.EmployeeId);
         sqlOperation.AddTimeParam("P_TimeOfEntry", meeting.TimeOfEntry);
         sqlOperation.AddTimeParam("P_TimeOfExit", meeting.TimeOfExit);
         sqlOperation.AddDateTimeParam("P_ProgrammedDate", meeting.ProgrammedDate);
         sqlOperation.AddStringParam("P_IsCancelled", meeting.IsCancelled);
-        sqlOperation.AddDateTimeParam("P_Created", meeting.Created);
+        
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -144,4 +144,44 @@ public class MeetingsCrudFactory : CrudFactory
     }
 
     #endregion
+    public  List<Meetings> RetrieveAllWithName()
+    {
+        var lstMeetings = new List<Meetings>();
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "RET_ALL_MEETINGS_W_NAMES_PR"
+        };
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var meeting = BuildMeetingWithName(row);
+                lstMeetings.Add(meeting);
+            }
+
+        return lstMeetings;
+    }
+
+    private Meetings BuildMeetingWithName(Dictionary<string, object> row)
+    {
+        var meetingToReturn = new Meetings
+        {
+            Id = (int)row["id"], // Asegúrate de que Meetings tenga un campo Id
+            ClientId = (int)row["client_id"],
+            ClientName = (string)row["client_name"],
+            EmployeeId = (int)row["employee_id"],
+            EmployeeName = (string)row["employee_name"],
+            TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
+            TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
+            ProgrammedDate = (DateTime)row["programmed_date"],
+            IsCancelled = (string)row["is_cancelled"],
+            Created = (DateTime)row["created"]
+
+            //Ejemplo para resolver error Unable to cast object of type 'System.TimeSpan' to type 'System.TimeOnly'.
+            //TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]) 
+        };
+        return meetingToReturn;
+    }
+
+
 }

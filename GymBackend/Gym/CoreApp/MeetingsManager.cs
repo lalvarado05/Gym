@@ -9,7 +9,43 @@ public class MeetingsManager
     {
         var mCrud = new MeetingsCrudFactory();
         // Validaciones adicionales
-        mCrud.Create(meeting);
+
+        if (WorksDayOfWeek(meeting))
+        {
+            if (IsInWorkHours(meeting))
+            {
+                if (NoGroupClassInterrupt(meeting))
+                {
+                    if (NoMeasureAppointmentInterrupt(meeting))
+                    {
+                        if (NoPersonalTrainingInterrupt(meeting))
+                        {
+                            mCrud.Create(meeting);
+                        }
+                        else
+                        {
+                            throw new Exception("Lo sentimos, el entrenador ya tiene programada una cita dentro de esa horas");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Lo sentimos, el entrenador ya tiene programada una cita dentro de esa horas");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Lo sentimos, el entrenador da una clase grupal a esta hora");
+                }
+            }
+            else
+            {
+                throw new Exception("Lo sentimos, el entrenador no trabaja a estas horas");
+            }
+        }
+        else
+        {
+            throw new Exception("Lo sentimos, el entrenador no trabaja el dia: " + meeting.ProgrammedDate.DayOfWeek);
+        }
     }
 
     public void Update(Meetings meeting)
@@ -39,8 +75,165 @@ public class MeetingsManager
     // Aquí irían las validaciones
 
     #region Validations
+    public bool WorksDayOfWeek(Meetings meeting)
+    {
+        // Esta funcion verifica que la cita para entrenamiento personal sea en un dia de la semana donde el entrenador si trabaja
+        var sCrud = new ScheduleCrudFactory();
+        var schedule = sCrud.RetrieveScheduleByUserID(meeting.EmployeeId);
+        var DaySchedule = schedule.DaysOfWeek;
+        var DayWeekProg = meeting.ProgrammedDate.DayOfWeek;
+        for (int i = 0; i < DaySchedule.Length; i++)
+        {
+            if (DaySchedule[i] == 'L')
+            {
+                if (DayWeekProg == DayOfWeek.Monday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'K')
+            {
+                if (DayWeekProg == DayOfWeek.Tuesday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'M')
+            {
+                if (DayWeekProg == DayOfWeek.Wednesday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'J')
+            {
+                if (DayWeekProg == DayOfWeek.Thursday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'V')
+            {
+                if (DayWeekProg == DayOfWeek.Friday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'S')
+            {
+                if (DayWeekProg == DayOfWeek.Saturday)
+                {
+                    return true;
+                }
+            }
+            else if (DaySchedule[i] == 'D')
+            {
+                if (DayWeekProg == DayOfWeek.Sunday)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public bool IsInWorkHours(Meetings meeting)
+    {
+        //Esta funcion verifica que la cita de medicion sea dentro de las horas laborales del entrenador
+        var sCrud = new ScheduleCrudFactory();
+        var schedule = sCrud.RetrieveScheduleByUserID(meeting.EmployeeId);
+        TimeOnly start = schedule.TimeOfEntry;
+        TimeOnly end = schedule.TimeOfExit;
+        TimeOnly startProg = meeting.TimeOfEntry;
+        TimeOnly endProg = meeting.TimeOfExit;
+        if (startProg >= start && endProg <= end)
+        {
+            return true;
+        }
+        return false;
+    }
 
-    // Aquí puedes agregar validaciones adicionales para Meetings, como asegurarte de que las fechas y horas sean válidas, etc.
+    public bool NoGroupClassInterrupt(Meetings meeting)
+    {
+        var gcCrud = new GroupClassCrudFactory();
+        List<GroupClass> lstAllGC = gcCrud.RetrieveByUserId(meeting.EmployeeId);
+        List<GroupClass> lstSameDate = [];
+        foreach (GroupClass groupClass in lstAllGC)
+        {
+            if (groupClass.ClassDate.Date == meeting.ProgrammedDate.Date)
+            {
+                lstSameDate.Add(groupClass);
+            }
+        }
+        foreach (GroupClass groupClass in lstSameDate)
+        {
+            if (meeting.TimeOfEntry >= groupClass.StartTime && meeting.TimeOfEntry < groupClass.EndTime)
+            {
+                return false;
+            }
+            else if (meeting.TimeOfExit > groupClass.StartTime && meeting.TimeOfExit <= groupClass.EndTime)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public bool NoMeasureAppointmentInterrupt(Meetings meeting)
+    {
+        var mCrud = new MeetingsCrudFactory();
+        List<Meetings> lstAllMeetings = mCrud.RetrieveByUserId(meeting.EmployeeId);
+        List<Meetings> lstSameDate = [];
+        foreach (Meetings meetingTrainer in lstAllMeetings)
+        {
+            if (meetingTrainer.ProgrammedDate.Date == meeting.ProgrammedDate.Date)
+            {
+                lstSameDate.Add(meetingTrainer);
+            }
+        }
+        foreach (Meetings meetingTrainer in lstSameDate)
+        {
+            if (meeting.TimeOfEntry >= meetingTrainer.TimeOfEntry && meeting.TimeOfEntry < meetingTrainer.TimeOfExit)
+            {
+                return false;
+            }
+            else if (meeting.TimeOfExit > meetingTrainer.TimeOfEntry && meeting.TimeOfExit <= meetingTrainer.TimeOfExit)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool NoPersonalTrainingInterrupt(Meetings meeting)
+    {
+        var ptCrud = new PersonalTrainingCrudFactory();
+        List<PersonalTraining> lstAllPT = ptCrud.RetrieveByEmployeeId(meeting.EmployeeId);
+        List<PersonalTraining> lstSameDate = [];
+        foreach (PersonalTraining pt in lstAllPT)
+        {
+            if (pt.ProgrammedDate.Date == meeting.ProgrammedDate.Date)
+            {
+                lstSameDate.Add(pt);
+            }
+        }
+        foreach (PersonalTraining pt in lstSameDate)
+        {
+            if (meeting.TimeOfEntry >= pt.TimeOfEntry && meeting.TimeOfEntry < pt.TimeOfExit)
+            {
+                return false;
+            }
+            else if (meeting.TimeOfExit > pt.TimeOfEntry && meeting.TimeOfExit <= pt.TimeOfExit)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     #endregion
+
+    public List<Meetings> RetrieveAllWithName()
+    {
+        var mCrud = new MeetingsCrudFactory();
+        return mCrud.RetrieveAllWithName();
+    }
 }
