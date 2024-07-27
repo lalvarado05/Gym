@@ -2,6 +2,7 @@
 using DTOs;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CoreApp;
 
@@ -10,40 +11,82 @@ public class UserManager
     public void Create(User user)
     {
         var uCrud = new UserCrudFactory();
-        uCrud.Create(user);
 
-        var pM = new PasswordManager();
-        var sM = new ScheduleManager();
-        // Hace Retrieve del user creado a traves del Email
-        var userJustCreated = uCrud.RetrieveByEmail(user.Email);
-
-        // Se genera el nuevo password con la info recibida
-        Password newUser = new Password();
-        newUser.PasswordContent = ComputeMD5Hash(user.Password);
-        newUser.UserId = userJustCreated.Id;
-        pM.Create(newUser);
-
-        // Checkea si DaysOfWeek contiene algo (Entrenador)
-        if (user.DaysOfWeek != "")
+        if (IsValidName(user))
         {
-            Schedule newSchedule = new Schedule();
-            newSchedule.DaysOfWeek = user.DaysOfWeek;
-            newSchedule.TimeOfEntry = user.TimeOfEntry;
-            newSchedule.TimeOfExit = user.TimeOfExit;
-            newSchedule.EmployeeId = userJustCreated.Id;
-            sM.Create(newSchedule);
+            if (IsValidLastName(user))
+            {
+                if (IsValidNumber(user))
+                {
+                    if (IsValidEmail(user))
+                    {
+                        if (IsValidGender(user))
+                        {
+                            if (IsAtLeastOneRoleSelected(user))
+                            {
+                                uCrud.Create(user);
+                                var pM = new PasswordManager();
+                                var sM = new ScheduleManager();
+                                // Hace Retrieve del user creado a través del Email
+                                var userJustCreated = uCrud.RetrieveByEmail(user.Email);
+
+                                // Se genera el nuevo password con la info recibida
+                                Password newUser = new Password();
+                                var password = GeneratePassword(8);
+                                newUser.PasswordContent = ComputeMD5Hash(password);
+
+                                newUser.UserId = userJustCreated.Id;
+                                pM.Create(newUser);
+
+                                // Checkea si DaysOfWeek contiene algo (Entrenador)
+                                if (user.DaysOfWeek != "")
+                                {
+                                    Schedule newSchedule = new Schedule();
+                                    newSchedule.DaysOfWeek = user.DaysOfWeek;
+                                    newSchedule.TimeOfEntry = user.TimeOfEntry;
+                                    newSchedule.TimeOfExit = user.TimeOfExit;
+                                    newSchedule.EmployeeId = userJustCreated.Id;
+                                    sM.Create(newSchedule);
+                                }
+                                // Itera a través de los roles, y se genera una instancia de userRole para cada uno de ellos.
+                                foreach (Rol rol in user.ListaRole)
+                                {
+                                    var urCrud = new UserRoleFactory();
+                                    var newUserRole = new UserRole();
+                                    newUserRole.RoleId = rol.Id;
+                                    newUserRole.UserId = userJustCreated.Id;
+                                    urCrud.Create(newUserRole);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: Debe seleccionar al menos un rol.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: Género no válido.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Correo electrónico no válido.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error: Número de teléfono debe tener 8 dígitos.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error: Apellido no válido.");
+            }
         }
-        // Itera a traves de los roles, y se genera una instancia de userRole para cada uno de ellos.
-        foreach(Rol rol in user.ListaRole)
+        else
         {
-            var urCrud = new UserRoleFactory();
-            var newUserRole = new UserRole();
-            newUserRole.RoleId = rol.Id;
-            newUserRole.UserId = userJustCreated.Id;
-            urCrud.Create(newUserRole);
+            Console.WriteLine("Error: Nombre no válido.");
         }
-
-
     }
 
     public void Update(User user)
@@ -98,21 +141,102 @@ public class UserManager
         var uCrud = new UserCrudFactory();
         return uCrud.RetrieveByEmail(email);
     }
+
     public List<User> RetrieveByUserRole(int userId)
+    {
+        var uCrud = new UserCrudFactory();
+        return uCrud.RetrieveByRole(userId);
+    }
+
+    public static string GeneratePassword(int length)
+    {
+        if (length < 8)
         {
-            var uCrud = new UserCrudFactory();
-            return uCrud.RetrieveByRole(userId);
+            throw new ArgumentException("La longitud de la contraseña debe ser al menos 8 caracteres.");
         }
 
-        public List<User> RetrieveByUserRoleWithSchedule(int userId)
+        var letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var digits = "0123456789";
+        var symbols = "!@#$%&*?";
+
+        var random = new Random();
+        var password = new StringBuilder(length);
+
+        // Ensure at least one letter, digit, and symbol
+        password.Append(letters[random.Next(letters.Length)]);
+        password.Append(digits[random.Next(digits.Length)]);
+        password.Append(symbols[random.Next(symbols.Length)]);
+
+        // Fill the rest of the password length with random characters from all sets
+        var allCharacters = letters + digits + symbols;
+        for (int i = 3; i < length; i++)
         {
-            var uCrud = new UserCrudFactory();
-            return uCrud.RetrieveByRoleWithSchedule(userId);
+            password.Append(allCharacters[random.Next(allCharacters.Length)]);
         }
+
+        // Shuffle the result to ensure randomness
+        var array = password.ToString().ToCharArray();
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int j = random.Next(i + 1);
+            char temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return new string(array);
+    }
+
+    public List<User> RetrieveByUserRoleWithSchedule(int userId)
+    {
+        var uCrud = new UserCrudFactory();
+        return uCrud.RetrieveByRoleWithSchedule(userId);
+    }
 
     // Aquí irían las validaciones
 
     #region Validations
+
+    public bool IsValidName(User user)
+    {
+        return !string.IsNullOrWhiteSpace(user.Name);
+    }
+
+    public bool IsValidLastName(User user)
+    {
+        return !string.IsNullOrWhiteSpace(user.LastName);
+    }
+
+    public bool IsValidNumber(User user)
+    {
+        return user.Phone.Length == 8 && Regex.IsMatch(user.Phone, @"^\d{8}$");
+    }
+
+    public bool IsValidEmail(User user)
+    {
+        return Regex.IsMatch(user.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
+
+    public bool IsValidGender(User user)
+    {
+        var validGenders = new HashSet<string> { "M", "F", "O" };
+        return validGenders.Contains(user.Gender);
+    }
+
+    public bool IsAtLeastOneRoleSelected(User user)
+    {
+        return user.ListaRole != null && user.ListaRole.Count > 0;
+    }
+
+    public bool IsValidUser(User user)
+    {
+        return IsValidName(user) &&
+               IsValidLastName(user) &&
+               IsValidNumber(user) &&
+               IsValidEmail(user) &&
+               IsValidGender(user) &&
+               IsAtLeastOneRoleSelected(user);
+    }
 
     #endregion
 }
