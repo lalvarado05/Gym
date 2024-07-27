@@ -52,13 +52,14 @@ public class UserController : ControllerBase
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(User user)
+    public ActionResult Delete(int id)
     {
         try
         {
             var um = new UserManager();
+            var user = new User { Id = id };
             um.Delete(user);
-            return Ok(user);
+            return Ok(new { Id = id });
         }
         catch (Exception ex)
         {
@@ -94,6 +95,22 @@ public class UserController : ControllerBase
         {
             var um = new UserManager();
             return Ok(um.RetrieveById(id));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("RetrieveByEmail")]
+    public ActionResult RetrieveByEmail(string email)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByEmail(email));
         }
         catch (Exception ex)
         {

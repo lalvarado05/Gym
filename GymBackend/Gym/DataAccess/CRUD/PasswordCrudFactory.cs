@@ -24,7 +24,6 @@ namespace DataAccess.CRUD
             // Agregamos los parámetros
             sqlOperation.AddIntParam("P_UserId", password.UserId);
             sqlOperation.AddStringParam("P_PasswordContent", password.PasswordContent);
-            sqlOperation.AddDateTimeParam("P_Created", password.Created);
 
             // Ir al DAO a ejecutar
             _sqlDao.ExecuteProcedure(sqlOperation);

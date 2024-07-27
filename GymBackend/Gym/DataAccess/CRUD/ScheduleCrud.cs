@@ -21,7 +21,6 @@ public class ScheduleCrudFactory : CrudFactory
         sqlOperation.AddStringParam("P_DaysOfWeek", schedule.DaysOfWeek);
         sqlOperation.AddTimeParam("P_TimeOfEntry", schedule.TimeOfEntry);
         sqlOperation.AddTimeParam("P_TimeOfExit", schedule.TimeOfExit);
-        sqlOperation.AddDateTimeParam("P_Created", schedule.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
