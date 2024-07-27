@@ -109,5 +109,19 @@ public class MeetingsController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveAllWithName")]
+    public ActionResult RetrieveAllWithName()
+    {
+        try
+        {
+            var mm = new MeetingsManager();
+            return Ok(mm.RetrieveAllWithName());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
     #endregion
 }
