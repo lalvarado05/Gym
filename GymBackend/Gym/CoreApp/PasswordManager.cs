@@ -36,6 +36,11 @@ namespace CoreApp
             return pCrud.RetrieveById<Password>(id);
         }
 
+        internal bool isValidPassword(string password)
+        {
+            throw new NotImplementedException();
+        }
+
         // Aquí irían las validaciones
 
         #region Validations

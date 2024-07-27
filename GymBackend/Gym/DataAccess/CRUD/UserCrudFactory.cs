@@ -30,27 +30,27 @@ public class UserCrudFactory : CrudFactory
             // Añadir un parámetro de salida para capturar el ID del nuevo usuario
             var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-            // Verificar si se obtuvieron resultados
-            if (result.Count > 0 && result[0].ContainsKey("UserId"))
-            {
-                user.Id = Convert.ToInt32(result[0]["UserId"]);
-            }
+            //// Verificar si se obtuvieron resultados
+            //if (result.Count > 0 && result[0].ContainsKey("UserId"))
+            //{
+            //    user.Id = Convert.ToInt32(result[0]["UserId"]);
+            //}
 
-            if (user.ListaRole.Count > 0) 
-            {
-                foreach (var role in user.ListaRole)
-                {
-                    var sqlRoleOperation = new SqlOperation
-                    {
-                        ProcedureName = "CRE_USER_ROL_PR"
-                    };
+            //if (user.ListaRole.Count > 0) 
+            //{
+            //    foreach (var role in user.ListaRole)
+            //    {
+            //        var sqlRoleOperation = new SqlOperation
+            //        {
+            //            ProcedureName = "CRE_USER_ROL_PR"
+            //        };
 
-                    sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
-                    sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
+            //        sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
+            //        sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
 
-                    _sqlDao.ExecuteProcedure(sqlRoleOperation);
-                }
-            }
+            //        _sqlDao.ExecuteProcedure(sqlRoleOperation);
+            //    }
+            //}
         
     }
 
@@ -207,4 +207,21 @@ public class UserCrudFactory : CrudFactory
 
           return users;
       }
+
+    public User RetrieveByEmail(string email)
+    {
+        var sqlOperation = new SqlOperation();
+
+        sqlOperation.ProcedureName = "RET_USER_BYEMAIL_PR";
+        sqlOperation.AddStringParam("P_Email", email);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+        if (listaResultados.Count > 0)
+        {
+            var row = listaResultados[0];
+            var readUser = BuildUser(row);
+            return readUser;
+        }
+        return default;
+    }
 }
