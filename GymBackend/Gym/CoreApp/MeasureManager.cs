@@ -9,8 +9,9 @@ namespace CoreApp
     {
         public void Create(Measures measure)
         {
+            ValidateMeasure(measure);
+
             var mCrud = new MeasureCrud();
-            // Validaciones adicionales
             mCrud.Create(measure);
         }
 
@@ -41,7 +42,28 @@ namespace CoreApp
         // Aquí irían las validaciones
 
         #region Validations
+        public void ValidateMeasure(Measures measure)
+        {
+            if (measure.ClientId <= 0)
+            {
+                throw new ArgumentException("Por favor elige un cliente.");
+            }
 
+            if (measure.Weight <= 0 || measure.Weight > 500)
+            {
+                throw new ArgumentException("El peso ingresado no es válido. Debe ser un valor entre 0 y 500 kg).");
+            }
+
+            if (measure.Height <= 0 || measure.Height > 272)
+            {
+                throw new ArgumentException("La altura no es válida. Debe ser un valor entre 0 y 272 centímetros.");
+            }
+
+            if (measure.AverageOfFat < 2 || measure.AverageOfFat > 80)
+            {
+                throw new ArgumentException("El porcentaje de grasa no es válido. Debe ser un valor entre 2% y 80%.");
+            }
+        }
         #endregion
     }
 }

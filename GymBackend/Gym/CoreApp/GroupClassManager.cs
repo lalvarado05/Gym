@@ -43,4 +43,10 @@ public class GroupClassManager
     // Aquí puedes agregar validaciones adicionales para GroupClass, como asegurarte de que las fechas y horas sean válidas, etc.
 
     #endregion
+
+    public List<GroupClass> RetrieveAllWithName()
+    {
+        var gcCrud = new GroupClassCrudFactory();
+        return gcCrud.RetrieveAllWithName();
+    }
 }

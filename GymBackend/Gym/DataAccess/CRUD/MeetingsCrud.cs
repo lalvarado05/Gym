@@ -183,5 +183,17 @@ public class MeetingsCrudFactory : CrudFactory
         return meetingToReturn;
     }
 
+    public void CancelMeeting(Meetings meeting)
+    {
+       
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "UPD_CANCEL_MEETING_PR"
+        };
 
+        sqlOperation.AddIntParam("P_Id",meeting.Id); // Asegúrate de que Meetings tenga un campo Id
+      
+
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
 }

@@ -138,4 +138,38 @@ public class GroupClassCrudFactory : CrudFactory
     }
 
     #endregion
+
+    public List<GroupClass> RetrieveAllWithName()
+    {
+        var lstGroupClasses = new List<GroupClass>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_GROUP_CLASSES_W_NAME_PR" };
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var groupClass = BuildGroupClassWithName(row);
+                lstGroupClasses.Add(groupClass);
+            }
+
+        return lstGroupClasses;
+    }
+
+    private GroupClass BuildGroupClassWithName(Dictionary<string, object> row)
+    {
+        var groupClassToReturn = new GroupClass
+
+        {
+            Id = (int)row["id"],
+            EmployeeId = (int)row["employee_id"],
+            ClassName = (string)row["class_name"],
+            MaxCapacity = (int)row["max_capacity"],
+            CurrentRegistered = (int)row["current_registered"],
+            ClassDate = (DateTime)row["class_time"],
+            StartTime = TimeOnly.FromTimeSpan((TimeSpan)row["start_time"]),
+            EndTime = TimeOnly.FromTimeSpan((TimeSpan)row["end_time"]),
+            EmployeeName = (string)row["full_name"]
+        };
+        return groupClassToReturn;
+    }
+
 }
