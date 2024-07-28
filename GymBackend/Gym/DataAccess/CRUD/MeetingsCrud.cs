@@ -18,19 +18,19 @@ public class MeetingsCrudFactory : CrudFactory
         {
             ProcedureName = "CRE_MEETINGS_PR"
         };
-        
+
         sqlOperation.AddIntParam("P_ClientId", meeting.ClientId);
         sqlOperation.AddIntParam("P_EmployeeId", meeting.EmployeeId);
         sqlOperation.AddTimeParam("P_TimeOfEntry", meeting.TimeOfEntry);
         sqlOperation.AddTimeParam("P_TimeOfExit", meeting.TimeOfExit);
         sqlOperation.AddDateTimeParam("P_ProgrammedDate", meeting.ProgrammedDate);
         sqlOperation.AddStringParam("P_IsCancelled", meeting.IsCancelled);
-        
+
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
-  public override void Delete(BaseDTO baseDto)
+    public override void Delete(BaseDTO baseDto)
     {
         var meeting = baseDto as Meetings;
         var sqlOperation = new SqlOperation
@@ -81,27 +81,27 @@ public class MeetingsCrudFactory : CrudFactory
             var retMeeting = (T)Convert.ChangeType(BuildMeeting(row), typeof(T));
             return retMeeting;
         }
-            return default;
+
+        return default;
     }
 
-  public List<Meetings> RetrieveByUserId(int employeeId)
-  {
-      List<Meetings> lstGroupMeetings = [];
-      var sqlOperation = new SqlOperation() { ProcedureName = "RET_MEETING_BYUSERID_PR" };
-      sqlOperation.AddIntParam("P_Id", employeeId);
-      var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-      if (lstResults.Count > 0)
-      {
-          foreach (var row in lstResults)
-          {
-              var meeting = BuildMeeting(row);
-              lstGroupMeetings.Add(meeting);
-          }
-      }
-      return lstGroupMeetings;
-  }
+    public List<Meetings> RetrieveByUserId(int employeeId)
+    {
+        List<Meetings> lstGroupMeetings = [];
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_MEETING_BYUSERID_PR" };
+        sqlOperation.AddIntParam("P_Id", employeeId);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var meeting = BuildMeeting(row);
+                lstGroupMeetings.Add(meeting);
+            }
 
-  public override void Update(BaseDTO baseDto)
+        return lstGroupMeetings;
+    }
+
+    public override void Update(BaseDTO baseDto)
     {
         var meeting = baseDto as Meetings;
 
@@ -144,7 +144,8 @@ public class MeetingsCrudFactory : CrudFactory
     }
 
     #endregion
-    public  List<Meetings> RetrieveAllWithName()
+
+    public List<Meetings> RetrieveAllWithName()
     {
         var lstMeetings = new List<Meetings>();
         var sqlOperation = new SqlOperation
@@ -182,6 +183,4 @@ public class MeetingsCrudFactory : CrudFactory
         };
         return meetingToReturn;
     }
-
-
 }

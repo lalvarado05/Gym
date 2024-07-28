@@ -77,7 +77,7 @@ public class PersonalTrainingCrudFactory : CrudFactory
     {
         var sqlOperation = new SqlOperation { ProcedureName = "RET_PERSONAL_TRAINING_BY_ID_PR" };
         sqlOperation.AddIntParam("P_Id", id);
-            // Ejecutamos contra el DAO
+        // Ejecutamos contra el DAO
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
         {
@@ -115,11 +115,43 @@ public class PersonalTrainingCrudFactory : CrudFactory
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
+    public List<PersonalTraining> RetrieveByClientId(int id)
+    {
+        List<PersonalTraining> lstPT = [];
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_PT_BY_CLIENTID_PR" };
+        sqlOperation.AddIntParam("P_Id", id);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var personalTraining = BuildPTWithNames(row);
+                lstPT.Add(personalTraining);
+            }
+
+        return lstPT;
+    }
+
+    public List<PersonalTraining> RetrieveByEmployeeId(int id)
+    {
+        List<PersonalTraining> lstPT = [];
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_PT_BY_EMPLOYEEID_PR" };
+        sqlOperation.AddIntParam("P_Id", id);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var personalTraining = BuildPTWithNames(row);
+                lstPT.Add(personalTraining);
+            }
+
+        return lstPT;
+    }
+
     #region Funciones extras
 
     private PersonalTraining BuildPersonalTraining(Dictionary<string, object> row)
     {
-        var personalTrainingToReturn = new PersonalTraining()
+        var personalTrainingToReturn = new PersonalTraining
         {
             Id = (int)row["id"],
             ClientId = (int)row["client_id"],
@@ -132,11 +164,11 @@ public class PersonalTrainingCrudFactory : CrudFactory
             HourlyRate = (double)(decimal)row["hourly_rate"]
         };
         return personalTrainingToReturn;
-    } 
-    
+    }
+
     private PersonalTraining BuildPTWithNames(Dictionary<string, object> row)
     {
-        var personalTrainingToReturn = new PersonalTraining()
+        var personalTrainingToReturn = new PersonalTraining
         {
             Id = (int)row["id"],
             ClientId = (int)row["client_id"],
@@ -154,37 +186,4 @@ public class PersonalTrainingCrudFactory : CrudFactory
     }
 
     #endregion
-    
-    public List<PersonalTraining> RetrieveByClientId(int id)
-        {
-            List<PersonalTraining> lstPT = [];
-            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PT_BY_CLIENTID_PR" };
-            sqlOperation.AddIntParam("P_Id", id);
-            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
-            {
-                foreach (var row in lstResults)
-                {
-                    var personalTraining = BuildPTWithNames(row);
-                    lstPT.Add(personalTraining);
-                }
-            }
-            return lstPT;
-        }
-        public List<PersonalTraining> RetrieveByEmployeeId(int id)
-        {
-            List<PersonalTraining> lstPT = [];
-            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PT_BY_EMPLOYEEID_PR" };
-            sqlOperation.AddIntParam("P_Id", id);
-            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
-            {
-                foreach (var row in lstResults)
-                {
-                    var personalTraining = BuildPTWithNames(row);
-                    lstPT.Add(personalTraining);
-                }
-            }
-            return lstPT;
-        }
 }
