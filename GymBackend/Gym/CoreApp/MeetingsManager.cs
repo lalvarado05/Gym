@@ -194,7 +194,20 @@ public class MeetingsManager
     {
         if (meeting.Id == 0)
         {
-            throw new ArgumentException("Por favor elige una cita.");
+            throw new Exception("Por favor elige una cita.");
+        }
+        // Obtener la fecha y hora actual
+        var currentDateTime = DateTime.Now;
+
+        // Combinar ProgrammedDate con TimeOfExit para obtener el rango completo de la cita
+       
+        var meetingEndDateTime = new DateTime(meeting.ProgrammedDate.Year, meeting.ProgrammedDate.Month, meeting.ProgrammedDate.Day,
+                                              meeting.TimeOfExit.Hour, meeting.TimeOfExit.Minute, meeting.TimeOfExit.Second);
+
+        // Verificar si la reunión ha pasado
+        if (currentDateTime > meetingEndDateTime)
+        {
+            throw new Exception("No se puede cancelar una cita que ya ocurrió.");
         }
 
         var mCrud = new MeetingsCrudFactory();
