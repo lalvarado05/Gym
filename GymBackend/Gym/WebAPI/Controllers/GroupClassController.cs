@@ -109,5 +109,20 @@ public class GroupClassController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveAllWithName")]
+    public ActionResult RetrieveAllWithName()
+    {
+        try
+        {
+            var gcManager = new GroupClassManager();
+            return Ok(gcManager.RetrieveAllWithName());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 }

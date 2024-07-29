@@ -51,6 +51,22 @@ public class MeetingsController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Route("CancelMeeting")]
+    public ActionResult CancelMeeting(Meetings meeting)
+    {
+        try
+        {
+            var mm = new MeetingsManager();
+            mm.CancelMeeting(meeting);
+            return Ok(meeting);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 
     #region DELETE

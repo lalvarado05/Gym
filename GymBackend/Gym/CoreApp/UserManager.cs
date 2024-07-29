@@ -64,6 +64,7 @@ public class UserManager
                                     newUserRole.UserId = userJustCreated.Id;
                                     urCrud.Create(newUserRole);
                                 }
+
                             }
                             else
                             {
