@@ -1,6 +1,8 @@
-﻿using DataAccess.CRUD;
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using DataAccess.CRUD;
 using DTOs;
-using System.Collections.Generic;
 
 namespace CoreApp;
 
@@ -96,7 +98,7 @@ public class UserManager
         }
     }
 
-        public void Delete(User user)
+    public void Delete(User user)
         {
             var uCrud = new UserCrudFactory();
             uCrud.Delete(user);
@@ -223,9 +225,48 @@ public class UserManager
 
     // Aquí irían las validaciones
 
-        #region Validations
+    #region Validations
 
-        #endregion
-
+    public bool IsValidName(User user)
+    {
+        return !string.IsNullOrWhiteSpace(user.Name);
     }
+
+    public bool IsValidLastName(User user)
+    {
+        return !string.IsNullOrWhiteSpace(user.LastName);
+    }
+
+    public bool IsValidNumber(User user)
+    {
+        return user.Phone.Length == 8 && Regex.IsMatch(user.Phone, @"^\d{8}$");
+    }
+
+    public bool IsValidEmail(User user)
+    {
+        return Regex.IsMatch(user.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
+
+    public bool IsValidGender(User user)
+    {
+        var validGenders = new HashSet<string> { "M", "F", "O" };
+        return validGenders.Contains(user.Gender);
+    }
+
+    public bool IsAtLeastOneRoleSelected(User user)
+    {
+        return user.ListaRole != null && user.ListaRole.Count > 0;
+    }
+
+    public bool IsValidUser(User user)
+    {
+        return IsValidName(user) &&
+               IsValidLastName(user) &&
+               IsValidNumber(user) &&
+               IsValidEmail(user) &&
+               IsValidGender(user) &&
+               IsAtLeastOneRoleSelected(user);
+    }
+
+    #endregion
 }
