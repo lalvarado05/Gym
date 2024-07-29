@@ -32,29 +32,7 @@ namespace DataAccess.CRUD
 
             // Añadir un parámetro de salida para capturar el ID del nuevo usuario
             var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-
-            // Verificar si se obtuvieron resultados
-            if (result.Count > 0 && result[0].ContainsKey("UserId"))
-            {
-                user.Id = Convert.ToInt32(result[0]["UserId"]);
-            }
-
-            if (user.ListaRole.Count > 0) 
-            {
-                foreach (var role in user.ListaRole)
-                {
-                    var sqlRoleOperation = new SqlOperation
-                    {
-                        ProcedureName = "CRE_USER_ROL_PR"
-                    };
-
-                    sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
-                    sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
-
-                    _sqlDao.ExecuteProcedure(sqlRoleOperation);
-                }
-            }
-        }
+    }
 
         public override void Delete(BaseDTO baseDto)
         {
@@ -132,22 +110,126 @@ namespace DataAccess.CRUD
             return default;
         }
 
-        private User BuildUser(Dictionary<string, object> row)
+    private User BuildUser(Dictionary<string, object> row)
+    {
+        var userToReturn = new User
         {
-            var userToReturn = new User
-            {
-                Id = (int)row["id"],
-                Name = (string)row["name"],
-                Phone = (string)row["phone"],
-                LastName = (string)row["last_name"],
-                Email = (string)row["email"],
-                LastLogin = (DateTime)row["last_login"],
-                Status = (string)row["status"],
-                Gender = (string)row["gender"],
-                BirthDate = (DateTime)row["birthdate"],
-                Created = (DateTime)row["created"]
-            };
-            return userToReturn;
+            Id = (int)row["id"],
+            Name = (string)row["name"],
+            Phone = (string)row["phone"],
+            LastName = (string)row["last_name"],
+            Email = (string)row["email"],
+            LastLogin = (DateTime)row["last_login"],
+            Status = (string)row["status"],
+            Gender = (string)row["gender"],
+            BirthDate = (DateTime)row["birthdate"],
+            Created = (DateTime)row["created"]
+        };
+        return userToReturn;
+    }
+
+    private User BuildUserWithSchedule(Dictionary<string, object> row)
+    {
+        var userToReturn = new User
+        {
+            Id = (int)row["id"],
+            Name = (string)row["name"],
+            Phone = (string)row["phone"],
+            LastName = (string)row["last_name"],
+            Email = (string)row["email"],
+            LastLogin = (DateTime)row["last_login"],
+            Status = (string)row["status"],
+            Gender = (string)row["gender"],
+            BirthDate = (DateTime)row["birthdate"],
+            Created = (DateTime)row["created"],
+            DaysOfWeek = (string)row["days_of_week"],
+            TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
+            TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"])
+        };
+        return userToReturn;
+    }
+
+    public List<User> RetrieveByRoleWithSchedule(int roleId)
+      {
+          // Crear instructivo para que el dao pueda realizar un create a la base de datos
+          var sqlOperation = new SqlOperation();
+
+          sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
+          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+          List<User> users = new List<User>();
+
+          foreach (var row in listaResultados)
+          {
+              var readUser = BuildUserWithSchedule(row);
+              users.Add(readUser);
+          }
+
+          return users;
+      }
+      
+    public List<User> RetrieveByRole(int roleId)
+      {
+          // Crear instructivo para que el dao pueda realizar un create a la base de datos
+          var sqlOperation = new SqlOperation();
+
+          sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
+          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+          List<User> users = new List<User>();
+
+          foreach (var row in listaResultados)
+          {
+              var readUser = BuildUser(row);
+              users.Add(readUser);
+          }
+
+          return users;
+      }
+
+    public User RetrieveByEmail(string email)
+    {
+        var sqlOperation = new SqlOperation();
+
+        sqlOperation.ProcedureName = "RET_USER_BYEMAIL_PR";
+        sqlOperation.AddStringParam("P_Email", email);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+        if (listaResultados.Count > 0)
+        {
+            var row = listaResultados[0];
+            var readUser = BuildUser(row);
+            return readUser;
         }
+        return default;
+    }
+
+    public User RetrieveUserByCredentials(string email, string password)
+    {
+        //Crear instructivo para que el DAO pueda realizar un create en la base de datos.
+        var sqlOperation = new SqlOperation
+        {
+            //Set del nombre del procedimiento
+            ProcedureName = "RET_USER_BY_CREDENTIALS_PR"
+        };
+
+        //Agregamos los parametros
+        sqlOperation.AddStringParam("P_Email", email);
+        sqlOperation.AddStringParam("P_Password", password);
+
+        //Ir al DAO a ejecutar
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+        if (lstResults.Count > 0)
+        {
+            var row = lstResults[0];
+            var retUser = BuildUser(row);
+
+            return retUser;
+        }
+
+        return default;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CoreApp;
 using DTOs;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -103,5 +104,76 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveByEmail")]
+    public ActionResult RetrieveByEmail(string email)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByEmail(email));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("RetrieveByRole")]
+    public ActionResult RetrieveByRole(int id)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByUserRole(id));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("RetrieveByRoleWithSchedule")]
+    public ActionResult RetrieveByRoleWithSchedule(int id)
+    {
+        try
+        {
+            var um = new UserManager();
+            return Ok(um.RetrieveByUserRoleWithSchedule(id));
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Route("LogIn")]
+    public ActionResult RetrieveUserByCredentials(LoginRequest loginRequest)
+    {
+        try
+        {
+            var um = new UserManager();
+            var user = um.RetrieveUserByCredentials(loginRequest.Email, loginRequest.Password);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return StatusCode(404, "User not found");
+            }
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
     #endregion
 }

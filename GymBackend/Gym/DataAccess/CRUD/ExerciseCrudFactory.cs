@@ -100,6 +100,7 @@ namespace DataAccess.CRUD
 
                 Id = (int)row["id"],
                 EquipmentId = (int)row["equipment_id"],
+                EquipmentName = (string)row["equipmentName"],
                 Type = (string)row["type"],
                 Name = (string)row["name"],
                 Sets = (int)row["sets"],
