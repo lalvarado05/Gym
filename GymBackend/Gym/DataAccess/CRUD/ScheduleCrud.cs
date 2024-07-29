@@ -21,7 +21,6 @@ public class ScheduleCrudFactory : CrudFactory
         sqlOperation.AddStringParam("P_DaysOfWeek", schedule.DaysOfWeek);
         sqlOperation.AddTimeParam("P_TimeOfEntry", schedule.TimeOfEntry);
         sqlOperation.AddTimeParam("P_TimeOfExit", schedule.TimeOfExit);
-        sqlOperation.AddDateTimeParam("P_Created", schedule.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -89,6 +88,22 @@ public class ScheduleCrudFactory : CrudFactory
         sqlOperation.AddDateTimeParam("P_Created", schedule.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
+    }
+
+    public Schedule RetrieveScheduleByUserID(int id)
+    {
+        var sqlOperation = new SqlOperation();
+        sqlOperation.ProcedureName = "RET_SCHEDULE_BYUSERID_PR";
+        sqlOperation.AddIntParam("P_EmployeeId", id);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            var row = lstResults[0];
+            var retSchedule = BuildSchedule(row);
+            return retSchedule;
+        }
+
+        return default;
     }
 
     #region Funciones extras

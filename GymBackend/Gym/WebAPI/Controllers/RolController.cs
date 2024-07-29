@@ -32,12 +32,12 @@ public class RolController : Controller
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(int idUsuario, int idRol)
+    public ActionResult Delete(UserRole userRole)
     {
         try
         {
             var rm = new RolManager();
-            rm.Delete(idUsuario, idRol);
+            rm.Delete(userRole.UserId, userRole.RoleId);
             return Ok();
         }
         catch (Exception ex)
@@ -96,5 +96,6 @@ public class RolController : Controller
             return StatusCode(500, ex.Message);
         }
     }
+
     #endregion
 }

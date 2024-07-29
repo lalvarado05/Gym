@@ -21,6 +21,7 @@ public class User : BaseDTO
     public DateTime Created { get; set; }
 
     public List<Rol> ListaRole { get; set; }
+
     
     public string? DaysOfWeek {  get; set; }
 
@@ -29,4 +30,5 @@ public class User : BaseDTO
     public TimeOnly? TimeOfExit { get; set; }
 
     public String? Password { get; set; }
+
 }

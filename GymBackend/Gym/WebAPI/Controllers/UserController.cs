@@ -9,7 +9,6 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-
     #region POSTS
 
     [HttpPost]
@@ -54,13 +53,14 @@ public class UserController : ControllerBase
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(User user)
+    public ActionResult Delete(int id)
     {
         try
         {
             var um = new UserManager();
+            var user = new User { Id = id };
             um.Delete(user);
-            return Ok(user);
+            return Ok(new { Id = id });
         }
         catch (Exception ex)
         {

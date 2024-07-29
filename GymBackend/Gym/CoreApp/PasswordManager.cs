@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using DataAccess.CRUD;
 using DTOs;
@@ -10,7 +10,6 @@ namespace CoreApp
         public void Create(Password password)
         {
             var pCrud = new PasswordCrudFactory();
-
             pCrud.Create(password);
         }
 
@@ -36,7 +35,6 @@ namespace CoreApp
             var id = password.UserId;
             var email = uCrud.RetrieveById<User>(id).Email;
 
-
             if (AlreadyExistPasswords(password)) throw new Exception("La contraseña no puede ser igual a las últimas 5.");
 
             if (ValidarContraseña(beforeMd5Password))
@@ -51,7 +49,6 @@ namespace CoreApp
                     "Revisa tu contraseña: debe tener 8 caracteres, 1 mayúscula, 1 número y 1 carácter especial.");
             }
         }
-
 
         public void Update(Password password)
         {
@@ -117,16 +114,11 @@ namespace CoreApp
 
         public string ComputeMD5Hash(string password)
         {
-            // Create an instance of the MD5CryptoServiceProvider
             using (var md5 = MD5.Create())
             {
-                // Compute the hash from the input string
                 var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Convert the byte array to a hexadecimal string
                 var sb = new StringBuilder();
                 for (var i = 0; i < hashBytes.Length; i++) sb.Append(hashBytes[i].ToString("X2"));
-
                 return sb.ToString();
             }
         }
@@ -157,8 +149,6 @@ namespace CoreApp
 
             return tieneMayuscula && tieneNumero && tieneCaracterEspecial;
         }
-
-        // Aquí irían las validaciones
 
         #region Validations
 

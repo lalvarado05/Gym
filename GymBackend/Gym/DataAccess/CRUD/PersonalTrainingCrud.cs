@@ -1,4 +1,4 @@
-﻿using DataAccess.DAOs;
+using DataAccess.DAOs;
 using DTOs;
 
 namespace DataAccess.CRUD
@@ -16,10 +16,10 @@ namespace DataAccess.CRUD
             var personalTraining = baseDto as PersonalTraining;
 
             // Crear el instructivo para que el DAO pueda realizar un create en la base de datos
-            var sqlOperation = new SqlOperation();
-
-            // Set del nombre del procedimiento
-            sqlOperation.ProcedureName = "CRE_PERSONAL_TRAINING_PR";
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "CRE_PERSONAL_TRAINING_PR"
+            };
 
             // Agregamos los parámetros
             sqlOperation.AddIntParam("P_ClientId", personalTraining.ClientId);
@@ -41,10 +41,10 @@ namespace DataAccess.CRUD
             var personalTraining = baseDto as PersonalTraining;
 
             // Crear el instructivo para que el DAO pueda realizar un delete en la base de datos
-            var sqlOperation = new SqlOperation();
-
-            // Set del nombre del procedimiento
-            sqlOperation.ProcedureName = "DEL_PERSONAL_TRAINING_PR";
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "DEL_PERSONAL_TRAINING_PR"
+            };
 
             // Agregamos los parámetros
             sqlOperation.AddIntParam("P_Id", personalTraining.Id);
@@ -61,24 +61,22 @@ namespace DataAccess.CRUD
         public override List<T> RetrieveAll<T>()
         {
             var lstPersonalTrainings = new List<T>();
-            var sqlOperation = new SqlOperation() { ProcedureName = "RET_ALL_PERSONAL_TRAININGS_PR" };
+            var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_PERSONAL_TRAININGS_PR" };
             var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
             if (lstResults.Count > 0)
-            {
                 foreach (var row in lstResults)
                 {
                     var personalTraining = BuildPersonalTraining(row);
                     lstPersonalTrainings.Add((T)Convert.ChangeType(personalTraining, typeof(T)));
                 }
-            }
+
             return lstPersonalTrainings;
         }
 
         public override T RetrieveById<T>(int id)
         {
-            var sqlOperation = new SqlOperation() { ProcedureName = "RET_PERSONAL_TRAINING_BY_ID_PR" };
+            var sqlOperation = new SqlOperation { ProcedureName = "RET_PERSONAL_TRAINING_BY_ID_PR" };
             sqlOperation.AddIntParam("P_Id", id);
-
             // Ejecutamos contra el DAO
             var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
             if (lstResults.Count > 0)
@@ -87,6 +85,7 @@ namespace DataAccess.CRUD
                 var retPersonalTraining = (T)Convert.ChangeType(BuildPersonalTraining(row), typeof(T));
                 return retPersonalTraining;
             }
+
             return default;
         }
 
@@ -96,10 +95,10 @@ namespace DataAccess.CRUD
             var personalTraining = baseDto as PersonalTraining;
 
             // Crear el instructivo para que el DAO pueda realizar un update en la base de datos
-            var sqlOperation = new SqlOperation();
-
-            // Set del nombre del procedimiento
-            sqlOperation.ProcedureName = "UPD_PERSONAL_TRAINING_PR";
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "UPD_PERSONAL_TRAINING_PR"
+            };
 
             // Agregamos los parámetros
             sqlOperation.AddIntParam("P_Id", personalTraining.Id);
@@ -115,11 +114,59 @@ namespace DataAccess.CRUD
             // Ir al DAO a ejecutar
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
+        
+        public void Cancel(PersonalTraining personalTraining)
+        {
+            // Crear el instructivo para que el DAO pueda realizar un update en la base de datos
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "UPD_CANCEL_PERSONAL_TRAINING"
+            };
+
+            // Agregamos los parámetros
+            sqlOperation.AddIntParam("P_Id", personalTraining.Id);
+   
+            // Ir al DAO a ejecutar
+            _sqlDao.ExecuteProcedure(sqlOperation);
+        }
+        
+        public List<PersonalTraining> RetrieveByClientId(int id)
+        {
+            List<PersonalTraining> lstPT = new List<PersonalTraining>();
+            var sqlOperation = new SqlOperation { ProcedureName = "RET_PT_BY_CLIENTID_PR" };
+            sqlOperation.AddIntParam("P_Id", id);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+                foreach (var row in lstResults)
+                {
+                    var personalTraining = BuildPTWithNames(row);
+                    lstPT.Add(personalTraining);
+                }
+
+            return lstPT;
+        }
+
+        public List<PersonalTraining> RetrieveByEmployeeId(int id)
+        {
+            List<PersonalTraining> lstPT = new List<PersonalTraining>();
+            var sqlOperation = new SqlOperation { ProcedureName = "RET_PT_BY_EMPLOYEEID_PR" };
+            sqlOperation.AddIntParam("P_Id", id);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+                foreach (var row in lstResults)
+                {
+                    var personalTraining = BuildPTWithNames(row);
+                    lstPT.Add(personalTraining);
+                }
+
+            return lstPT;
+        }
 
         #region Funciones extras
+
         private PersonalTraining BuildPersonalTraining(Dictionary<string, object> row)
         {
-            var personalTrainingToReturn = new PersonalTraining()
+            var personalTrainingToReturn = new PersonalTraining
             {
                 Id = (int)row["id"],
                 ClientId = (int)row["client_id"],
@@ -128,11 +175,33 @@ namespace DataAccess.CRUD
                 IsPaid = (string)row["is_paid"],
                 TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
                 TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
-                ProgrammedDate = (DateTime)row["programed_date"],
+                ProgrammedDate = (DateTime)row["programmed_date"],
                 HourlyRate = (double)(decimal)row["hourly_rate"]
             };
             return personalTrainingToReturn;
         }
+
+        private PersonalTraining BuildPTWithNames(Dictionary<string, object> row)
+        {
+            var personalTrainingToReturn = new PersonalTraining
+            {
+                Id = (int)row["id"],
+                ClientId = (int)row["client_id"],
+                ClientName = (string)row["client_full_name"],
+                EmployeeId = (int)row["employee_id"],
+                EmployeeName = (string)row["employee_full_name"],
+                IsCancelled = (string)row["is_cancelled"],
+                IsPaid = (string)row["is_paid"],
+                TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
+                TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
+                ProgrammedDate = (DateTime)row["programmed_date"],
+                HourlyRate = (double)(decimal)row["hourly_rate"]
+            };
+            return personalTrainingToReturn;
+        }
+
         #endregion
+
+        
     }
 }
