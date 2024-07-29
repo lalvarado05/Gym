@@ -51,6 +51,22 @@ public class PersonalTrainingController : ControllerBase
         }
     }
 
+    [HttpPut]
+    [Route("Cancel")]
+    public ActionResult Cancel(PersonalTraining personalTraining)
+    {
+        try
+        {
+            var ptManager = new PersonalTrainingManager();
+            ptManager.Cancel(personalTraining);
+            return Ok(personalTraining);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 
     #region DELETE

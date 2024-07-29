@@ -187,4 +187,20 @@ public class PersonalTrainingCrudFactory : CrudFactory
             }
             return lstPT;
         }
+
+    public void Cancel(PersonalTraining personalTraining)
+    {
+        
+        // Crear el instructivo para que el DAO pueda realizar un update en la base de datos
+        var sqlOperation = new SqlOperation();
+
+        // Set del nombre del procedimiento
+        sqlOperation.ProcedureName = "UPD_CANCEL_PERSONAL_TRAINING";
+
+        // Agregamos los parámetros
+        sqlOperation.AddIntParam("P_Id", personalTraining.Id);
+   
+        // Ir al DAO a ejecutar
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
 }
