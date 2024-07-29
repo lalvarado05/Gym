@@ -143,6 +143,10 @@ public class UserManager
     public User RetrieveByEmail(string email)
     {
         var uCrud = new UserCrudFactory();
+        if (uCrud.RetrieveByEmail(email) == null)
+        {
+            throw new Exception("Email no encontrado");
+        }
         return uCrud.RetrieveByEmail(email);
     }
 

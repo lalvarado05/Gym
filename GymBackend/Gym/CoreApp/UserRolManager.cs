@@ -8,7 +8,10 @@ public class UserRolManager
     public void Create(UserRole userRole)
     {
         if (AlreadyHave(userRole)) throw new Exception("El usuario ya tiene asigando el rol que se ingreso");
-
+        if (RetrieveById(userRole.UserId) == null)
+        {
+            throw new Exception("El Usuario ingresado no existe");
+        }
         var urCrud = new UserRoleFactory();
         urCrud.Create(userRole);
     }

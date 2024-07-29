@@ -87,6 +87,22 @@ public class PasswordController : ControllerBase
         }
     }
 
+    [HttpPost]
+    [Route("ChangePassword")]
+    public ActionResult ChangePassword(Password password)
+    {
+        try
+        {
+            var pm = new PasswordManager();
+            pm.ChangePassword(password);
+            return Ok(password);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 
     #region GETS
