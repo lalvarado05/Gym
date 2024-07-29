@@ -96,5 +96,6 @@ public class RolController : Controller
             return StatusCode(500, ex.Message);
         }
     }
+
     #endregion
 }

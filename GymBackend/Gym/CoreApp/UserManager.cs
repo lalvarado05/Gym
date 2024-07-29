@@ -1,14 +1,15 @@
-﻿using DataAccess.CRUD;
-using DTOs;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using DataAccess.CRUD;
+using DTOs;
 
 namespace CoreApp;
 
 public class UserManager
 {
-    public void Create(User user)
+    //aca el async
+    public async void Create(User user)
     {
         var uCrud = new UserCrudFactory();
 
@@ -31,25 +32,31 @@ public class UserManager
                                 var userJustCreated = uCrud.RetrieveByEmail(user.Email);
 
                                 // Se genera el nuevo password con la info recibida
-                                Password newUser = new Password();
+                                var newUser = new Password();
                                 var password = GeneratePassword(8);
+                                
                                 newUser.PasswordContent = ComputeMD5Hash(password);
 
                                 newUser.UserId = userJustCreated.Id;
                                 pM.Create(newUser);
+                                //Envio de correo :) verificar cuando se haga PR poner despues del create y hacer la funcion async
+                                var emailSender = new SendGridEmail();
+                                await emailSender.SendEmailAsync(user.Email, password);
 
                                 // Checkea si DaysOfWeek contiene algo (Entrenador)
                                 if (user.DaysOfWeek != "")
                                 {
-                                    Schedule newSchedule = new Schedule();
+                                    var newSchedule = new Schedule();
                                     newSchedule.DaysOfWeek = user.DaysOfWeek;
                                     newSchedule.TimeOfEntry = user.TimeOfEntry;
                                     newSchedule.TimeOfExit = user.TimeOfExit;
                                     newSchedule.EmployeeId = userJustCreated.Id;
                                     sM.Create(newSchedule);
+
                                 }
+
                                 // Itera a través de los roles, y se genera una instancia de userRole para cada uno de ellos.
-                                foreach (Rol rol in user.ListaRole)
+                                foreach (var rol in user.ListaRole)
                                 {
                                     var urCrud = new UserRoleFactory();
                                     var newUserRole = new UserRole();
@@ -121,17 +128,14 @@ public class UserManager
     public string ComputeMD5Hash(string password)
     {
         // Create an instance of the MD5CryptoServiceProvider
-        using (MD5 md5 = MD5.Create())
+        using (var md5 = MD5.Create())
         {
             // Compute the hash from the input string
-            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
 
             // Convert the byte array to a hexadecimal string
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
-            {
-                sb.Append(hashBytes[i].ToString("X2"));
-            }
+            var sb = new StringBuilder();
+            for (var i = 0; i < hashBytes.Length; i++) sb.Append(hashBytes[i].ToString("X2"));
 
             return sb.ToString();
         }
@@ -140,6 +144,10 @@ public class UserManager
     public User RetrieveByEmail(string email)
     {
         var uCrud = new UserCrudFactory();
+        if (uCrud.RetrieveByEmail(email) == null)
+        {
+            throw new Exception("Email no encontrado");
+        }
         return uCrud.RetrieveByEmail(email);
     }
 
@@ -151,10 +159,7 @@ public class UserManager
 
     public static string GeneratePassword(int length)
     {
-        if (length < 8)
-        {
-            throw new ArgumentException("La longitud de la contraseña debe ser al menos 8 caracteres.");
-        }
+        if (length < 8) throw new ArgumentException("La longitud de la contraseña debe ser al menos 8 caracteres.");
 
         var letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var digits = "0123456789";
@@ -170,17 +175,14 @@ public class UserManager
 
         // Fill the rest of the password length with random characters from all sets
         var allCharacters = letters + digits + symbols;
-        for (int i = 3; i < length; i++)
-        {
-            password.Append(allCharacters[random.Next(allCharacters.Length)]);
-        }
+        for (var i = 3; i < length; i++) password.Append(allCharacters[random.Next(allCharacters.Length)]);
 
         // Shuffle the result to ensure randomness
         var array = password.ToString().ToCharArray();
-        for (int i = array.Length - 1; i > 0; i--)
+        for (var i = array.Length - 1; i > 0; i--)
         {
-            int j = random.Next(i + 1);
-            char temp = array[i];
+            var j = random.Next(i + 1);
+            var temp = array[i];
             array[i] = array[j];
             array[j] = temp;
         }

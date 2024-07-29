@@ -1,4 +1,4 @@
-﻿using DataAccess.CRUD;
+using DataAccess.CRUD;
 using DTOs;
 
 namespace CoreApp;
@@ -18,13 +18,22 @@ public class PersonalTrainingManager
         ptCrud.Create(personalTraining);
     }
 
-
     public void Update(PersonalTraining personalTraining)
     {
         var ptCrud = new PersonalTrainingCrudFactory();
         ptCrud.Update(personalTraining);
     }
+    
+     public void Cancel(PersonalTraining personalTraining)
+    {
+        // Validar el objeto antes de proceder con la cancelación
+        ValidateCancelPersonalTraining(personalTraining);
 
+        // Si todas las validaciones pasan, proceder con la cancelación
+        var ptCrud = new PersonalTrainingCrudFactory();
+        ptCrud.Cancel(personalTraining);
+    }
+  
     public void Delete(PersonalTraining personalTraining)
     {
         var ptCrud = new PersonalTrainingCrudFactory();
@@ -48,16 +57,15 @@ public class PersonalTrainingManager
         var ptCrud = new PersonalTrainingCrudFactory();
         return ptCrud.RetrieveByEmployeeId(id);
     }
+
     public List<PersonalTraining> RetrieveByClientId(int id)
     {
         var ptCrud = new PersonalTrainingCrudFactory();
         return ptCrud.RetrieveByClientId(id);
     }
 
-
-    // Aquí irían las validaciones
-
     #region Validations
+
     private void ValidatePersonalTraining(PersonalTraining personalTraining)
     {
         // Validación: EmployeeId debe ser válido (distinto de cero)
@@ -85,12 +93,11 @@ public class PersonalTrainingManager
         {
             throw new Exception("La fecha programada debe ser al menos un día en el futuro.");
         }
+
         if (personalTraining.HourlyRate < 2500)
         {
-            throw new Exception("La tarifa por hora mínima ese de ₡2500, por favor ingresa la tarifa acordada con el entrenador.");
+            throw new Exception("La tarifa por hora mínima es de ₡2500, por favor ingresa la tarifa acordada con el entrenador.");
         }
-
-
     }
 
     private bool IsTrainingScheduleValid(PersonalTraining personalTraining)
@@ -122,8 +129,10 @@ public class PersonalTrainingManager
 
         return true;
     }
-    private bool WorksDayOfWeek(PersonalTraining personalTraining)
+
+    public bool WorksDayOfWeek(PersonalTraining personalTraining)
     {
+        // Esta funcion verifica que la cita para entrenamiento personal sea en un dia de la semana donde el entrenador si trabaja
         var sCrud = new ScheduleCrudFactory();
         var schedule = sCrud.RetrieveScheduleByUserID(personalTraining.EmployeeId);
         var DaySchedule = schedule.DaysOfWeek;
@@ -147,14 +156,15 @@ public class PersonalTrainingManager
 
     public bool IsInWorkHours(PersonalTraining personalTraining)
     {
+        // Esta funcion verifica que el entrenamiento personal sea dentro de las horas laborales del entrenador
         var sCrud = new ScheduleCrudFactory();
         var schedule = sCrud.RetrieveScheduleByUserID(personalTraining.EmployeeId);
-        TimeOnly start = schedule.TimeOfEntry;
-        TimeOnly end = schedule.TimeOfExit;
-        TimeOnly startProg = personalTraining.TimeOfEntry;
-        TimeOnly endProg = personalTraining.TimeOfExit;
-
-        return startProg >= start && endProg <= end;
+        var start = schedule.TimeOfEntry;
+        var end = schedule.TimeOfExit;
+        var startProg = personalTraining.TimeOfEntry;
+        var endProg = personalTraining.TimeOfExit;
+        if (startProg >= start && endProg <= end) return true;
+        return false;
     }
 
     public bool NoGroupClassInterrupt(PersonalTraining personalTraining)
@@ -189,13 +199,12 @@ public class PersonalTrainingManager
         return start1 < end2 && end1 > start2;
     }
 
-
     private void ValidateCancelPersonalTraining(PersonalTraining personalTraining)
     {
         // Validación: Id debe ser válido (distinto de cero)
         if (personalTraining.Id <= 0)
         {
-            throw new Exception("Por favor selecciona un cita a cancelar");
+            throw new Exception("Por favor selecciona una cita a cancelar");
         }
 
         // Obtener la fecha y hora actual
@@ -218,15 +227,6 @@ public class PersonalTrainingManager
         }
     }
 
+  
     #endregion
-
-    public void Cancel(PersonalTraining personalTraining)
-    {
-        // Validar el objeto antes de proceder con la cancelación
-        ValidateCancelPersonalTraining(personalTraining);
-
-        // Si todas las validaciones pasan, proceder con la cancelación
-        var ptCrud = new PersonalTrainingCrudFactory();
-        ptCrud.Cancel(personalTraining);
-    }
 }

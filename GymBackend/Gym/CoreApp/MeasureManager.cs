@@ -1,12 +1,10 @@
 ﻿using DataAccess.CRUD;
 using DTOs;
-using System;
-using System.Collections.Generic;
 
-namespace CoreApp
+namespace CoreApp;
+
+public class MeasuresManager
 {
-    public class MeasuresManager
-    {
         public void Create(Measures measure)
         {
             ValidateMeasure(measure);
@@ -65,5 +63,4 @@ namespace CoreApp
             }
         }
         #endregion
-    }
 }

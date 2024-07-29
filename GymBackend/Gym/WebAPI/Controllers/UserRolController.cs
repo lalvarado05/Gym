@@ -28,6 +28,28 @@ public class UserRolController : ControllerBase
 
     #endregion
 
+    #region DELETE
+
+    [HttpDelete]
+    [Route("Delete")]
+    public ActionResult Delete(int id)
+    {
+        try
+        {
+            var urm = new UserRolManager();
+            // Crear un DTO vacío para la eliminación
+            var userRole = new UserRole { Id = id };
+            urm.Delete(userRole);
+            return Ok(new { Id = id });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    #endregion
+
     #region GETS
 
     [HttpGet]
@@ -60,26 +82,5 @@ public class UserRolController : ControllerBase
         }
     }
 
-    #endregion
-
-    #region DELETE
-
-    [HttpDelete]
-    [Route("Delete")]
-    public ActionResult Delete(int id)
-    {
-        try
-        {
-            var urm = new UserRolManager();
-            // Crear un DTO vacío para la eliminación
-            var userRole = new UserRole { Id = id };
-            urm.Delete(userRole);
-            return Ok(new { Id = id });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
     #endregion
 }

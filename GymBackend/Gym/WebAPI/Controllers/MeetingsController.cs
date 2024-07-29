@@ -139,5 +139,6 @@ public class MeetingsController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
     #endregion
 }

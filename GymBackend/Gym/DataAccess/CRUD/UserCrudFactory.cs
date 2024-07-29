@@ -16,42 +16,41 @@ public class UserCrudFactory : CrudFactory
 
         var sqlOperation = new SqlOperation
         {
-          ProcedureName = "CRE_USER_PR"
+            ProcedureName = "CRE_USER_PR"
         };
 
-            sqlOperation.AddStringParam("P_Name", user.Name);
-            sqlOperation.AddStringParam("P_LastName", user.LastName);
-            sqlOperation.AddStringParam("P_Phone", user.Phone);
-            sqlOperation.AddStringParam("P_Email", user.Email);
-            sqlOperation.AddStringParam("P_Status", user.Status);
-            sqlOperation.AddStringParam("P_Gender", user.Gender);
-            sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
+        sqlOperation.AddStringParam("P_Name", user.Name);
+        sqlOperation.AddStringParam("P_LastName", user.LastName);
+        sqlOperation.AddStringParam("P_Phone", user.Phone);
+        sqlOperation.AddStringParam("P_Email", user.Email);
+        sqlOperation.AddStringParam("P_Status", user.Status);
+        sqlOperation.AddStringParam("P_Gender", user.Gender);
+        sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
 
-            // Añadir un parámetro de salida para capturar el ID del nuevo usuario
-            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        // Añadir un parámetro de salida para capturar el ID del nuevo usuario
+        var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-            //// Verificar si se obtuvieron resultados
-            //if (result.Count > 0 && result[0].ContainsKey("UserId"))
-            //{
-            //    user.Id = Convert.ToInt32(result[0]["UserId"]);
-            //}
+        //// Verificar si se obtuvieron resultados
+        //if (result.Count > 0 && result[0].ContainsKey("UserId"))
+        //{
+        //    user.Id = Convert.ToInt32(result[0]["UserId"]);
+        //}
 
-            //if (user.ListaRole.Count > 0) 
-            //{
-            //    foreach (var role in user.ListaRole)
-            //    {
-            //        var sqlRoleOperation = new SqlOperation
-            //        {
-            //            ProcedureName = "CRE_USER_ROL_PR"
-            //        };
+        //if (user.ListaRole.Count > 0) 
+        //{
+        //    foreach (var role in user.ListaRole)
+        //    {
+        //        var sqlRoleOperation = new SqlOperation
+        //        {
+        //            ProcedureName = "CRE_USER_ROL_PR"
+        //        };
 
-            //        sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
-            //        sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
+        //        sqlRoleOperation.AddIntParam("@P_User_ID", user.Id);
+        //        sqlRoleOperation.AddIntParam("@P_Rol_ID", role.Id);
 
-            //        _sqlDao.ExecuteProcedure(sqlRoleOperation);
-            //    }
-            //}
-        
+        //        _sqlDao.ExecuteProcedure(sqlRoleOperation);
+        //    }
+        //}
     }
 
 
@@ -126,7 +125,8 @@ public class UserCrudFactory : CrudFactory
             var readUser = (T)Convert.ChangeType(BuildUser(row), typeof(T));
             return readUser;
         }
-                return default;
+
+        return default;
     }
 
     private User BuildUser(Dictionary<string, object> row)
@@ -168,45 +168,45 @@ public class UserCrudFactory : CrudFactory
         return userToReturn;
     }
 
-      public List<User> RetrieveByRoleWithSchedule(int roleId)
-      {
-          // Crear instructivo para que el dao pueda realizar un create a la base de datos
-          var sqlOperation = new SqlOperation();
+    public List<User> RetrieveByRoleWithSchedule(int roleId)
+    {
+        // Crear instructivo para que el dao pueda realizar un create a la base de datos
+        var sqlOperation = new SqlOperation();
 
-          sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
-          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
-          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
+        sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-          List<User> users = new List<User>();
+        var users = new List<User>();
 
-          foreach (var row in listaResultados)
-          {
-              var readUser = BuildUserWithSchedule(row);
-              users.Add(readUser);
-          }
+        foreach (var row in listaResultados)
+        {
+            var readUser = BuildUserWithSchedule(row);
+            users.Add(readUser);
+        }
 
-          return users;
-      }
-      
-      public List<User> RetrieveByRole(int roleId)
-      {
-          // Crear instructivo para que el dao pueda realizar un create a la base de datos
-          var sqlOperation = new SqlOperation();
+        return users;
+    }
 
-          sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
-          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
-          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+    public List<User> RetrieveByRole(int roleId)
+    {
+        // Crear instructivo para que el dao pueda realizar un create a la base de datos
+        var sqlOperation = new SqlOperation();
 
-          List<User> users = new List<User>();
+        sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
+        sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-          foreach (var row in listaResultados)
-          {
-              var readUser = BuildUser(row);
-              users.Add(readUser);
-          }
+        var users = new List<User>();
 
-          return users;
-      }
+        foreach (var row in listaResultados)
+        {
+            var readUser = BuildUser(row);
+            users.Add(readUser);
+        }
+
+        return users;
+    }
 
     public User RetrieveByEmail(string email)
     {
@@ -222,6 +222,7 @@ public class UserCrudFactory : CrudFactory
             var readUser = BuildUser(row);
             return readUser;
         }
+
         return default;
     }
 }
