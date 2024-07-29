@@ -168,7 +168,7 @@ namespace CoreApp
         public bool NoPersonalTrainingInterrupt(Meetings meeting)
         {
             var ptCrud = new PersonalTrainingCrudFactory();
-            var lstAllPT = ptCrud.RetrieveByEmployeeId(meeting.EmployeeId);
+            List<PersonalTraining> lstAllPT = ptCrud.RetrieveByEmployeeId(meeting.EmployeeId);
 
             return !lstAllPT.Any(pt =>
                 pt.ProgrammedDate.Date == meeting.ProgrammedDate.Date &&
