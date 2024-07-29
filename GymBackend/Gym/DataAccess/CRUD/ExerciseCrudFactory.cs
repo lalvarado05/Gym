@@ -87,20 +87,23 @@ public class ExerciseCrudFactory : CrudFactory
 
         return lstExercises;
     }
-
-    private Exercise BuildExercise(Dictionary<string, object> row)
+		
+	 	private Exercise BuildExercise(Dictionary<string, object> row)
     {
         var exerciseToReturn = new Exercise
         {
-            Id = (int)row["id"],
-            EquipmentId = (int)row["equipment_id"],
-            Type = (string)row["type"],
-            Name = (string)row["name"],
-            Sets = (int)row["sets"],
-            Weight = (int)row["weight"],
-            Reps = (int)row["reps"],
-            Duration = (int)row["duration"]
-        };
-        return exerciseToReturn;
-    }
+            		Id = (int)row["id"],
+                EquipmentId = (int)row["equipment_id"],
+                EquipmentName = (string)row["equipmentName"],
+                Type = (string)row["type"],
+                Name = (string)row["name"],
+                Sets = (int)row["sets"],
+                Weight = (int)row["weight"],
+                Reps = (int)row["reps"],
+                Duration = (int)row["duration"]
+            };
+            return exerciseToReturn;
+        }
 }
+
+  

@@ -18,7 +18,9 @@ public class SendGridEmail
         var to = new EmailAddress(toEmail);
         var subject = "Clave Temporal de Silueta Club Fitness";
         var plainTextContent = "Clave temporal enviada por Silueta Club Fitness";
-        var htmlContent = "<h3>Se te ha enviado tu clave temporal, no olvides cambiarla.</h3>"+ "<strong>"+ "Clave temporal: "  +password+"</strong>";
+
+        var htmlContent = "<h3>Se te ha enviado tu clave temporal, no olvides cambiarla.</h3>" + "<strong>" + "Clave temporal: " + password + "</strong>";
+
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
         var response = await client.SendEmailAsync(msg);
     }
@@ -33,7 +35,8 @@ public class SendGridEmail
         var plainTextContent = "Nueva clave registrada en Silueta Club Fitness";
         var htmlContent = "<h3>Se ha cambiado tu clave, si no fuiste tú por favor verifica.</h3>";
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-        var response =  client.SendEmailAsync(msg);
+
+        var response = client.SendEmailAsync(msg);
     }
 }
 

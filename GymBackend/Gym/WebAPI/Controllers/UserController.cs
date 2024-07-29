@@ -1,5 +1,6 @@
 ﻿using CoreApp;
 using DTOs;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -151,5 +152,28 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpPost]
+    [Route("LogIn")]
+    public ActionResult RetrieveUserByCredentials(LoginRequest loginRequest)
+    {
+        try
+        {
+            var um = new UserManager();
+            var user = um.RetrieveUserByCredentials(loginRequest.Email, loginRequest.Password);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return StatusCode(404, "User not found");
+            }
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
     #endregion
 }

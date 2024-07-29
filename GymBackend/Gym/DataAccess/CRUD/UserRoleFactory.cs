@@ -31,25 +31,26 @@ public class UserRoleFactory : CrudFactory
 
     public override void Update(BaseDTO baseDto)
     {
-        ////Conversion del DTO base a equipment
-        //var rol = baseDto as Rol;
+        //Conversion del DTO base a product
+        //var userRole = baseDto as UserRole;
 
-        ////Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
+        //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
         //var sqlOperation = new SqlOperation();
 
-        ////Set del nombre del procedimiento
-        //sqlOperation.ProcedureName = "UPD_ROL_PR";
+        //Set del nombre del procedimiento
+        //sqlOperation.ProcedureName = "UPD_USER_ROL_PR";
 
-        ////Agregamos los parametros
-        //sqlOperation.AddIntParam("P_Id", rol.Id);
-        //sqlOperation.AddStringParam("P_Name", rol.Name);
+        //Agregamos los parametros
+        //sqlOperation.AddIntParam("P_User_ID", userRole.UserId);
+        //sqlOperation.AddIntParam("P_Rol_ID", userRole.RoleId);
 
-        ////Ir al DAO a ejecutor
+        //Ir al DAO a ejecutor
         //_sqlDao.ExecuteProcedure(sqlOperation);
     }
 
     public override void Delete(BaseDTO baseDto)
     {
+
         var userRol = baseDto as UserRole;
 
         var sqlOperation = new SqlOperation
@@ -58,6 +59,7 @@ public class UserRoleFactory : CrudFactory
         };
 
         sqlOperation.AddIntParam("P_Id", userRol.Id);
+
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -84,6 +86,24 @@ public class UserRoleFactory : CrudFactory
         return default;
     }
 
+    public List<Rol> RetrieveByUserId(int userId)
+    {
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_ROLES_BY_IDUSER_PR" };
+        sqlOperation.AddIntParam("@P_ID_User", userId);
+
+        //Ejecutamos contra el DAO
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        
+        var roles = new List<Rol>();
+        foreach (var row in lstResults)
+        {
+            var readRole = BuildRole(row);
+            roles.Add(readRole);
+        }
+
+        return roles;
+    }
+
     public override List<T> RetrieveAll<T>()
     {
         var lstUserRole = new List<T>();
@@ -108,5 +128,15 @@ public class UserRoleFactory : CrudFactory
             RoleId = (int)row["rol_id"]
         };
         return userRoleToReturn;
+    }
+
+    private Rol BuildRole(Dictionary<string, object> row)
+    {
+        var roleToReturn = new Rol
+        {
+            Id = (int)row["id"],
+            Name = (string)row["name"]
+        };
+        return roleToReturn;
     }
 }

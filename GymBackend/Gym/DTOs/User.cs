@@ -3,7 +3,9 @@
 public class User : BaseDTO
 {
     public string Name { get; set; }
+
     public string LastName { get; set; }
+
     public string Phone { get; set; }
 
     public string Email { get; set; }
@@ -20,8 +22,13 @@ public class User : BaseDTO
 
     public List<Rol> ListaRole { get; set; }
 
-    public string DaysOfWeek { get; set; }
-    public TimeOnly TimeOfEntry { get; set; }
-    public TimeOnly TimeOfExit { get; set; }
-    public string Password { get; set; }
+    
+    public string? DaysOfWeek {  get; set; }
+
+    public TimeOnly? TimeOfEntry { get; set; }
+
+    public TimeOnly? TimeOfExit { get; set; }
+
+    public String? Password { get; set; }
+
 }
