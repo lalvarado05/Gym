@@ -175,7 +175,7 @@ namespace DataAccess.CRUD
                 IsPaid = (string)row["is_paid"],
                 TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
                 TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
-                ProgrammedDate = (DateTime)row["programmed_date"],
+                ProgrammedDate = (DateTime)row["programed_date"],
                 HourlyRate = (double)(decimal)row["hourly_rate"]
             };
             return personalTrainingToReturn;
@@ -194,7 +194,7 @@ namespace DataAccess.CRUD
                 IsPaid = (string)row["is_paid"],
                 TimeOfEntry = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_entry"]),
                 TimeOfExit = TimeOnly.FromTimeSpan((TimeSpan)row["time_of_exit"]),
-                ProgrammedDate = (DateTime)row["programmed_date"],
+                ProgrammedDate = (DateTime)row["programed_date"],
                 HourlyRate = (double)(decimal)row["hourly_rate"]
             };
             return personalTrainingToReturn;
