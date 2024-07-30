@@ -124,5 +124,21 @@ public class GroupClassController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveAvailableWithName")]
+    public ActionResult RetrieveAvailableWithName()
+    {
+        try
+        {
+            var gcManager = new GroupClassManager();
+            List<GroupClass> AvailableClasses = gcManager.RetrieveAvailableWithName();
+            return Ok(AvailableClasses);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 }

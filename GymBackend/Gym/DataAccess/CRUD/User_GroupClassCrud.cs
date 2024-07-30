@@ -45,12 +45,34 @@ public class UserGroupClassCrudFactory : CrudFactory
         var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_USER_GROUP_CLASSES_PR" };
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
+        {
             foreach (var row in lstResults)
             {
                 var userGroupClass = BuildUserGroupClass(row);
                 lstUserGroupClasses.Add((T)Convert.ChangeType(userGroupClass, typeof(T)));
             }
 
+        }
+
+
+        return lstUserGroupClasses;
+    }
+
+    public List<UserGroupClass> RetrieveByGroupClassId(int groupClassId)
+    {
+        var lstUserGroupClasses = new List<UserGroupClass>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_USER_GROUP_CLASS_BY_GROUP_CLASS_ID_PR" };
+        sqlOperation.AddIntParam("P_GP_Id", groupClassId);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            foreach (var row in lstResults)
+            {
+                var userGroupClass = BuildUserGroupClass(row);
+                lstUserGroupClasses.Add(userGroupClass);
+            }
+
+        }
         return lstUserGroupClasses;
     }
 
