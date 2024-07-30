@@ -152,8 +152,14 @@ namespace CoreApp
             var uCrud = new UserCrudFactory();
             var hashedPassword = ComputeMD5Hash(password);
             var user = uCrud.RetrieveUserByCredentials(email, hashedPassword);
-            user.ListaRole = GetUserRoles(user.Id);
-            return user;
+          if(user != null)
+            {
+                user.ListaRole = GetUserRoles(user.Id);
+                return user;
+            }
+
+            throw new Exception("Correo o contraseña incorrectos");
+
         }
 
         public List<Rol> GetUserRoles(int userId)

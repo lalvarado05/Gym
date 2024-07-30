@@ -228,6 +228,7 @@ public class UserCrudFactory : CrudFactory
 
             return retUser;
         }
+
         return default;
     }
 }
