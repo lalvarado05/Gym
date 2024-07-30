@@ -150,7 +150,7 @@ namespace CoreApp
 
             return !lstAllGC.Any(gc =>
                 gc.ClassDate.Date == meeting.ProgrammedDate.Date &&
-                (meeting.TimeOfEntry < gc.EndTime && meeting.TimeOfExit > gc.StartTime)
+                ((meeting.TimeOfEntry < gc.EndTime && meeting.TimeOfEntry >= gc.StartTime) || (meeting.TimeOfExit <= gc.EndTime && meeting.TimeOfExit > gc.StartTime))
             );
         }
 
@@ -161,7 +161,7 @@ namespace CoreApp
 
             return !lstAllMeetings.Any(m =>
                 m.ProgrammedDate.Date == meeting.ProgrammedDate.Date &&
-                (meeting.TimeOfEntry < m.TimeOfExit && meeting.TimeOfExit > m.TimeOfEntry)
+                ((meeting.TimeOfEntry < m.TimeOfExit && meeting.TimeOfEntry >= m.TimeOfEntry) || (meeting.TimeOfExit <= m.TimeOfExit && meeting.TimeOfExit > m.TimeOfEntry))
             );
         }
 
@@ -172,7 +172,7 @@ namespace CoreApp
 
             return !lstAllPT.Any(pt =>
                 pt.ProgrammedDate.Date == meeting.ProgrammedDate.Date &&
-                (meeting.TimeOfEntry < pt.TimeOfExit && meeting.TimeOfExit > pt.TimeOfEntry)
+                ((meeting.TimeOfEntry < pt.TimeOfExit && meeting.TimeOfEntry >= pt.TimeOfEntry) || (meeting.TimeOfExit <= pt.TimeOfExit && meeting.TimeOfExit > pt.TimeOfEntry))
             );
         }
 

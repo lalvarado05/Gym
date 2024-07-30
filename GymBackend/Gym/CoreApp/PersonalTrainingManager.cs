@@ -196,7 +196,7 @@ public class PersonalTrainingManager
 
     private bool IsTimeOverlap(TimeOnly start1, TimeOnly end1, TimeOnly start2, TimeOnly end2)
     {
-        return start1 < end2 && end1 > start2;
+        return (start1 < end2 && start1 >= start2)|| (end1 <= end2 && end1 > start2);
     }
 
     private void ValidateCancelPersonalTraining(PersonalTraining personalTraining)
