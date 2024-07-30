@@ -171,4 +171,18 @@ public class GroupClassCrudFactory : CrudFactory
         return groupClassToReturn;
     }
 
+    public List<GroupClass> RetrieveAvailableWithName()
+    {
+        var lstGroupClasses = new List<GroupClass>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_AVA_GROUP_CLASSES_W_NAME_PR" };
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var groupClass = BuildGroupClassWithName(row);
+                lstGroupClasses.Add(groupClass);
+            }
+
+        return lstGroupClasses;
+    }
 }
