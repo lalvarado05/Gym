@@ -85,8 +85,8 @@ public class UserManager
         var uCrud = new UserCrudFactory();
         var urCrud = new UserRoleFactory();
 
-        uCrud.Update(user);
-        urCrud.Delete(user);
+            uCrud.Update(user);
+            urCrud.DeleteByUserId(user);
 
         // Itera a través de los roles, y se genera una instancia de userRole para cada uno de ellos.
         foreach (Rol rol in user.ListaRole)
@@ -101,6 +101,11 @@ public class UserManager
     public void Delete(User user)
         {
             var uCrud = new UserCrudFactory();
+            var urCrud = new UserRoleFactory();
+            var pCrud = new PasswordCrudFactory();
+
+            urCrud.DeleteByUserId(user);
+            pCrud.DeleteByUserId(user);
             uCrud.Delete(user);
         }
 
