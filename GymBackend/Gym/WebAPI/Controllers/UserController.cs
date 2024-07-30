@@ -52,7 +52,7 @@ public class UserController : ControllerBase
     #region DELETE
 
     [HttpDelete]
-    [Route("Delete")]
+    [Route("Delete/{id}")]
     public ActionResult Delete(int id)
     {
         try

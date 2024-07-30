@@ -52,6 +52,22 @@ namespace DataAccess.CRUD
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
+        public void DeleteByUserId(BaseDTO baseDto)
+        {
+
+            var user = baseDto as User;
+
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "DEL_USER_PASS_PR"
+            };
+
+            sqlOperation.AddIntParam("P_Id", user.Id);
+
+
+            _sqlDao.ExecuteProcedure(sqlOperation);
+        }
+
         public override T Retrieve<T>()
         {
             throw new NotImplementedException();

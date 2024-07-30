@@ -88,7 +88,7 @@ namespace CoreApp
             var urCrud = new UserRoleFactory();
 
             uCrud.Update(user);
-            urCrud.Delete(user);
+            urCrud.DeleteByUserId(user);
 
             // Itera a través de los roles, y se genera una instancia de userRole para cada uno de ellos.
             foreach (var rol in user.ListaRole)
@@ -105,6 +105,11 @@ namespace CoreApp
         public void Delete(User user)
         {
             var uCrud = new UserCrudFactory();
+            var urCrud = new UserRoleFactory();
+            var pCrud = new PasswordCrudFactory();
+
+            urCrud.DeleteByUserId(user);
+            pCrud.DeleteByUserId(user);
             uCrud.Delete(user);
         }
 
