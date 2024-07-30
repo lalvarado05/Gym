@@ -59,9 +59,12 @@ namespace CoreApp
             var userJustCreated = uCrud.RetrieveByEmail(user.Email);
 
             // Se genera el nuevo password con la info recibida
+            var beforeHashPassword = GeneratePassword(8);
+            var emailSender = new SendGridEmail();
+            emailSender.SendEmailAsync(user.Email, beforeHashPassword);
             Password newUser = new Password
             {
-                PasswordContent = ComputeMD5Hash(GeneratePassword(8)),
+                PasswordContent = ComputeMD5Hash(beforeHashPassword),
                 UserId = userJustCreated.Id
             };
             pM.Create(newUser);

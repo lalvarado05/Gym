@@ -22,7 +22,7 @@ namespace CoreApp
             var id = password.UserId;
             var email = uCrud.RetrieveById<User>(id).Email;
             var emailSender = new SendGridEmail();
-            await emailSender.SendEmailAsync(email, genPassword);
+            emailSender.SendEmailAsync(email, genPassword);
             pCrud.Create(password);
         }
 
