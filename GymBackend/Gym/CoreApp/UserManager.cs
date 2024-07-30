@@ -32,6 +32,11 @@ namespace CoreApp
                 throw new Exception("Error: Correo electrónico no válido.");
             }
 
+            if (!IsUniqueEmail(user))
+            {
+                throw new Exception("Error: El correo electrónico ya está en uso.");
+            }
+
             if (!IsValidGender(user))
             {
                 throw new Exception("Error: Género no válido.");
@@ -40,6 +45,11 @@ namespace CoreApp
             if (!IsAtLeastOneRoleSelected(user))
             {
                 throw new Exception("Error: Debe seleccionar al menos un rol.");
+            }
+
+            if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
+            {
+                throw new Exception("Error: Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
             }
 
             uCrud.Create(user);
@@ -227,13 +237,41 @@ namespace CoreApp
 
         #region Validations
 
-        public bool IsValidName(User user) => !string.IsNullOrWhiteSpace(user.Name);
+        public bool IsValidName(User user)
+        {
+            return !string.IsNullOrWhiteSpace(user.Name) &&
+                   user.Name.Length >= 2 &&
+                   user.Name.Length <= 50 &&
+                   Regex.IsMatch(user.Name, @"^[a-zA-Z]+$");
+        }
 
-        public bool IsValidLastName(User user) => !string.IsNullOrWhiteSpace(user.LastName);
+        public bool IsValidLastName(User user)
+        {
+            return !string.IsNullOrWhiteSpace(user.LastName) &&
+                   user.LastName.Length >= 2 &&
+                   user.LastName.Length <= 50 &&
+                   Regex.IsMatch(user.LastName, @"^[a-zA-Z]+$");
+        }
 
         public bool IsValidNumber(User user) => user.Phone.Length == 8 && Regex.IsMatch(user.Phone, @"^\d{8}$");
 
         public bool IsValidEmail(User user) => Regex.IsMatch(user.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+        public bool IsValidPassword(string password)
+        {
+            return password.Length >= 8 &&
+                   Regex.IsMatch(password, @"[a-z]") &&
+                   Regex.IsMatch(password, @"[A-Z]") &&
+                   Regex.IsMatch(password, @"[0-9]") &&
+                   Regex.IsMatch(password, @"[\W_]");
+        }
+
+        public bool IsUniqueEmail(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            var existingUser = uCrud.RetrieveByEmail(user.Email);
+            return existingUser == null;
+        }
 
         public bool IsValidGender(User user)
         {
@@ -242,6 +280,23 @@ namespace CoreApp
         }
 
         public bool IsAtLeastOneRoleSelected(User user) => user.ListaRole != null && user.ListaRole.Count > 0;
+
+        public bool IsEntrenadorRoleSelected(User user) => user.ListaRole.Any(r => r.Id == 2);
+
+        public bool IsValidTrainerAvailability(User user)
+        {
+            if (string.IsNullOrEmpty(user.DaysOfWeek))
+            {
+                return false;
+            }
+
+            if (user.TimeOfEntry == null || user.TimeOfExit == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         public bool IsValidUser(User user)
         {
