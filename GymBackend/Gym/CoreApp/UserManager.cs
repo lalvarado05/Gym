@@ -137,6 +137,28 @@ namespace CoreApp
             return userFound;
         }
 
+        public User RetrieveUserByCredentials(string email, string password)
+        {
+            var uCrud = new UserCrudFactory();
+            var hashedPassword = ComputeMD5Hash(password);
+            var user = uCrud.RetrieveUserByCredentials(email, hashedPassword);
+            
+            if(user != null)
+            {
+                user.ListaRole = GetUserRoles(user.Id);
+                return user;
+            }
+
+            throw new Exception("Correo o contraseña incorrectos");
+        }
+
+        public List<Rol> GetUserRoles(int userId)
+        {
+            var rCrud = new RoleCrudFactory();
+            var roles = rCrud.RetrieveAllRolesByUserId(userId);
+            return roles;
+        }
+
         public string ComputeMD5Hash(string password)
         {
             using (var md5 = MD5.Create())
