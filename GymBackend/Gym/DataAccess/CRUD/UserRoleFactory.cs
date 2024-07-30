@@ -50,14 +50,16 @@ public class UserRoleFactory : CrudFactory
 
     public override void Delete(BaseDTO baseDto)
     {
-        var user = baseDto as User;
+
+        var userRol = baseDto as UserRole;
 
         var sqlOperation = new SqlOperation
         {
             ProcedureName = "DEL_USER_ROL_PR"
         };
 
-        sqlOperation.AddIntParam("P_Id", user.Id);
+        sqlOperation.AddIntParam("P_Id", userRol.Id);
+
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }

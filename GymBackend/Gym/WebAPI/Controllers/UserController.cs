@@ -9,7 +9,6 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-
     #region POSTS
 
     [HttpPost]
@@ -59,8 +58,9 @@ public class UserController : ControllerBase
         try
         {
             var um = new UserManager();
+            var user = new User { Id = id };
             um.Delete(user);
-            return Ok(user);
+            return Ok(new { Id = id });
         }
         catch (Exception ex)
         {

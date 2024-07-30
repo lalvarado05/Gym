@@ -6,19 +6,19 @@ namespace WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExerciseController : ControllerBase
+public class MeasuresController : Controller
 {
     #region POSTS
 
     [HttpPost]
     [Route("Create")]
-    public ActionResult Create(Exercise exercise)
+    public ActionResult Create(Measures measure)
     {
         try
         {
-            var em = new ExerciseManager();
-            em.Create(exercise);
-            return Ok(exercise);
+            var mm = new MeasuresManager();
+            mm.Create(measure);
+            return Ok(measure);
         }
         catch (Exception ex)
         {
@@ -28,37 +28,19 @@ public class ExerciseController : ControllerBase
 
     #endregion
 
-    #region PUT
-
-    [HttpPut]
-    [Route("Update")]
-    public ActionResult Update(Exercise exercise)
-    {
-        try
-        {
-            var em = new ExerciseManager();
-            em.Update(exercise);
-            return Ok(exercise);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    #endregion
-
-    #region DELETE
+    #region Delete
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(Exercise exercise)
+    public ActionResult Delete(int id)
     {
         try
         {
-            var em = new ExerciseManager();
-            em.Delete(exercise);
-            return Ok(exercise);
+            var mm = new MeasuresManager();
+            var measure = mm.RetrieveById(id);
+            if (measure == null) return NotFound();
+            mm.Delete(measure);
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -71,17 +53,33 @@ public class ExerciseController : ControllerBase
     #region GETS
 
     [HttpGet]
+    [Route("RetrieveById")]
+    public ActionResult RetrieveById(int id)
+    {
+        try
+        {
+            var mm = new MeasuresManager();
+            var measure = mm.RetrieveById(id);
+            if (measure == null) return NotFound();
+            return Ok(measure);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
     [Route("RetrieveAll")]
     public ActionResult RetrieveAll()
     {
         try
         {
-            var em = new ExerciseManager();
-            return Ok(em.RetrieveAll());
+            var mm = new MeasuresManager();
+            return Ok(mm.RetrieveAll());
         }
         catch (Exception ex)
         {
-            // 500 es internal server error
             return StatusCode(500, ex.Message);
         }
     }

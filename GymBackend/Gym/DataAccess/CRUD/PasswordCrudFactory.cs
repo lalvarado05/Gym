@@ -1,10 +1,10 @@
-﻿using DataAccess.DAOs;
-using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.DAOs;
+using DTOs;
 
 namespace DataAccess.CRUD
 {
@@ -79,11 +79,13 @@ namespace DataAccess.CRUD
             var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_PASSWORDS_PR" };
             var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
             if (lstResults.Count > 0)
+            {
                 foreach (var row in lstResults)
                 {
                     var password = BuildPassword(row);
                     lstPasswords.Add((T)Convert.ChangeType(password, typeof(T)));
                 }
+            }
 
             return lstPasswords;
         }
@@ -107,15 +109,14 @@ namespace DataAccess.CRUD
 
         public List<Password> RetrievePasswordsById(int id)
         {
-            // Crear instructivo para que el dao pueda realizar un create a la base de datos
-            var sqlOperation = new SqlOperation();
-
-            sqlOperation.ProcedureName = "RE_LAST_5_PASSWORDS_BY_ID";
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "RE_LAST_5_PASSWORDS_BY_ID"
+            };
             sqlOperation.AddIntParam("P_IdUser", id);
             var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             var passwords = new List<Password>();
-
             foreach (var row in listaResultados)
             {
                 var readPassword = BuildPassword(row);

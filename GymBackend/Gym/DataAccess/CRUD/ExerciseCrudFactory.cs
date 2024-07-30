@@ -1,104 +1,98 @@
 ﻿using DataAccess.DAOs;
 using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataAccess.CRUD
+namespace DataAccess.CRUD;
+
+public class ExerciseCrudFactory : CrudFactory
 {
-    public class ExerciseCrudFactory : CrudFactory
+    public ExerciseCrudFactory()
     {
-        public ExerciseCrudFactory()
+        _sqlDao = SqlDao.GetInstance();
+    }
+
+    public override void Create(BaseDTO baseDto)
+    {
+        //Conversion del DTO base a product
+        var exercise = baseDto as Exercise;
+
+        //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
+        var sqlOperation = new SqlOperation();
+
+        //Set del nombre del procedimiento
+        sqlOperation.ProcedureName = "CRE_EXE_PR";
+
+        //Agregamos los parametros
+        sqlOperation.AddStringParam("P_Name", exercise.Name);
+        sqlOperation.AddStringParam("P_Type", exercise.Type);
+        sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
+        sqlOperation.AddIntParam("P_Sets", exercise.Sets);
+        sqlOperation.AddIntParam("P_Reps", exercise.Reps);
+        sqlOperation.AddIntParam("P_Weight", exercise.Weight);
+        sqlOperation.AddIntParam("P_Duration", exercise.Duration);
+
+        //Ir al DAO a ejecutor
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
+
+    public override void Update(BaseDTO baseDto)
+    {
+        var exercise = baseDto as Exercise;
+
+        var sqlOperation = new SqlOperation
         {
-            _sqlDao = SqlDao.GetInstance();
-        }
+            ProcedureName = "UPD_EXE_PR"
+        };
 
-        public override void Create(BaseDTO baseDto)
-        {
-            //Conversion del DTO base a product
-            var exercise = baseDto as Exercise;
+        sqlOperation.AddIntParam("P_Id", exercise.Id);
+        sqlOperation.AddStringParam("P_Name", exercise.Name);
+        sqlOperation.AddStringParam("P_Type", exercise.Type);
+        sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
+        sqlOperation.AddIntParam("P_Sets", exercise.Sets);
+        sqlOperation.AddIntParam("P_Reps", exercise.Reps);
+        sqlOperation.AddIntParam("P_Weight", exercise.Weight);
+        sqlOperation.AddIntParam("P_Duration", exercise.Duration);
 
-            //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
-            var sqlOperation = new SqlOperation();
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
 
-            //Set del nombre del procedimiento
-            sqlOperation.ProcedureName = "CRE_EXE_PR";
+    public override void Delete(BaseDTO baseDto)
+    {
+        var exercise = baseDto as Exercise;
+        var sqlOperation = new SqlOperation { ProcedureName = "DEL_EXE_PR" };
+        sqlOperation.AddIntParam("P_Id", exercise.Id);
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
 
-            //Agregamos los parametros
-            sqlOperation.AddStringParam("P_Name", exercise.Name);
-            sqlOperation.AddStringParam("P_Type", exercise.Type);
-            sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
-            sqlOperation.AddIntParam("P_Sets", exercise.Sets);
-            sqlOperation.AddIntParam("P_Reps", exercise.Reps);
-            sqlOperation.AddIntParam("P_Weight", exercise.Weight);
-            sqlOperation.AddIntParam("P_Duration", exercise.Duration);
+    public override T Retrieve<T>()
+    {
+        throw new NotImplementedException();
+    }
 
-            //Ir al DAO a ejecutor
-            _sqlDao.ExecuteProcedure(sqlOperation);
-        }
-        public override void Update(BaseDTO baseDto)
-        {
-            var exercise = baseDto as Exercise;
+    public override T RetrieveById<T>(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            var sqlOperation = new SqlOperation
+    public override List<T> RetrieveAll<T>()
+    {
+        var lstExercises = new List<T>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_EXE_PR" };
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
             {
-                ProcedureName = "UPD_EXE_PR"
-            };
-
-            sqlOperation.AddIntParam("P_Id", exercise.Id);
-            sqlOperation.AddStringParam("P_Name", exercise.Name);
-            sqlOperation.AddStringParam("P_Type", exercise.Type);
-            sqlOperation.AddIntParam("P_EquipmentId", exercise.EquipmentId);
-            sqlOperation.AddIntParam("P_Sets", exercise.Sets);
-            sqlOperation.AddIntParam("P_Reps", exercise.Reps);
-            sqlOperation.AddIntParam("P_Weight", exercise.Weight);
-            sqlOperation.AddIntParam("P_Duration", exercise.Duration);
-
-            _sqlDao.ExecuteProcedure(sqlOperation);
-        }
-
-        public override void Delete(BaseDTO baseDto)
-        {
-            var exercise = baseDto as Exercise;
-            var sqlOperation = new SqlOperation { ProcedureName = "DEL_EXE_PR" };
-            sqlOperation.AddIntParam("P_Id", exercise.Id);
-            _sqlDao.ExecuteProcedure(sqlOperation);
-        }
-
-        public override T Retrieve<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override T RetrieveById<T>(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override List<T> RetrieveAll<T>()
-        {
-            var lstExercises = new List<T>();
-            var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_EXE_PR" };
-            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
-            {
-                foreach (var row in lstResults)
-                {
-                    var exercise = BuildExercise(row);
-                    lstExercises.Add((T)Convert.ChangeType(exercise, typeof(T)));
-                }
+                var exercise = BuildExercise(row);
+                lstExercises.Add((T)Convert.ChangeType(exercise, typeof(T)));
             }
-            return lstExercises;
-        }
 
-        private Exercise BuildExercise(Dictionary<string, object> row)
+        return lstExercises;
+    }
+		
+	 	private Exercise BuildExercise(Dictionary<string, object> row)
+    {
+        var exerciseToReturn = new Exercise
         {
-            var exerciseToReturn = new Exercise
-            {
-
-                Id = (int)row["id"],
+            		Id = (int)row["id"],
                 EquipmentId = (int)row["equipment_id"],
                 EquipmentName = (string)row["equipmentName"],
                 Type = (string)row["type"],
@@ -110,5 +104,6 @@ namespace DataAccess.CRUD
             };
             return exerciseToReturn;
         }
-    }
 }
+
+  
