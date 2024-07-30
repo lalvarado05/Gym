@@ -190,4 +190,10 @@ public class GroupClassManager
         var gcCrud = new GroupClassCrudFactory();
         return gcCrud.RetrieveAllWithName();
     }
+
+    public List<GroupClass> RetrieveAvailableWithName()
+    {
+        var gcCrud = new GroupClassCrudFactory();
+        return gcCrud.RetrieveAvailableWithName();
+    }
 }

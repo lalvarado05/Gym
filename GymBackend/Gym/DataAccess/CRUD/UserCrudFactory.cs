@@ -204,8 +204,8 @@ public class UserCrudFactory : CrudFactory
         }
 	        return default;
     }
-		
-		    public User RetrieveUserByCredentials(string email, string password)
+
+    public User RetrieveUserByCredentials(string email, string password)
     {
         //Crear instructivo para que el DAO pueda realizar un create en la base de datos.
         var sqlOperation = new SqlOperation
@@ -228,7 +228,7 @@ public class UserCrudFactory : CrudFactory
 
             return retUser;
         }
-				return default;
+        return default;
     }
 }
 
