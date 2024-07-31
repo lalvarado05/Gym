@@ -1,6 +1,5 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Net.Mail;
 
 public class SendGridEmail
 {
@@ -10,19 +9,22 @@ public class SendGridEmail
     {
         _apiKey = "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";
     }
+
     //Se pueden crear mas templates del email :)
-    public void SendEmailAsync(string toEmail, string password)
+    public void SendEmailAsync(string toEmail, string passwordR)
     {
         var client = new SendGridClient(_apiKey);
         var from = new EmailAddress("siluetaclubfitness@gmail.com", "Silueta Club Fitness");
         var to = new EmailAddress(toEmail);
-        var subject = "Clave Temporal de Silueta Club Fitness";
-        var plainTextContent = "Clave temporal enviada por Silueta Club Fitness";
 
-        var htmlContent = "<h3>Se te ha enviado tu clave temporal, no olvides cambiarla.</h3>" + "<strong>" + "Clave temporal: " + password + "</strong>";
-
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-        var response =  client.SendEmailAsync(msg);
+        var templateId = "d-e87f1f3d83064e929f7dcdb90faf8352";
+        var dynamicTemplateData = new
+        {
+            subject = "Clave Temporal de Silueta Club Fitness",
+            password = passwordR
+        };
+        var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicTemplateData);
+        var response = client.SendEmailAsync(msg);
     }
 
     //Se quita el async y el await por problemas con el codigo.
@@ -39,4 +41,3 @@ public class SendGridEmail
         var response = client.SendEmailAsync(msg);
     }
 }
-
