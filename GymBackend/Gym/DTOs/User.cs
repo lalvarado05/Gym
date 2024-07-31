@@ -18,6 +18,22 @@ public class User : BaseDTO
 
     public DateTime BirthDate { get; set; }
 
+    public int? Age
+    {
+        get
+        {
+            DateTime today = DateTime.Today;
+            int age = today.Year - BirthDate.Year;
+
+            // Ajustar la edad si el cumpleaños no ha ocurrido este año todavía
+            if (BirthDate.Date > today.AddYears(-age))
+            {
+                age--;
+            }
+
+            return age;
+        }
+    }
     public DateTime Created { get; set; }
 
     public List<Rol> ListaRole { get; set; }

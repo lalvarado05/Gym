@@ -88,6 +88,26 @@ public class MeasureCrud : CrudFactory
         return default;
     }
 
+    public List<Measures> RetrieveByUserId(int id)
+    {
+        List<Measures> lstMeasures = new List<Measures>();
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "RET_MEASURES_BY_USERID_PR"
+        };
+        sqlOperation.AddIntParam("P_Id", id);
+        List<Dictionary<string, object>> lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var measure = BuildMeasure(row);
+                lstMeasures.Add(measure);
+            }
+
+        return lstMeasures;
+    }
+
     public override void Update(BaseDTO baseDto)
     {
         var measure = baseDto as Measures;

@@ -62,5 +62,11 @@ public class MeasuresManager
                 throw new Exception("El porcentaje de grasa no es válido. Debe ser un valor entre 2% y 80%.");
             }
         }
-        #endregion
+
+    public List<Measures> RetrieveByUserId(int id)
+    {
+        var mCrud = new MeasureCrud();
+        return mCrud.RetrieveByUserId(id);
+    }
+    #endregion
 }
