@@ -84,5 +84,21 @@ public class MeasuresController : Controller
         }
     }
 
+    [HttpGet]
+    [Route("RetrieveByUserId")]
+    public ActionResult RetrieveByUserId(int id)
+    {
+        try
+        {
+            var mm = new MeasuresManager();
+            List<Measures> measures = mm.RetrieveByUserId(id);
+            return Ok(measures);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     #endregion
 }
