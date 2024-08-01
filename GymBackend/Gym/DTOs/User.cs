@@ -20,7 +20,7 @@ public class User : BaseDTO
 
     public DateTime Created { get; set; }
 
-    public List<Rol> ListaRole { get; set; }
+    public List<Rol>? ListaRole { get; set; }
 
     
     public string? DaysOfWeek {  get; set; }
