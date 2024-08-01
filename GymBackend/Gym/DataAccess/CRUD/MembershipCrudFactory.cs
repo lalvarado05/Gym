@@ -19,7 +19,6 @@ public class MembershipCrudFactory : CrudFactory
         sqlOperation.AddStringParam("P_Type", membership.Type);
         sqlOperation.AddIntParam("P_AmountClassesAllowed", membership.AmountClassesAllowed);
         sqlOperation.AddDoubleParam("P_MonthlyCost", membership.MonthlyCost);
-        sqlOperation.AddDateTimeParam("P_Created", membership.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -81,7 +80,6 @@ public class MembershipCrudFactory : CrudFactory
         sqlOperation.AddStringParam("P_Type", membership.Type);
         sqlOperation.AddIntParam("P_AmountClassesAllowed", membership.AmountClassesAllowed);
         sqlOperation.AddDoubleParam("P_MonthlyCost", membership.MonthlyCost);
-        sqlOperation.AddDateTimeParam("P_Created", membership.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -95,7 +93,7 @@ public class MembershipCrudFactory : CrudFactory
             Id = (int)row["id"],
             Type = (string)row["type"],
             AmountClassesAllowed = (int)row["amount_classes_allowed"],
-            MonthlyCost = (double)row["monthly_cost"],
+            MonthlyCost = Convert.ToDouble(row["monthly_cost"]),
             Created = (DateTime)row["created"]
         };
         return membershipToReturn;
