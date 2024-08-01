@@ -98,21 +98,26 @@ namespace CoreApp
         public void Update(User user)
         {
             var uCrud = new UserCrudFactory();
-            var urCrud = new UserRoleFactory();
+            //var urCrud = new UserRoleFactory();
+
+            if (EmailExist(user))
+            {
+                throw new Exception("Ya existe un usuario con este correo eléctronico");
+            }
 
             uCrud.Update(user);
-            urCrud.DeleteByUserId(user);
+            //urCrud.DeleteByUserId(user);
 
             // Itera a través de los roles, y se genera una instancia de userRole para cada uno de ellos.
-            foreach (var rol in user.ListaRole)
-            {
-                var newUserRole = new UserRole
-                {
-                    RoleId = rol.Id,
-                    UserId = user.Id
-                };
-                urCrud.Create(newUserRole);
-            }
+            //foreach (var rol in user.ListaRole)
+            //{
+            //    var newUserRole = new UserRole
+            //    {
+            //        RoleId = rol.Id,
+            //        UserId = user.Id
+            //    };
+            //    urCrud.Create(newUserRole);
+            //}
         }
 
         public void Delete(User user)
@@ -306,6 +311,26 @@ namespace CoreApp
 
             return true;
         }
+
+        public bool EmailExist(User user)
+        {
+            try
+            {
+                var userDB = RetrieveByEmail(user.Email);
+
+                // Si no se encuentra el usuario, retornamos false
+                // Si se encuentra, retornamos true solo si el ID es diferente
+                return userDB != null && userDB.Id != user.Id;
+            }
+            catch
+            {
+
+                // Si ocurre una excepción, asumimos que el email no existe
+                return false;
+            }
+        }
+
+
 
         public bool IsValidUser(User user)
         {
