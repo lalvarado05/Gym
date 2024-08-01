@@ -198,11 +198,12 @@ public class UserCrudFactory : CrudFactory
 
         if (listaResultados.Count > 0)
         {
-						var row = listaResultados[0];
+            var row = listaResultados[0];
             var readUser = BuildUser(row);
             return readUser;
         }
-	        return default;
+
+        return default;
     }
 
     public User RetrieveUserByCredentials(string email, string password)
