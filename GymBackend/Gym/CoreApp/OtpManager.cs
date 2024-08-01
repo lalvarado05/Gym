@@ -11,13 +11,13 @@ public class OtpManager
         if (UserExists(otp.UserId)) throw new Exception("El usuario no existe");
         var newOTP = GenerateOTP();
         otp.OtpData = newOTP;
-        otpCrud.Create(otp);
         var uCrud = new UserCrudFactory();
         var tempPhone = uCrud.RetrieveById<User>(otp.UserId).Phone;
         var sms = new TwilioOTP();
-
+        otpCrud.Create(otp);
         var number = "+506" + tempPhone;
         sms.SendMessage(number, newOTP);
+        
     }
 
     public void Update(string email, int phone, int otp)
