@@ -51,14 +51,15 @@ public class MembershipController : ControllerBase
     #region DELETE
 
     [HttpDelete]
-    [Route("Delete")]
-    public ActionResult Delete(Membership membership)
+    [Route("Delete/{id}")]
+    public ActionResult Delete(int id)
     {
         try
         {
             var meCrud = new MembershipManager();
+            var membership = new Membership { Id = id };
             meCrud.Delete(membership);
-            return Ok(membership);
+            return Ok(new { Id = id });
         }
         catch (Exception ex)
         {
