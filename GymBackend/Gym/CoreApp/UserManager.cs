@@ -14,37 +14,42 @@ namespace CoreApp
 
             if (!IsValidName(user))
             {
-                throw new Exception("Error: Nombre no válido.");
+                throw new Exception("Nombre no válido.");
             }
 
             if (!IsValidLastName(user))
             {
-                throw new Exception("Error: Apellido no válido.");
+                throw new Exception("Apellido no válido.");
             }
 
             if (!IsValidNumber(user))
             {
-                throw new Exception("Error: Número de teléfono debe tener 8 dígitos.");
+                throw new Exception("Número de teléfono debe tener 8 dígitos.");
             }
 
             if (!IsValidEmail(user))
             {
-                throw new Exception("Error: Correo electrónico no válido.");
+                throw new Exception("Correo electrónico no válido.");
             }
 
             if (!IsUniqueEmail(user))
             {
-                throw new Exception("Error: El correo electrónico ya está en uso.");
+                throw new Exception("El correo electrónico ya está en uso.");
             }
 
             if (!IsValidGender(user))
             {
-                throw new Exception("Error: Género no válido.");
+                throw new Exception("Género no válido.");
+            }
+
+            if (!IsValidDate(user))
+            {
+                throw new Exception("Debe seleccionar una fecha de nacimiento");
             }
 
             if (!IsAtLeastOneRoleSelected(user))
             {
-                throw new Exception("Error: Debe seleccionar al menos un rol.");
+                throw new Exception("Debe seleccionar al menos un rol.");
             }
 
             if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
@@ -291,6 +296,12 @@ namespace CoreApp
         {
             var validGenders = new HashSet<string> { "M", "F", "O" };
             return validGenders.Contains(user.Gender);
+        }
+
+        public bool IsValidDate(User user)
+        {
+            var defaultDate = DateTime.Parse("1821-09-15T17:26:50.620Z");
+            return user.BirthDate.Date != defaultDate.Date;
         }
 
         public bool IsAtLeastOneRoleSelected(User user) => user.ListaRole != null && user.ListaRole.Count > 0;
