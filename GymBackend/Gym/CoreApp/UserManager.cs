@@ -54,7 +54,7 @@ namespace CoreApp
 
             if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
             {
-                throw new Exception("Error: Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
+                throw new Exception("Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
             }
 
             uCrud.Create(user);
