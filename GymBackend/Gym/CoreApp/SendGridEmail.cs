@@ -1,4 +1,5 @@
-﻿using SendGrid;
+﻿using DTOs;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 
 public class SendGridEmail
@@ -30,14 +31,18 @@ public class SendGridEmail
     //Se quita el async y el await por problemas con el codigo.
     public void SendEmailAsyncPasswordChanges(string toEmail)
     {
+        
         var client = new SendGridClient(_apiKey);
         var from = new EmailAddress("siluetaclubfitness@gmail.com", "Silueta Club Fitness");
         var to = new EmailAddress(toEmail);
-        var subject = "Su clave ha sido cambiada";
-        var plainTextContent = "Nueva clave registrada en Silueta Club Fitness";
-        var htmlContent = "<h3>Se ha cambiado tu clave, si no fuiste tú por favor verifica.</h3>";
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
+        var templateId = "d-68185f3204154cee9b778c59f00da17d";
+        var dynamicTemplateData = new
+        {
+            subject = "Su clave ha sido cambiada",
+            
+        };
+        var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicTemplateData);
         var response = client.SendEmailAsync(msg);
     }
 }
