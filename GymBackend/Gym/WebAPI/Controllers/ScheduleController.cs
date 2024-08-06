@@ -70,7 +70,6 @@ public class ScheduleController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
-
     #endregion
 
     #region GETS
