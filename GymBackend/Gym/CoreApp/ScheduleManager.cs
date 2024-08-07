@@ -24,6 +24,12 @@ public class ScheduleManager
         sCrud.Delete(schedule);
     }
 
+    public void DeleteByUserId(int userId)
+    {
+        var sCrud = new ScheduleCrudFactory();
+        sCrud.DeleteByUserId(userId);
+    }
+
     public List<Schedule> RetrieveAll()
     {
         var sCrud = new ScheduleCrudFactory();
