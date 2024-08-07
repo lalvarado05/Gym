@@ -41,11 +41,55 @@ public class UserMembershipManager
 
     public List<UserMembership> RetrieveByUserId(int userId)
     {
+        ValidateId(userId);
+        
         var umCrud = new UserMembershipCrud();
-        return umCrud.RetrieveByUserId(userId);
+        List<UserMembership> Memberships = umCrud.RetrieveByUserId(userId);
+        return Memberships;
+    }
+    public UserMembership RetrieveNewestByUserId(int userId)
+    {
+        ValidateId(userId);
+        
+        var umCrud = new UserMembershipCrud();
+        List<UserMembership> Memberships = umCrud.RetrieveByUserId(userId);
+        UserMembership Newest = Memberships[0];
+        foreach (var membership in Memberships)
+        {
+            if (membership.Created > Newest.Created)
+            {
+                Newest = membership;
+            }
+        }
+        ShouldPay(Newest);
+
+        return Newest;
     }
 
+    private void ShouldPay(UserMembership newest)
+    {
+        // Calcula la fecha un mes después de la fecha de creación
+        DateTime oneMonthLater = newest.Created.AddMonths(1);
+
+        // Compara la fecha actual con la fecha en la que vence la membresía
+        if (DateTime.Now.Date < oneMonthLater.Date)
+        {
+            throw new Exception("A este usuario aún no se le vence la membresía. Vence hasta el: " + oneMonthLater.Date.ToShortDateString());
+        }
+    }
+
+
+
     #region Validations
+
+    private void ValidateId(int userId)
+    {
+        if (userId <= 0)
+        {
+            throw new Exception("Por favor selecione un cliente.");
+        }
+    }
+
     private void ValidateUserMembership(UserMembership userMembership)
     {
         if (userMembership.UserId <= 0)

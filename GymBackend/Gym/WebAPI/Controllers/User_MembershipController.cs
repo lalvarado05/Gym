@@ -9,7 +9,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class User_MembershipController: Controller
+    public class UserMembershipController: Controller
     {
         #region POSTS
 
@@ -96,6 +96,22 @@ namespace WebAPI.Controllers
                 var umm = new UserMembershipManager();
                 List<UserMembership> userMemberships = umm.RetrieveByUserId(userId);
                 return Ok(userMemberships);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveNewestByUserId")]
+        public ActionResult RetrieveNewestByUserId(int userId)
+        {
+            try
+            {
+                var umm = new UserMembershipManager();
+                UserMembership userNewestMembership = umm.RetrieveNewestByUserId(userId);
+                return Ok(userNewestMembership);
             }
             catch (Exception ex)
             {
