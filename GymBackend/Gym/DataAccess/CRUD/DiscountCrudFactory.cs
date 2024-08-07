@@ -22,7 +22,6 @@ public class DiscountCrudFactory : CrudFactory
         sqlOperation.AddIntParam("P_Percentage", discount.Percentage);
         sqlOperation.AddDateTimeParam("P_ValidFrom", discount.ValidFrom);
         sqlOperation.AddDateTimeParam("P_ValidTo", discount.ValidTo);
-        sqlOperation.AddDateTimeParam("P_Created", discount.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -88,7 +87,6 @@ public class DiscountCrudFactory : CrudFactory
         sqlOperation.AddIntParam("P_Percentage", discount.Percentage);
         sqlOperation.AddDateTimeParam("P_ValidFrom", discount.ValidFrom);
         sqlOperation.AddDateTimeParam("P_ValidTo", discount.ValidTo);
-        sqlOperation.AddDateTimeParam("P_Created", discount.Created);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
