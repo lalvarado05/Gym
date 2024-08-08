@@ -1,4 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-var theTime = TimeOnly.Parse("6:00:00");
-Console.WriteLine(theTime);
+﻿using CoreApp;
+
+namespace Testing;
+
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var smsSender = new TwilioOTP();
+
+        // Reemplaza con el número de teléfono del destinatario y el mensaje que quieres enviar
+        var toPhoneNumber = "+50685663503";
+
+        smsSender.SendMessage(toPhoneNumber);
+    }
+}

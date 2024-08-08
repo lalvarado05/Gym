@@ -37,6 +37,16 @@ public class ScheduleCrudFactory : CrudFactory
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
+    public void DeleteByUserId(int idUser)
+    {
+        var sqlOperation = new SqlOperation();
+        sqlOperation.ProcedureName = "DEL_BYIDUSER_SCHEDULE_PR";
+
+        sqlOperation.AddIntParam("P_IdUser", idUser);
+
+        _sqlDao.ExecuteProcedure(sqlOperation);
+    }
+
     public override T Retrieve<T>()
     {
         throw new NotImplementedException();

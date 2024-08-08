@@ -32,22 +32,27 @@ namespace CoreApp
             var uCrud = new UserCrudFactory();
             var beforeMd5Password = password.PasswordContent;
             password.PasswordContent = ComputeMD5Hash(password.PasswordContent);
+            password.PasswordToChange = ComputeMD5Hash(password.PasswordToChange);
             var id = password.UserId;
             var email = uCrud.RetrieveById<User>(id).Email;
-
-            if (AlreadyExistPasswords(password)) throw new Exception("La contraseña no puede ser igual a las últimas 5.");
-
-            if (ValidarContraseña(beforeMd5Password))
+            if (Exists(password))
             {
-                var emailSender = new SendGridEmail();
-                emailSender.SendEmailAsyncPasswordChanges(email);
-                pCrud.Create(password);
+                if (AlreadyExistPasswords(password)) throw new Exception("La contraseña no puede ser igual a las últimas 5.");
+
+                if (ValidarContraseña(beforeMd5Password))
+                {
+                    var emailSender = new SendGridEmail();
+                    emailSender.SendEmailAsyncPasswordChanges(email);
+                    pCrud.Create(password);
+                }
+                else
+                {
+                    throw new Exception(
+                        "Revisa tu contraseña: debe tener 8 caracteres, 1 mayúscula, 1 número y 1 carácter especial.");
+                }
             }
-            else
-            {
-                throw new Exception(
-                    "Revisa tu contraseña: debe tener 8 caracteres, 1 mayúscula, 1 número y 1 carácter especial.");
-            }
+
+
         }
 
         public void Update(Password password)
@@ -128,6 +133,15 @@ namespace CoreApp
             var pCrud = new PasswordCrudFactory();
             foreach (var item in pCrud.RetrievePasswordsById(password.UserId))
                 if (password.PasswordContent == item.PasswordContent)
+                    return true;
+            return false;
+        }
+
+        public bool Exists(Password password)
+        {
+            var pCrud = new PasswordCrudFactory();
+            foreach (var item in pCrud.RetrievePasswordsById(password.UserId))
+                if (password.PasswordToChange == item.PasswordContent)
                     return true;
             return false;
         }

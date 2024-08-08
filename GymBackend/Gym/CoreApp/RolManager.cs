@@ -32,6 +32,8 @@ public class RolManager
         }
         var rCrud = new RoleCrudFactory();
         rCrud.DeleteById(idUsuario, idRol);
+        var sM = new ScheduleManager();
+        sM.DeleteByUserId(idUsuario);
     }
 
     public List<Rol> RetrieveAll()

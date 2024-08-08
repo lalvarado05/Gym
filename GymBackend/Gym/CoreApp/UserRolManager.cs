@@ -8,12 +8,25 @@ public class UserRolManager
     public void Create(UserRole userRole)
     {
         var urCrud = new UserRoleFactory();
-        if (AlreadyHave(userRole)) throw new Exception("El usuario ya tiene asigando el rol que se ingreso");
+        if (AlreadyHave(userRole)) throw new Exception("El usuario ya tiene asignado el rol que se ingreso");
         if (urCrud.RetrieveByUserId(userRole.UserId) == null)
         {
             throw new Exception("El Usuario ingresado no existe");
         }
         urCrud.Create(userRole);
+
+        if (!string.IsNullOrEmpty(userRole.DaysOfWeek))
+        {
+            Schedule newSchedule = new Schedule
+            {
+                DaysOfWeek = userRole.DaysOfWeek,
+                TimeOfEntry = userRole.TimeOfEntry ?? default(TimeOnly),
+                TimeOfExit = userRole.TimeOfExit ?? default(TimeOnly),
+                EmployeeId = userRole.UserId
+            };
+            var sM = new ScheduleManager();
+            sM.Create(newSchedule);
+        }
     }
 
     public void Update(UserRole userRole)
@@ -25,6 +38,12 @@ public class UserRolManager
     {
         var urCrud = new UserRoleFactory();
         urCrud.Delete(userRole);
+
+        if (!string.IsNullOrEmpty(userRole.DaysOfWeek))
+        {
+            var sM = new ScheduleManager();
+            sM.DeleteByUserId(userRole.UserId);
+        }
     }
 
     public List<UserRole> RetrieveAll()
