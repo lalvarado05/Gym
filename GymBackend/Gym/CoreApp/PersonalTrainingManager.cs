@@ -78,7 +78,7 @@ public class PersonalTrainingManager
         {
             DateOnly dateOnly = new DateOnly(personalTraining.ProgrammedDate.Year, personalTraining.ProgrammedDate.Month, personalTraining.ProgrammedDate.Day);
             DateTime ptDate = new DateTime(dateOnly, personalTraining.TimeOfEntry);
-            if(ptDate>= lastMembership.Created && ptDate<= DateTime.Now && personalTraining.IsCancelled =="no")
+            if(ptDate>= lastMembership.Created && ptDate< DateTime.Now && personalTraining.IsCancelled =="no")
             {
                 payable.Add(personalTraining);
             }
