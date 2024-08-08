@@ -51,14 +51,15 @@ public class DiscountController : ControllerBase
     #region DELETE
 
     [HttpDelete]
-    [Route("Delete")]
-    public ActionResult Delete(Discount discount)
+    [Route("Delete/{id}")]
+    public ActionResult Delete(int id)
     {
         try
         {
             var dm = new DiscountManager();
+            var discount = new Discount { Id  = id };
             dm.Delete(discount);
-            return Ok(discount);
+            return Ok(new {Id = id});
         }
         catch (Exception ex)
         {
