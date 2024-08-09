@@ -28,6 +28,7 @@ namespace DataAccess.CRUD
 
             //Agregamos los parametros
             sqlOperation.AddIntParam("P_ClientId", routine.ClientId);
+            sqlOperation.AddStringParam("P_Name", routine.Name);
 
             //Ir al DAO a ejecutor
             _sqlDao.ExecuteProcedure(sqlOperation);
@@ -81,7 +82,8 @@ namespace DataAccess.CRUD
             {
                 Id = (int)row["id"],
                 ClientId = (int)row["client_id"],
-                Created = (DateTime)row["created"]
+                Created = (DateTime)row["created"],
+                Name = (string)row["name"]
             };
 
             return routineToReturn;
