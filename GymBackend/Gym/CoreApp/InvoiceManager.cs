@@ -43,27 +43,21 @@ namespace CoreApp
 
         private void ValidateInvoice(Invoice invoice)
         {
+            if (invoice.MembershipID == 0)
+            {
+                throw new Exception("Por favor selecciona un tipo de membresía.");
+            }
             if (invoice.UserId <= 0)
             {
                 throw new Exception("Por favor selecciona un usuario.");
             }
-
-            if (invoice.Amount <= 0)
-            {
-                throw new Exception("El monto debe ser mayor a 0.");
-            }
-
-            if (invoice.AmountAfterDiscount < 0)
-            {
-                throw new Exception("El monto después del descuento no puede ser negativo.");
-            }
-
-            if (string.IsNullOrWhiteSpace(invoice.PaymentMethod))
+            if (invoice.PaymentMethod == "empty")
             {
                 throw new Exception("Por favor selecciona un método de pago.");
             }
+            
 
-         
+
         }
 
         #endregion
