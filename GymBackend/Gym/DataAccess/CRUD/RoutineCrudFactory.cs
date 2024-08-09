@@ -28,6 +28,7 @@ namespace DataAccess.CRUD
 
             //Agregamos los parametros
             sqlOperation.AddIntParam("P_ClientId", routine.ClientId);
+            sqlOperation.AddStringParam("P_Name", routine.Name);
 
             //Ir al DAO a ejecutor
             _sqlDao.ExecuteProcedure(sqlOperation);
@@ -70,6 +71,61 @@ namespace DataAccess.CRUD
             return default;
         }
 
+        public List<Routine> RetrieveRoutineByUser(int clientId)
+        {
+            try
+            {
+                var sqlOperation = new SqlOperation();
+
+                sqlOperation.ProcedureName = "RET_ROUTINE_BY_USER_PR";
+
+                //Agregamos los parametros
+                sqlOperation.AddIntParam("P_ClientId", clientId);
+                var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+                var routines = new List<Routine>();
+
+                foreach (var row in listaResultados)
+                {
+                    var readRoutine = BuildRoutine(row);
+                    routines.Add(readRoutine);
+                }
+
+                return routines;
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Routine RetrieveById(int id)
+        {
+            try
+            {
+                var sqlOperation = new SqlOperation();
+
+                sqlOperation.ProcedureName = "RET_ROUTINE_BY_ID_PR";
+
+                //Agregamos los parametros
+                sqlOperation.AddIntParam("P_Id", id);
+                var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+                if (listaResultados.Count > 0)
+                {
+                    var row = listaResultados[0];
+                    var readRoutine = BuildRoutine(row);
+                    return readRoutine;
+                }
+
+                return default;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public override void Update(BaseDTO baseDto)
         {
             throw new NotImplementedException();
@@ -81,7 +137,8 @@ namespace DataAccess.CRUD
             {
                 Id = (int)row["id"],
                 ClientId = (int)row["client_id"],
-                Created = (DateTime)row["created"]
+                Created = (DateTime)row["created"],
+                Name = (string)row["name"],
             };
 
             return routineToReturn;

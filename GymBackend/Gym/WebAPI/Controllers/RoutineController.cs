@@ -28,6 +28,43 @@ namespace WebAPI.Controllers
 
         #endregion
 
+        #region GETS
+
+        [HttpGet]
+        [Route("RetrieveByUser")]
+        public ActionResult RetrieveByUser(int clientId)
+        {
+            try
+            {
+                var rm = new RoutineManager();
+                return Ok(rm.RetrieveByUser(clientId));
+            }
+            catch (Exception ex)
+            {
+                // 500 es internal server error
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int Id)
+        {
+            try
+            {
+                var rm = new RoutineManager();
+                return Ok(rm.RetrieveById(Id));
+            }
+            catch (Exception ex)
+            {
+                // 500 es internal server error
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        #endregion
+
         public class RoutineRequest
         {
             public Routine Routine { get; set; }
