@@ -23,8 +23,8 @@ public class PersonalTrainingManager
         var ptCrud = new PersonalTrainingCrudFactory();
         ptCrud.Update(personalTraining);
     }
-    
-     public void Cancel(PersonalTraining personalTraining)
+
+    public void Cancel(PersonalTraining personalTraining)
     {
         // Validar el objeto antes de proceder con la cancelación
         ValidateCancelPersonalTraining(personalTraining);
@@ -33,7 +33,7 @@ public class PersonalTrainingManager
         var ptCrud = new PersonalTrainingCrudFactory();
         ptCrud.Cancel(personalTraining);
     }
-  
+
     public void Delete(PersonalTraining personalTraining)
     {
         var ptCrud = new PersonalTrainingCrudFactory();
@@ -63,6 +63,30 @@ public class PersonalTrainingManager
         var ptCrud = new PersonalTrainingCrudFactory();
         return ptCrud.RetrieveByClientId(id);
     }
+
+    public List<PersonalTraining> RetrieveByClientIdPayable(int id)
+    {
+        //Esta es la logica para ver cuales entrenamientos personales se deben de pagar 
+        // a la hora de renovar la membresia.
+
+        var ptCrud = new PersonalTrainingCrudFactory();
+        var msManager = new UserMembershipManager();
+        var lastMembership = msManager.RetrieveNewestByUserId(id);
+        var personalTrainings = ptCrud.RetrieveByClientId(id);
+        List<PersonalTraining> payable = new List<PersonalTraining>();
+        foreach (var personalTraining in personalTrainings)
+        {
+            DateOnly dateOnly = new DateOnly(personalTraining.ProgrammedDate.Year, personalTraining.ProgrammedDate.Month, personalTraining.ProgrammedDate.Day);
+            DateTime ptDate = new DateTime(dateOnly, personalTraining.TimeOfEntry);
+            if(ptDate>= lastMembership.Created && ptDate< DateTime.Now && personalTraining.IsCancelled =="no")
+            {
+                payable.Add(personalTraining);
+            }
+        }
+
+        return payable;
+    }
+
 
     #region Validations
 
@@ -196,7 +220,7 @@ public class PersonalTrainingManager
 
     private bool IsTimeOverlap(TimeOnly start1, TimeOnly end1, TimeOnly start2, TimeOnly end2)
     {
-        return (start1 < end2 && start1 >= start2)|| (end1 <= end2 && end1 > start2);
+        return (start1 < end2 && start1 >= start2) || (end1 <= end2 && end1 > start2);
     }
 
     private void ValidateCancelPersonalTraining(PersonalTraining personalTraining)
@@ -227,6 +251,7 @@ public class PersonalTrainingManager
         }
     }
 
-  
+
+
     #endregion
 }
