@@ -122,6 +122,22 @@ public class PersonalTrainingController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+    [HttpGet]
+    [Route("RetrieveByClientIdPayable")]
+    public ActionResult RetrieveByClientIdPayable(int id)
+    {
+        try
+        {
+            var ptManager = new PersonalTrainingManager();
+            List<PersonalTraining> personalTraining = ptManager.RetrieveByClientIdPayable(id);
+            return Ok(personalTraining);
+        }
+        catch (Exception ex)
+        {
+            // 500 es internal server error
+            return StatusCode(500, ex.Message);
+        }
+    }
 
     #region GETS
 

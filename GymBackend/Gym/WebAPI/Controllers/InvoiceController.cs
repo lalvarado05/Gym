@@ -6,19 +6,24 @@ namespace WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class DiscountController : ControllerBase
+public class InvoiceController : ControllerBase
 {
+    // CREATE --> POST
+    // RETRIEVE --> GET
+    // UPDATE --> PUT
+    // DELETE --> DELETE
+
     #region POSTS
 
     [HttpPost]
     [Route("Create")]
-    public ActionResult Create(Discount discount)
+    public ActionResult Create(Invoice invoice)
     {
         try
         {
-            var dm = new DiscountManager();
-            dm.Create(discount);
-            return Ok(discount);
+            var im = new InvoiceManager();
+            im.Create(invoice);
+            return Ok(invoice);
         }
         catch (Exception ex)
         {
@@ -32,13 +37,13 @@ public class DiscountController : ControllerBase
 
     [HttpPut]
     [Route("Update")]
-    public ActionResult Update(Discount discount)
+    public ActionResult Update(Invoice invoice)
     {
         try
         {
-            var dm = new DiscountManager();
-            dm.Update(discount);
-            return Ok(discount);
+            var im = new InvoiceManager();
+            im.Update(invoice);
+            return Ok(invoice);
         }
         catch (Exception ex)
         {
@@ -51,15 +56,16 @@ public class DiscountController : ControllerBase
     #region DELETE
 
     [HttpDelete]
-    [Route("Delete/{id}")]
+    [Route("Delete")]
     public ActionResult Delete(int id)
     {
         try
         {
-            var dm = new DiscountManager();
-            var discount = new Discount { Id  = id };
-            dm.Delete(discount);
-            return Ok(new {Id = id});
+            var im = new InvoiceManager();
+            var invoice = im.RetrieveById(id);
+            if (invoice == null) return NotFound();
+            im.Delete(invoice);
+            return Ok(invoice);
         }
         catch (Exception ex)
         {
@@ -77,8 +83,8 @@ public class DiscountController : ControllerBase
     {
         try
         {
-            var dm = new DiscountManager();
-            return Ok(dm.RetrieveAll());
+            var im = new InvoiceManager();
+            return Ok(im.RetrieveAll());
         }
         catch (Exception ex)
         {
@@ -92,8 +98,10 @@ public class DiscountController : ControllerBase
     {
         try
         {
-            var dm = new DiscountManager();
-            return Ok(dm.RetrieveById(id));
+            var im = new InvoiceManager();
+            var invoice = im.RetrieveById(id);
+            if (invoice == null) return NotFound();
+            return Ok(invoice);
         }
         catch (Exception ex)
         {
