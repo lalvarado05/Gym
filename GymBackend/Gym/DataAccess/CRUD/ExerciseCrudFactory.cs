@@ -12,7 +12,6 @@ public class ExerciseCrudFactory : CrudFactory
 
     public override void Create(BaseDTO baseDto)
     {
-        //Conversion del DTO base a product
         var exercise = baseDto as Exercise;
 
         //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
