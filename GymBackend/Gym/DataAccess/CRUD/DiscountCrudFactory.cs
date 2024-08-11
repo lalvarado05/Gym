@@ -60,7 +60,7 @@ public class DiscountCrudFactory : CrudFactory
 
     public override T RetrieveById<T>(int id)
     {
-        var sqlOperation = new SqlOperation { ProcedureName = "RET_DISCOUNT_BY_ID_PR" };
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_DISCOUNT_BYID_PR" };
         sqlOperation.AddIntParam("P_Id", id);
 
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);

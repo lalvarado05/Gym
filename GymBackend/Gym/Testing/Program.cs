@@ -1,4 +1,5 @@
 ﻿using CoreApp;
+using DTOs;
 
 namespace Testing;
 
@@ -6,11 +7,21 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var smsSender = new TwilioOTP();
+        Double membershipCost = 20000;
+        Double ptCost = 0;
+        int percentage = 10;
+        Double descuento = (1 - ((double)percentage / 100));
+        Double AmountAfterDiscount = ptCost + membershipCost * descuento;
 
-        // Reemplaza con el número de teléfono del destinatario y el mensaje que quieres enviar
-        var toPhoneNumber = "+50685663503";
+        Console.WriteLine("El total es:" + AmountAfterDiscount);
+        Console.WriteLine("El descuento es:" + descuento);
+        Console.WriteLine("El total es:" + AmountAfterDiscount);
+        Console.WriteLine("El total es:" + AmountAfterDiscount);
 
-        smsSender.SendMessage(toPhoneNumber);
+        //NewestInvoice.Amount = ptCost + membershipCost;
+        //NewestInvoice.AmountAfterDiscount = ptCost + membershipCost * (1 - (discount.Percentage / 100));
+        //iCrud.Update(NewestInvoice);
+
+
     }
 }
