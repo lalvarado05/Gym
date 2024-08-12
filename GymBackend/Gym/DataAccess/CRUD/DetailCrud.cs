@@ -115,7 +115,7 @@ namespace DataAccess.CRUD
                 InvoiceId = (int)row["invoice_id"],
                 UserMembershipId = (int)row["user_membership_id"] ,
                 PersonalTrainingId = (int)row["personal_training_id"] ,
-                Price = (double)row["price"],
+                Price = (double)(decimal)row["price"],
                 Created = (DateTime)row["created"]
             };
             return detailToReturn;
