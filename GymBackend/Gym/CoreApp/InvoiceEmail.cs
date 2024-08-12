@@ -41,7 +41,7 @@ public class InvoiceEmailSender
         {
             Content = Convert.ToBase64String(pdfContent),
             Type = "application/pdf",
-            Filename = "Invoice.pdf",
+            Filename = $"Recibo - #{invoice.Id.ToString()} - {user.Name + " " + user.LastName}.pdf",
             Disposition = "attachment"
         };
         msg.AddAttachment(pdfAttachment);
@@ -50,7 +50,7 @@ public class InvoiceEmailSender
         {
             Content = Convert.ToBase64String(xmlContent),
             Type = "application/xml",
-            Filename = "Invoice.xml",
+            Filename = $"Recibo - #{invoice.Id.ToString()} - {user.Name + " " + user.LastName}.xml",
             Disposition = "attachment"
         };
         msg.AddAttachment(xmlAttachment);
