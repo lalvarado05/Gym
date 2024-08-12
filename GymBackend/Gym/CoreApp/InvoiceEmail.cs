@@ -30,10 +30,12 @@ public class InvoiceEmailSender
         var client = new SendGridClient(_apiKey);
         var from = new EmailAddress("siluetaclubfitness@gmail.com", "Silueta Club Fitness");
         var to = new EmailAddress(user.Email);
-        var subject = $"Silueta Club Fitness - Recibo - {DateTime.Now:dd-MM-yyyy}";
-        var plainTextContent = "Encuentre el recibo adjunto al correo.";
-        var htmlContent = "<strong>Encuentre el recibo adjunto al correo.</strong>";
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        var templateId = "d-fb2be50c94204770ad738f67d49c8edc";
+        var dynamicTemplateData = new
+        {
+            subject = $"Silueta Club Fitness - Recibo - {DateTime.Now:dd-MM-yyyy}",
+        };
+        var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicTemplateData);
 
         var pdfAttachment = new Attachment
         {
