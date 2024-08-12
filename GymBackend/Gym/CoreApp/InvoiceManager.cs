@@ -14,11 +14,12 @@ namespace CoreApp
             var msCrud = new MembershipCrudFactory();
             var ptManager = new PersonalTrainingManager();
             var uCrud = new UserCrudFactory();
+            List<Detail> detailsList = new List<Detail>();
 
             // Validar la factura antes de crearla
             ValidateInvoice(invoice);
 
-            //Validar el descuento que se va a aplicar (Nuevo, expirado, o seleccionado en frontEnd)
+            //Validar el descuento que se va a aplicar (Nuevo, expirado, o seleccionado en frontEndd)
             invoice = ValidateDiscount(invoice);
 
             //Tenemos el invoice que acabamos de crear
@@ -42,6 +43,7 @@ namespace CoreApp
                 Created = DateTime.Now
             };
             umsCrud.Create(umNew);
+            
             //Llamo el UserMembership que acabo de crear para obtener el ID
             List<UserMembership> lstUM = umsCrud.RetrieveAll<UserMembership>();
             UserMembership newUM = obtainNewUMbyID(invoice.UserId,lstUM);
@@ -57,6 +59,8 @@ namespace CoreApp
                 Created = DateTime.Now
             };
             dCrud.Create(MembershipDetail);
+            detailsList.Add(MembershipDetail);
+
 
             //Guardo el costo del membership
             var membershipCost = membership.MonthlyCost;
@@ -82,6 +86,7 @@ namespace CoreApp
                     Created = DateTime.Now
                 };
                 dCrud.Create(ptDetail);
+                detailsList.Add(ptDetail);
             }
 
             //Update a PTs que ya se cancelaron
@@ -94,7 +99,7 @@ namespace CoreApp
             //Update al invoice con los cobros
             NewestInvoice.Amount = ptCost + membershipCost;
             NewestInvoice.AmountAfterDiscount = ptCost + membershipCost*(1-((double)discount.Percentage/100));
-           iCrud.Update(NewestInvoice);
+            iCrud.Update(NewestInvoice);
 
            
 
@@ -104,6 +109,9 @@ namespace CoreApp
             uCrud.Update(user);
 
             //Aqui iria la logica para enviar el correo con PDF y XML del pago
+            NewestInvoice.MembershipID = invoice.MembershipID;
+            InvoiceEmailSender ies = new InvoiceEmailSender();
+            Task sendEmailTask = ies.SendInvoiceEmailAsync(NewestInvoice, detailsList, user);
         }
 
         private UserMembership obtainNewUMbyID(int userId, List<UserMembership> lstUM)

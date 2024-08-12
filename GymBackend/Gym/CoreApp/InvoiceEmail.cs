@@ -20,23 +20,21 @@ public class InvoiceEmailSender
         _apiKey = "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";
     }
 
-    public async Task SendInvoiceEmailAsync(Invoice invoice, List<Detail> details)
+    public async Task SendInvoiceEmailAsync(Invoice invoice, List<Detail> details, User user)
     {
         QuestPDF.Settings.License = LicenseType.Community;
-        // Generate PDF content using QuestPDF
-        var pdfContent = GeneratePdf(invoice, details);
-        var xmlContent = GenerateXml(invoice, details);
 
-        // Send email with attachments
+        var pdfContent = GeneratePdf(invoice, details, user);
+        var xmlContent = GenerateXml(invoice, details, user);
+
         var client = new SendGridClient(_apiKey);
         var from = new EmailAddress("siluetaclubfitness@gmail.com", "Silueta Club Fitness");
-        var to = new EmailAddress("lgarmanyv@ucenfotec.ac.cr");
-        var subject = "Your Invoice";
-        var plainTextContent = "Please find your invoice attached.";
-        var htmlContent = "<strong>Please find your invoice attached.</strong>";
+        var to = new EmailAddress(user.Email);
+        var subject = $"Silueta Club Fitness - Recibo - {DateTime.Now:dd-MM-yyyy}";
+        var plainTextContent = "Encuentre el recibo adjunto al correo.";
+        var htmlContent = "<strong>Encuentre el recibo adjunto al correo.</strong>";
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-        // Attach PDF
         var pdfAttachment = new Attachment
         {
             Content = Convert.ToBase64String(pdfContent),
@@ -46,7 +44,6 @@ public class InvoiceEmailSender
         };
         msg.AddAttachment(pdfAttachment);
 
-        // Attach XML
         var xmlAttachment = new Attachment
         {
             Content = Convert.ToBase64String(xmlContent),
@@ -56,20 +53,17 @@ public class InvoiceEmailSender
         };
         msg.AddAttachment(xmlAttachment);
 
-        // Send the email
         try
         {
             var response = await client.SendEmailAsync(msg);
-            // Handle response if needed
         }
         catch (Exception ex)
         {
-            // Handle exceptions (log, notify, etc.)
             Console.WriteLine($"Error sending email: {ex.Message}");
         }
     }
 
-    private byte[] GeneratePdf(Invoice invoice, List<Detail> details)
+    public byte[] GeneratePdf(Invoice invoice, List<Detail> details, User user)
     {
         var pdfDocument = Document.Create(container =>
         {
@@ -77,75 +71,191 @@ public class InvoiceEmailSender
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
-                page.Header().Text($"Invoice for User {invoice.UserId}").FontSize(20).Bold().AlignCenter();
-                page.Content().Element(content =>
+
+                page.Header().Row(row =>
                 {
-                    BuildTable(invoice, details, content);
+                    row.RelativeItem().Column(column =>
+                    {
+                        column.Item().Text("Silueta Club Fitness").FontSize(16).Bold();
+                        column.Item().Text("Cédula Jurídica: 4-101-747234").FontSize(10);
+                        column.Item().Text("Tel: 87654321").FontSize(10);
+                        column.Item().Text("Email: siluetaclubfitness@gmail.com").FontSize(10);
+                        column.Item().Text("Horario: Lunes a Viernes de 6am a 10pm").FontSize(10);
+                    });
                 });
-                page.Footer().AlignCenter().Text($"Generated on {DateTime.Now:yyyy-MM-dd}");
+
+                page.Content().Column(column =>
+                {
+                    column.Item().Height(20);
+
+                    column.Item().AlignRight().Text(text =>
+                    {
+                        text.Span("Recibo #").Bold();
+                        text.Span(invoice.Id.ToString())
+                            .FontColor(Colors.Orange.Medium);
+                        column.Item().Height(10);
+                        text.Span(" Fecha: ").Bold();
+                        text.Span($"{DateTime.Now:dd/MM/yyyy}")
+                            .FontColor(Colors.Orange.Medium);
+                    });
+
+                    column.Item().Height(10);
+
+                    column.Item().Element(content =>
+                    {
+                        BuildClientDetailsTable(user, content);
+                    });
+
+                    column.Item().PaddingVertical(10);
+
+                    column.Item().Element(content =>
+                    {
+                        BuildTable(invoice, details, content);
+                    });
+                });
+
+                page.Footer().AlignCenter().Text($"Silueta Club Fitness - 2024");
             });
         });
 
         using (var memoryStream = new MemoryStream())
         {
-             pdfDocument.GeneratePdf(memoryStream);
+            pdfDocument.GeneratePdf(memoryStream);
             return memoryStream.ToArray();
         }
     }
 
+    private void BuildClientDetailsTable(User user, IContainer container)
+    {
+        container.Table(table =>
+        {
+            table.ColumnsDefinition(columns =>
+            {
+                columns.RelativeColumn(4);
+                columns.RelativeColumn(8);
+            });
+
+            table.Header(header =>
+            {
+                header.Cell().ColumnSpan(2).Element(HeaderCellStyle).Text("Detalles del Cliente");
+            });
+
+            table.Cell().Element(LabelCellStyle).Text("Nombre:");
+            table.Cell().Element(DataCellStyle).Text(user.Name + " " + user.LastName);
+
+            table.Cell().Element(LabelCellStyle).Text("Número de Teléfono:");
+            table.Cell().Element(DataCellStyle).Text(user.Phone);
+
+            table.Cell().Element(LabelCellStyle).Text("Correo Electrónico:");
+            table.Cell().Element(DataCellStyle).Text(user.Email);
+        });
+    }
 
     private void BuildTable(Invoice invoice, List<Detail> details, IContainer container)
     {
         container.Table(table =>
         {
-            // Define columns
             table.ColumnsDefinition(columns =>
             {
                 columns.RelativeColumn(4);
                 columns.RelativeColumn(2);
             });
 
-            // Header
             table.Header(header =>
             {
-                header.Cell().Element(CellStyle).Text("Item");
-                header.Cell().Element(CellStyle).AlignRight().Text("Price");
+                header.Cell().Element(HeaderCellStyle).Text("Detalle");
+                header.Cell().Element(HeaderCellStyle).AlignRight().Text("Precio");
             });
 
-            // Details
+            bool alternateRow = false;
             foreach (var detail in details)
             {
-                if (detail.UserMembershipId != 0) {
-
+                if (detail.UserMembershipId != 2)
+                {
                     var mCrud = new MembershipCrudFactory();
-
-                    var Membership = mCrud.RetrieveById <Membership> (detail.UserMembershipId);
-
-                    table.Cell().Element(CellStyle).Text("Tipo de Membresia:" + $"{Membership.Type}");
+                    var membership = mCrud.RetrieveById<Membership>(invoice.MembershipID ?? 0);
+                    table.Cell().Element(c => DetailCellStyle(c, alternateRow)).Text("Tipo de Membresia: " + membership.Type);
                 }
-
                 else
                 {
                     var ptCrud = new PersonalTrainingCrudFactory();
-                    var pTraining = ptCrud.RetrieveById<PersonalTraining>(detail.PersonalTrainingId);
-                    table.Cell().Element(CellStyle).Text("Entrenamiento Personal con Entrenador:" + $"{pTraining.EmployeeName}" + "el dia" + $"{pTraining.ProgrammedDate}");
+                    var pTraining = ptCrud.RetrieveById<PersonalTraining>(detail.PersonalTrainingId ?? 0);
+                    table.Cell().Element(c => DetailCellStyle(c, alternateRow)).Text("Entrenamiento Personal el dia: " + pTraining.ProgrammedDate);
                 }
-                
-                table.Cell().Element(CellStyle).AlignRight().Text($"{detail.Price:C}");
+
+                table.Cell().Element(c => DetailCellStyle(c, alternateRow)).AlignRight().Text($"₡{detail.Price:N}"); ;
+                alternateRow = !alternateRow;
             }
 
-            // Totals
-            table.Cell().Element(CellStyle).Text("Total (Before Discount)");
-            table.Cell().Element(CellStyle).AlignRight().Text($"{invoice.Amount:C}");
+            table.Cell().Element(TotalCellStyle).Text("Subtotal");
+            table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{invoice.Amount:N}");
 
-            table.Cell().Element(CellStyle).Text("Total (After Discount)");
-            table.Cell().Element(CellStyle).AlignRight().Text($"{invoice.AmountAfterDiscount:C}");
+            table.Cell().Element(TotalCellStyle).Text("Descuento");
+            table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{Math.Abs(invoice.Amount - invoice.AmountAfterDiscount):N}");
 
-            table.Cell().Element(CellStyle).Text("Payment Method");
-            table.Cell().Element(CellStyle).AlignRight().Text(invoice.PaymentMethod);
+            table.Cell().Element(TotalCellStyle).Text("Total");
+            table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{invoice.AmountAfterDiscount:N}");
+
+            table.Cell().Element(TotalCellStyle).Text("Metodo de Pago");
+            table.Cell().Element(TotalCellStyle).AlignRight().Text(invoice.PaymentMethod);
+
         });
     }
 
+    private IContainer HeaderCellStyle(IContainer container)
+    {
+        return container
+            .Border(0.5f)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Background(Colors.Orange.Medium)
+            .Padding(5)
+            .AlignMiddle()
+            .AlignCenter()
+            .DefaultTextStyle(x => x.FontSize(14).FontColor(Colors.White).Bold());
+    }
+
+    private IContainer LabelCellStyle(IContainer container)
+    {
+        return container
+            .Border(0.5f)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Background(Colors.Grey.Lighten4)
+            .Padding(5)
+            .AlignMiddle()
+            .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Grey.Darken3).Bold());
+    }
+
+    private IContainer DataCellStyle(IContainer container)
+    {
+        return container
+            .Border(0.5f)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Background(Colors.White)
+            .Padding(5)
+            .AlignMiddle()
+            .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Grey.Darken3));
+    }
+    private IContainer DetailCellStyle(IContainer container, bool alternate)
+    {
+        return container
+            .Border(0.5f)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Background(alternate ? Colors.Grey.Lighten4 : Colors.White)
+            .Padding(5)
+            .AlignMiddle()
+            .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Grey.Darken3));
+    }
+
+    private IContainer TotalCellStyle(IContainer container)
+    {
+        return container
+            .Border(0.5f)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Background(Colors.Orange.Lighten5)
+            .Padding(5)
+            .AlignMiddle()
+            .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Orange.Darken2).Bold());
+    }
 
     private IContainer CellStyle(IContainer container)
     {
@@ -157,21 +267,29 @@ public class InvoiceEmailSender
             .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Black));
     }
 
-    private byte[] GenerateXml(Invoice invoice, List<Detail> details)
+    private byte[] GenerateXml(Invoice invoice, List<Detail> details, User user)
     {
         using (var memoryStream = new MemoryStream())
         {
-            var serializer = new XmlSerializer(typeof(Invoice));
-            serializer.Serialize(memoryStream, invoice);
-
-            foreach (var detail in details)
+            var fullInvoiceData = new FullInvoiceData
             {
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                serializer = new XmlSerializer(typeof(Detail));
-                serializer.Serialize(memoryStream, detail);
-            }
+                Invoice = invoice,
+                Details = details,
+                User = user
+            };
+
+            var serializer = new XmlSerializer(typeof(FullInvoiceData));
+            serializer.Serialize(memoryStream, fullInvoiceData);
 
             return memoryStream.ToArray();
         }
     }
+
+    [Serializable]
+    public class FullInvoiceData
+    {
+        public Invoice Invoice { get; set; }
+        public List<Detail> Details { get; set; }
+        public User User { get; set; }
+    } 
 }
