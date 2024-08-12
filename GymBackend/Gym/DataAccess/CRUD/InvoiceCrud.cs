@@ -89,6 +89,24 @@ namespace DataAccess.CRUD
             return default;
         }
 
+        public Invoice RetrieveLastestInvoiceByUserId(int userId)
+        {
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "RET_LATEST_INVOICE_BY_USERID_PR"
+            };
+            sqlOperation.AddIntParam("P_UserId", userId);
+
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                var latestInvoice = BuildInvoice(row); // Método que convierte el resultado en un objeto Invoice.
+                return latestInvoice;
+            }
+            return null;
+        }
+
         public override void Update(BaseDTO baseDto)
         {
             var invoice = baseDto as Invoice;

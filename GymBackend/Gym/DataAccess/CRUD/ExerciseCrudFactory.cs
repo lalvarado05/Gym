@@ -12,7 +12,6 @@ public class ExerciseCrudFactory : CrudFactory
 
     public override void Create(BaseDTO baseDto)
     {
-        //Conversion del DTO base a product
         var exercise = baseDto as Exercise;
 
         //Crear el instructivo para que el DAO Pueda realizar un create en la base de datos
@@ -87,23 +86,44 @@ public class ExerciseCrudFactory : CrudFactory
 
         return lstExercises;
     }
-		
-	 	private Exercise BuildExercise(Dictionary<string, object> row)
+
+    public List<T> RetrieveByRoutineId<T>(int routineId)
+    {
+        var lstExercises = new List<T>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_EXE_BY_ROUTINE_PR" };
+        
+        //Agregamos los parametros
+        sqlOperation.AddIntParam("@P_RoutineId", routineId);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            foreach (var row in lstResults)
+            {
+                var exercise = BuildExercise(row);
+                lstExercises.Add((T)Convert.ChangeType(exercise, typeof(T)));
+            }
+        }
+
+        return lstExercises;
+    }
+
+    private Exercise BuildExercise(Dictionary<string, object> row)
     {
         var exerciseToReturn = new Exercise
         {
-            		Id = (int)row["id"],
-                EquipmentId = (int)row["equipment_id"],
-                EquipmentName = (string)row["equipmentName"],
-                Type = (string)row["type"],
-                Name = (string)row["name"],
-                Sets = (int)row["sets"],
-                Weight = (int)row["weight"],
-                Reps = (int)row["reps"],
-                Duration = (int)row["duration"]
-            };
-            return exerciseToReturn;
-        }
+            Id = (int)row["id"],
+            EquipmentId = (int)row["equipment_id"],
+            EquipmentName = (string)row["equipmentName"],
+            Type = (string)row["type"],
+            Name = (string)row["name"],
+            Sets = (int)row["sets"],
+            Weight = (int)row["weight"],
+            Reps = (int)row["reps"],
+            Duration = (int)row["duration"]
+        };
+            
+        return exerciseToReturn;
+    }
 }
 
   

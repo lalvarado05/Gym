@@ -12,4 +12,6 @@ public class Invoice : BaseDTO
     public string IsConfirmed { get; set; }
 
     public DateTime Created { get; set; }
+
+    public int? MembershipID { get; set; }
 }

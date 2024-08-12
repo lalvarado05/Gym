@@ -1,13 +1,16 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataAccess.CRUD;
+
 using DTOs;
 
 public class InvoiceEmailSenderTest
 {
     public static async Task Main(string[] args)
     {
+
         // Step 1: Create a sample invoice
         var invoice = new Invoice
         {
@@ -42,5 +45,6 @@ public class InvoiceEmailSenderTest
 
         // Step 5: Confirm email was sent (you can check the email inbox to verify)
         Console.WriteLine("Invoice email sent. Please check your inbox.");
+
     }
 }
