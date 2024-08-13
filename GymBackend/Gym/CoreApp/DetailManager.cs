@@ -40,7 +40,17 @@ namespace CoreApp
             var detailCrud = new DetailCrudFactory();
             return detailCrud.RetrieveAll<Detail>();
         }
+        public List<Detail> RetrieveByInvoiceId(int invoiceId)
+        {
+            var detailCrud = new DetailCrudFactory();
+            var allDetails = detailCrud.RetrieveAll<Detail>();
+            List<Detail> ret = new List<Detail>();
+            foreach (Detail detail in allDetails) {
+                if (detail.InvoiceId == invoiceId) { ret.Add(detail); }
+            }
 
+            return ret;
+        }
         public Detail RetrieveById(int id)
         {
             var detailCrud = new DetailCrudFactory();
@@ -66,6 +76,8 @@ namespace CoreApp
                 throw new Exception("Por favor ingresa una fecha de creación válida.");
             }
         }
+
+
 
         #endregion
     }
