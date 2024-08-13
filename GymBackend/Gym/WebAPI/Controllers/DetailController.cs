@@ -93,6 +93,22 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("RetrieveByInvoiceId")]
+        public ActionResult RetrieveByInvoiceId(int invoiceId)
+        {
+            try
+            {
+                var dm = new DetailManager();
+                List<Detail> list = dm.RetrieveByInvoiceId(invoiceId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("RetrieveById")]
         public ActionResult RetrieveById(int id)
         {

@@ -149,6 +149,27 @@ namespace CoreApp
             return iCrud.RetrieveAll<Invoice>();
         }
 
+        public List<Invoice> RetrieveAllwithDetails()
+        {
+            var iCrud = new InvoiceCrudFactory();
+            return iCrud.RetrieveAllwithDetails();
+        }
+
+        public List<Invoice> RetrieveByClientIdwithDetails(int id)
+        {
+            List<Invoice> allInvoices = RetrieveAllwithDetails();
+            List<Invoice> ret = new List<Invoice>();
+            foreach (var invoice in allInvoices) {
+                if (invoice.UserId == id)
+                {
+                    ret.Add(invoice);
+                }
+            
+            }
+
+            return ret;
+        }
+
         public Invoice RetrieveById(int id)
         {
             var iCrud = new InvoiceCrudFactory();
@@ -193,6 +214,9 @@ namespace CoreApp
 
             return invoice;
         }
+
+        
+
 
 
         #endregion
