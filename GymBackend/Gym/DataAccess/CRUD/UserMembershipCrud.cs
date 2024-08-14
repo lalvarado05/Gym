@@ -107,6 +107,26 @@ public class UserMembershipCrud : CrudFactory
         return lstUserMemberships;
     }
 
+    public List<UserMembership> RetrieveByUserIdStatusChange(int userId)
+    {
+        List<UserMembership> lstUserMemberships = new List<UserMembership>();
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "RET_USER_MEMBERSHIP_BY_USERID_STATUS_V_PR"
+        };
+        sqlOperation.AddIntParam("P_UserId", userId);
+        List<Dictionary<string, object>> lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var userMembership = BuildUserMembership(row);
+                lstUserMemberships.Add(userMembership);
+            }
+
+        return lstUserMemberships;
+    }
+
     public override void Update(BaseDTO baseDto)
     {
         var userMembership = baseDto as UserMembership;

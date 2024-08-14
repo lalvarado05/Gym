@@ -119,6 +119,22 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("RetrieveByUserIdStatusChange")]
+        public ActionResult RetrieveByUserIdStatusChange(int userId)
+        {
+            try
+            {
+                var umm = new UserMembershipManager();
+                UserMembership userNewestMembership = umm.RetrieveByUserIdStatusChange(userId);
+                return Ok(userNewestMembership);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         #endregion
 
 

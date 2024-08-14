@@ -70,6 +70,27 @@ public class UserMembershipManager
         return Newest;
     }
 
+    public UserMembership RetrieveByUserIdStatusChange(int userId)
+    {
+        ValidateId(userId);
+
+        var umCrud = new UserMembershipCrud();
+        List<UserMembership> Memberships = umCrud.RetrieveByUserIdStatusChange(userId);
+        UserMembership Newest = new();
+        if (Memberships.Count != 0)
+        {
+            Newest = Memberships[0];
+            foreach (var membership in Memberships)
+            {
+                if (membership.Created > Newest.Created)
+                {
+                    Newest = membership;
+                }
+            }
+        }
+        return Newest;
+    }
+
     private void ShouldPay(UserMembership newest)
     {
         // Calcula la fecha un mes después de la fecha de creación
