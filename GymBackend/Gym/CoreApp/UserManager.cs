@@ -261,7 +261,7 @@ namespace CoreApp
             return !string.IsNullOrWhiteSpace(user.Name) &&
                    user.Name.Length >= 2 &&
                    user.Name.Length <= 50 &&
-                   Regex.IsMatch(user.Name, @"^[a-zA-Z]+$");
+                   Regex.IsMatch(user.Name, @"^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+$");
         }
 
         public bool IsValidLastName(User user)
@@ -269,7 +269,7 @@ namespace CoreApp
             return !string.IsNullOrWhiteSpace(user.LastName) &&
                    user.LastName.Length >= 2 &&
                    user.LastName.Length <= 50 &&
-                   Regex.IsMatch(user.LastName, @"^[a-zA-Z]+$");
+                   Regex.IsMatch(user.LastName, @"^[a-zA-ZñÑáéíóúÁÉÍÓÚüÜ]+$");
         }
 
         public bool IsValidNumber(User user) => user.Phone.Length == 8 && Regex.IsMatch(user.Phone, @"^\d{8}$");

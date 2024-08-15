@@ -42,7 +42,7 @@ public class UserMembershipManager
     public List<UserMembership> RetrieveByUserId(int userId)
     {
         ValidateId(userId);
-        
+
         var umCrud = new UserMembershipCrud();
         List<UserMembership> Memberships = umCrud.RetrieveByUserId(userId);
         return Memberships;
@@ -50,19 +50,44 @@ public class UserMembershipManager
     public UserMembership RetrieveNewestByUserId(int userId)
     {
         ValidateId(userId);
-        
+
         var umCrud = new UserMembershipCrud();
         List<UserMembership> Memberships = umCrud.RetrieveByUserId(userId);
-        UserMembership Newest = Memberships[0];
-        foreach (var membership in Memberships)
+        UserMembership Newest = new();
+        if (Memberships.Count != 0)
         {
-            if (membership.Created > Newest.Created)
+            Newest = Memberships[0];
+            foreach (var membership in Memberships)
             {
-                Newest = membership;
+                if (membership.Created > Newest.Created)
+                {
+                    Newest = membership;
+                }
+            }
+            ShouldPay(Newest);
+        }
+
+        return Newest;
+    }
+
+    public UserMembership RetrieveByUserIdStatusChange(int userId)
+    {
+        ValidateId(userId);
+
+        var umCrud = new UserMembershipCrud();
+        List<UserMembership> Memberships = umCrud.RetrieveByUserIdStatusChange(userId);
+        UserMembership Newest = new();
+        if (Memberships.Count != 0)
+        {
+            Newest = Memberships[0];
+            foreach (var membership in Memberships)
+            {
+                if (membership.Created > Newest.Created)
+                {
+                    Newest = membership;
+                }
             }
         }
-        ShouldPay(Newest);
-
         return Newest;
     }
 

@@ -70,6 +70,26 @@ namespace DataAccess.CRUD
             return lstInvoices;
         }
 
+        public List<Invoice> RetrieveAllwithDetails()
+        {
+            var lstInvoices = new List<Invoice>();
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "RET_ALL_INVOICES_W_DETAILS_PR"
+            };
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var invoice = BuildInvoiceWithDetails(row);
+                    lstInvoices.Add(invoice);
+                }
+            }
+
+            return lstInvoices;
+        }
+
         public override T RetrieveById<T>(int id)
         {
             var sqlOperation = new SqlOperation
@@ -87,6 +107,24 @@ namespace DataAccess.CRUD
             }
 
             return default;
+        }
+
+        public Invoice RetrieveLastestInvoiceByUserId(int userId)
+        {
+            var sqlOperation = new SqlOperation
+            {
+                ProcedureName = "RET_LATEST_INVOICE_BY_USERID_PR"
+            };
+            sqlOperation.AddIntParam("P_UserId", userId);
+
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                var latestInvoice = BuildInvoice(row); // Método que convierte el resultado en un objeto Invoice.
+                return latestInvoice;
+            }
+            return null;
         }
 
         public override void Update(BaseDTO baseDto)
@@ -118,6 +156,22 @@ namespace DataAccess.CRUD
             {
                 Id = (int)row["id"],
                 UserId = (int)row["user_id"],
+                DiscountId = (int)row["discount_id"],
+                Amount = Convert.ToDouble(row["amount"]),
+                AmountAfterDiscount = Convert.ToDouble(row["amount_after_discount"]),
+                PaymentMethod = (string)row["payment_method"],
+                IsConfirmed = (string)row["is_confirmed"],
+                Created = (DateTime)row["created"]
+            };
+            return invoiceToReturn;
+        }
+        private Invoice BuildInvoiceWithDetails(Dictionary<string, object> row)
+        {
+            var invoiceToReturn = new Invoice
+            {
+                Id = (int)row["id"],
+                UserId = (int)row["user_id"],
+                UserName = (string)row["full_name"],
                 DiscountId = (int)row["discount_id"],
                 Amount = Convert.ToDouble(row["amount"]),
                 AmountAfterDiscount = Convert.ToDouble(row["amount_after_discount"]),

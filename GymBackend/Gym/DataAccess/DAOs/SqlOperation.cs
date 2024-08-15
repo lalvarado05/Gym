@@ -18,7 +18,7 @@ public class SqlOperation
         Parameters.Add(new SqlParameter(paramName, paramValue));
     }
 
-    public void AddIntParam(string paramName, int paramValue)
+    public void AddIntParam(string paramName, int? paramValue)
     {
         Parameters.Add(new SqlParameter(paramName, paramValue));
     }

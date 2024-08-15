@@ -93,6 +93,38 @@ public class InvoiceController : ControllerBase
     }
 
     [HttpGet]
+    [Route("RetrieveAllwithDetails")]
+    public ActionResult RetrieveAllwithDetails()
+    {
+        try
+        {
+            var im = new InvoiceManager();
+            List<Invoice> invoices = im.RetrieveAllwithDetails();
+            return Ok(invoices);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("RetrieveByClientIdwithDetails")]
+    public ActionResult RetrieveByClientIdwithDetails(int id)
+    {
+        try
+        {
+            var im = new InvoiceManager();
+            List<Invoice> invoices = im.RetrieveByClientIdwithDetails(id);
+            return Ok(invoices);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
     [Route("RetrieveById")]
     public ActionResult RetrieveById(int id)
     {
