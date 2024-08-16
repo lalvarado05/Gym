@@ -76,6 +76,23 @@ public class UserGroupClassCrudFactory : CrudFactory
         return lstUserGroupClasses;
     }
 
+    public List<UserGroupClass> RetrieveByGroupClassWithName(int groupClassId)
+    {
+        var lstUserGroupClasses = new List<UserGroupClass>();
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_USER_GROUP_CLASS_WITH_NAME_BY_GROUP_CLASS_ID_PR" };
+        sqlOperation.AddIntParam("P_GP_Id", groupClassId);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+        {
+            foreach (var row in lstResults)
+            {
+                var userGroupClass = BuildUserGroupClassWithName(row);
+                lstUserGroupClasses.Add(userGroupClass);
+            }
+        }
+        return lstUserGroupClasses;
+    }
+
     public override T RetrieveById<T>(int id)
     {
         var sqlOperation = new SqlOperation { ProcedureName = "RET_USER_GROUP_CLASS_BY_ID_PR" };
@@ -118,6 +135,17 @@ public class UserGroupClassCrudFactory : CrudFactory
         };
         return userGroupClassToReturn;
     }
-
+    private UserGroupClass BuildUserGroupClassWithName(Dictionary<string, object> row)
+    {
+        var userGroupClassToReturn = new UserGroupClass
+        {
+            Id = (int)row["id"],
+            GroupClassId = (int)row["group_class_id"],
+            ClientId = (int)row["client_id"],
+            Created = (DateTime)row["created"],
+            ClientName = row.ContainsKey("client_name") ? row["client_name"].ToString() : null
+        };
+        return userGroupClassToReturn;
+    }
     #endregion
 }
