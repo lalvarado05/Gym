@@ -91,6 +91,22 @@ public class UserGroupClassController : ControllerBase
     }
 
     [HttpGet]
+    [Route("RetrieveByGroupClassWithName")]
+    public ActionResult RetrieveByGroupClassWithName(int groupClassId)
+    {
+        try
+        {
+            var ugcManager = new UserGroupClassManager();
+            List<UserGroupClass> lstugc = ugcManager.RetrieveByGroupClassWithName(groupClassId);
+            return Ok(lstugc);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet]
     [Route("RetrieveById")]
     public ActionResult RetrieveById(int id)
     {
