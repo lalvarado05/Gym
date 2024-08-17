@@ -339,6 +339,7 @@ namespace CoreApp
             }
 
             return true;
+
         }
 
         public bool IsValidGender(User user)
