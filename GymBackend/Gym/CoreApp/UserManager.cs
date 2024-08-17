@@ -120,6 +120,11 @@ namespace CoreApp
                 throw new Exception("Número de teléfono debe tener 8 dígitos.");
             }
 
+            if (!IsUniqueEmail(user))
+            {
+                throw new Exception("El correo electrónico ya está en uso.");
+            }
+
             if (!IsValidEmail(user))
             {
                 throw new Exception("Correo electrónico no válido.");
