@@ -17,13 +17,25 @@ public class GroupClassManager
  
     public void Update(GroupClass groupClass)
     {
+        GeneralValidations(groupClass);
+        ScheduleValidations(groupClass);
         var gcCrud = new GroupClassCrudFactory();
         gcCrud.Update(groupClass);
     }
 
     public void Delete(GroupClass groupClass)
     {
+        var DateToday = DateTime.Now;
+        if (groupClass.ClassDate <= DateToday)
+        {
+            throw new Exception("No se puede eliminar una clase que ya pasó.");
+        }
         var gcCrud = new GroupClassCrudFactory();
+        var uGcCrud = new UserGroupClassCrudFactory();
+        var lstUserGroupClass = uGcCrud.RetrieveByGroupClassId(groupClass.Id);
+        foreach (var grpClass in lstUserGroupClass) {
+            uGcCrud.Delete(grpClass);
+        }
         gcCrud.Delete(groupClass);
     }
 
@@ -157,7 +169,7 @@ public class GroupClassManager
         var lstAllGC = gcCrud.RetrieveByUserId(groupClass.EmployeeId);
 
         return !lstAllGC.Any(gc =>
-            gc.ClassDate.Date == groupClass.ClassDate.Date &&
+            gc.ClassDate.Date == groupClass.ClassDate.Date && gc.Id != groupClass.Id &&
             ((groupClass.StartTime < gc.EndTime && groupClass.StartTime >= gc.StartTime)|| (groupClass.EndTime <= gc.EndTime && groupClass.EndTime > gc.StartTime))
         );
     }

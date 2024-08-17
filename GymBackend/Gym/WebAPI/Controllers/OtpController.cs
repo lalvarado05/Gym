@@ -36,8 +36,13 @@ public class OtpController : Controller
     {
         try
         {
+            var decodedEmail = Uri.UnescapeDataString(email);
+            //var emailSplit = email.Split(' ');
+            //if (emailSplit.Length > 1) { 
+            //    email = emailSplit[0]+"+"+ emailSplit[1];
+            //}
             var otpM = new OtpManager();
-            otpM.Update(email, phone, otp);
+            otpM.Update(decodedEmail, phone, otp);
             return Ok(otp);
         }
         catch (Exception ex)

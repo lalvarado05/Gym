@@ -105,9 +105,49 @@ namespace CoreApp
             var uCrud = new UserCrudFactory();
             //var urCrud = new UserRoleFactory();
 
-            if (EmailExist(user))
+            if (!IsValidName(user))
             {
-                throw new Exception("Ya existe un usuario con este correo eléctronico");
+                throw new Exception("Nombre no válido.");
+            }
+
+            if (!IsValidLastName(user))
+            {
+                throw new Exception("Apellido no válido.");
+            }
+
+            if (!IsValidNumber(user))
+            {
+                throw new Exception("Número de teléfono debe tener 8 dígitos.");
+            }
+
+            if (!IsUniqueEmail(user))
+            {
+                throw new Exception("El correo electrónico ya está en uso.");
+            }
+
+            if (!IsValidEmail(user))
+            {
+                throw new Exception("Correo electrónico no válido.");
+            }
+
+            if (!IsValidGender(user))
+            {
+                throw new Exception("Género no válido.");
+            }
+
+            if (!IsValidDate(user))
+            {
+                throw new Exception("Debe seleccionar una fecha de nacimiento");
+            }
+
+            if (!IsAtLeastOneRoleSelected(user))
+            {
+                throw new Exception("Debe seleccionar al menos un rol.");
+            }
+
+            if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
+            {
+                throw new Exception("Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
             }
 
             uCrud.Update(user);
@@ -289,7 +329,17 @@ namespace CoreApp
         {
             var uCrud = new UserCrudFactory();
             var existingUser = uCrud.RetrieveByEmail(user.Email);
-            return existingUser == null;
+
+            if (existingUser != null)
+            {
+                if (existingUser.Id != user.Id)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
         }
 
         public bool IsValidGender(User user)
