@@ -329,7 +329,16 @@ namespace CoreApp
         {
             var uCrud = new UserCrudFactory();
             var existingUser = uCrud.RetrieveByEmail(user.Email);
-            return existingUser == null;
+
+            if (existingUser != null)
+            {
+                if (existingUser.Id != user.Id)
+                {
+                    return false;
+                }
+            }
+
+            return true; 
         }
 
         public bool IsValidGender(User user)
