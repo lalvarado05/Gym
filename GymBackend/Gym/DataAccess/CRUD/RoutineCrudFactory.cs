@@ -138,7 +138,7 @@ namespace DataAccess.CRUD
                 Id = (int)row["id"],
                 ClientId = (int)row["client_id"],
                 Created = (DateTime)row["created"],
-                Name = (string)row["name"],
+                Name = (string)row["name"]
             };
 
             return routineToReturn;

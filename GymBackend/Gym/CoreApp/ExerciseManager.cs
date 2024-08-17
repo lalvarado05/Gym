@@ -42,6 +42,11 @@ public class ExerciseManager
                 throw new Exception("El peso es requerido para ejercicios basados en peso");
             }
 
+            if (exercise.Weight > 300)
+            {
+                throw new Exception("El peso máximo son 300KG");
+            }
+
             exercise.Duration = 0;
         }
 
@@ -52,6 +57,11 @@ public class ExerciseManager
                 throw new Exception("El tiempo es requerido para ejercicios basados en tiempo");
             }
 
+            if (exercise.Duration > 120)
+            {
+                throw new Exception("El tiempo máximo son 120minutos");
+            }
+
             exercise.Sets = 0;
             exercise.Reps = 0;
             exercise.Weight = 0;
@@ -59,13 +69,29 @@ public class ExerciseManager
 
         if (exercise.Type == "AMRAP")
         {
-            if (exercise.Reps < 1)
+            //if (exercise.Reps < 1)
+            //{
+            //    throw new Exception("Las repeticiones son requeridas para ejercicios basados en AMRP");
+            //}
+
+            //if (exercise.Reps > 12)
+            //{
+            //    throw new Exception("Las repeticiones maximas aceptadas son 12");
+            //}
+
+            if (exercise.Duration < 1)
             {
-                throw new Exception("Las repeticiones son requeridas para ejercicios basados en AMRP");
+                throw new Exception("El tiempo es requerido para ejercicios basados en tiempo");
+            }
+
+            if (exercise.Duration > 120)
+            {
+                throw new Exception("El tiempo máximo son 120minutos");
             }
 
             exercise.Sets = 0;
-            exercise.Duration = 0;
+            exercise.Reps = 0;
+            exercise.Weight = 0;
         }
     }
 

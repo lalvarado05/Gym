@@ -140,14 +140,17 @@ namespace CoreApp
                 throw new Exception("Debe seleccionar una fecha de nacimiento");
             }
 
-            if (!IsAtLeastOneRoleSelected(user))
+            if(user.ListaRole != null)
             {
-                throw new Exception("Debe seleccionar al menos un rol.");
-            }
+                if (!IsAtLeastOneRoleSelected(user))
+                {
+                    throw new Exception("Debe seleccionar al menos un rol.");
+                }
 
-            if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
-            {
-                throw new Exception("Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
+                if (IsEntrenadorRoleSelected(user) && !IsValidTrainerAvailability(user))
+                {
+                    throw new Exception("Debe seleccionar al menos un día de disponibilidad y llenar las horas de entrada y salida.");
+                }
             }
 
             uCrud.Update(user);
