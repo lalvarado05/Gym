@@ -50,7 +50,6 @@ public class UserRoleFactory : CrudFactory
 
     public override void Delete(BaseDTO baseDto)
     {
-
         var userRol = baseDto as UserRole;
 
         var sqlOperation = new SqlOperation
@@ -66,7 +65,6 @@ public class UserRoleFactory : CrudFactory
 
     public void DeleteByUserId(BaseDTO baseDto)
     {
-
         var user = baseDto as User;
 
         var sqlOperation = new SqlOperation
@@ -109,7 +107,7 @@ public class UserRoleFactory : CrudFactory
 
         //Ejecutamos contra el DAO
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-        
+
         var roles = new List<Rol>();
         foreach (var row in lstResults)
         {

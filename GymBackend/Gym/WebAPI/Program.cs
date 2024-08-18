@@ -13,9 +13,9 @@ builder.Services.AddSwaggerGen();
 // Add session services
 //builder.Services.AddSession(options =>
 //{
-    //options.IdleTimeout = TimeSpan.FromMinutes(30);
-    //options.Cookie.HttpOnly = true;
-    //options.Cookie.IsEssential = true;
+//options.IdleTimeout = TimeSpan.FromMinutes(30);
+//options.Cookie.HttpOnly = true;
+//options.Cookie.IsEssential = true;
 //});
 
 // Add HttpContextAccessor
@@ -25,9 +25,9 @@ var app = builder.Build();
 
 //CORS: Permitiendo cualquier origen , en cualquier metodo y con cualquier encabezado.
 app.UseCors(builder => builder
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
     //.AllowCredentials()
 );
 

@@ -90,13 +90,13 @@ public class MeasureCrud : CrudFactory
 
     public List<Measures> RetrieveByUserId(int id)
     {
-        List<Measures> lstMeasures = new List<Measures>();
+        var lstMeasures = new List<Measures>();
         var sqlOperation = new SqlOperation
         {
             ProcedureName = "RET_MEASURES_BY_USERID_PR"
         };
         sqlOperation.AddIntParam("P_Id", id);
-        List<Dictionary<string, object>> lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
         if (lstResults.Count > 0)
             foreach (var row in lstResults)

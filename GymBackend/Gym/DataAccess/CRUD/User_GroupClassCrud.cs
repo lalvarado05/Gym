@@ -45,14 +45,11 @@ public class UserGroupClassCrudFactory : CrudFactory
         var sqlOperation = new SqlOperation { ProcedureName = "RET_ALL_USER_GROUP_CLASSES_PR" };
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
-        {
             foreach (var row in lstResults)
             {
                 var userGroupClass = BuildUserGroupClass(row);
                 lstUserGroupClasses.Add((T)Convert.ChangeType(userGroupClass, typeof(T)));
             }
-
-        }
 
 
         return lstUserGroupClasses;
@@ -65,14 +62,12 @@ public class UserGroupClassCrudFactory : CrudFactory
         sqlOperation.AddIntParam("P_GP_Id", groupClassId);
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
-        {
             foreach (var row in lstResults)
             {
                 var userGroupClass = BuildUserGroupClass(row);
                 lstUserGroupClasses.Add(userGroupClass);
             }
 
-        }
         return lstUserGroupClasses;
     }
 
@@ -83,13 +78,12 @@ public class UserGroupClassCrudFactory : CrudFactory
         sqlOperation.AddIntParam("P_GP_Id", groupClassId);
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
-        {
             foreach (var row in lstResults)
             {
                 var userGroupClass = BuildUserGroupClassWithName(row);
                 lstUserGroupClasses.Add(userGroupClass);
             }
-        }
+
         return lstUserGroupClasses;
     }
 
@@ -135,6 +129,7 @@ public class UserGroupClassCrudFactory : CrudFactory
         };
         return userGroupClassToReturn;
     }
+
     private UserGroupClass BuildUserGroupClassWithName(Dictionary<string, object> row)
     {
         var userGroupClassToReturn = new UserGroupClass
@@ -147,5 +142,6 @@ public class UserGroupClassCrudFactory : CrudFactory
         };
         return userGroupClassToReturn;
     }
+
     #endregion
 }

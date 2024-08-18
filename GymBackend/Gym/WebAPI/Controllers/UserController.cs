@@ -161,13 +161,8 @@ public class UserController : ControllerBase
             var um = new UserManager();
             var user = um.RetrieveUserByCredentials(loginRequest.Email, loginRequest.Password);
             if (user != null)
-            {
                 return Ok(user);
-            }
-            else
-            {
-                return StatusCode(404, "User not found");
-            }
+            return StatusCode(404, "User not found");
         }
         catch (Exception ex)
         {
@@ -175,5 +170,6 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
     #endregion
 }

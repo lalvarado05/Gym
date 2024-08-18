@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using DataAccess.CRUD;
 using DTOs;
+using QuestPDF;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -22,7 +19,7 @@ public class InvoiceEmailSender
 
     public async Task SendInvoiceEmailAsync(Invoice invoice, List<Detail> details, User user)
     {
-        QuestPDF.Settings.License = LicenseType.Community;
+        Settings.License = LicenseType.Community;
 
         var pdfContent = GeneratePdf(invoice, details, user);
         var xmlContent = GenerateXml(invoice, details, user);
@@ -33,7 +30,7 @@ public class InvoiceEmailSender
         var templateId = "d-fb2be50c94204770ad738f67d49c8edc";
         var dynamicTemplateData = new
         {
-            subject = $"Silueta Club Fitness - Recibo - {DateTime.Now:dd-MM-yyyy}",
+            subject = $"Silueta Club Fitness - Recibo - {DateTime.Now:dd-MM-yyyy}"
         };
         var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicTemplateData);
 
@@ -103,20 +100,14 @@ public class InvoiceEmailSender
 
                     column.Item().Height(10);
 
-                    column.Item().Element(content =>
-                    {
-                        BuildClientDetailsTable(user, content);
-                    });
+                    column.Item().Element(content => { BuildClientDetailsTable(user, content); });
 
                     column.Item().PaddingVertical(10);
 
-                    column.Item().Element(content =>
-                    {
-                        BuildTable(invoice, details, content);
-                    });
+                    column.Item().Element(content => { BuildTable(invoice, details, content); });
                 });
 
-                page.Footer().AlignCenter().Text($"Silueta Club Fitness - 2024");
+                page.Footer().AlignCenter().Text("Silueta Club Fitness - 2024");
             });
         });
 
@@ -169,23 +160,26 @@ public class InvoiceEmailSender
                 header.Cell().Element(HeaderCellStyle).AlignRight().Text("Precio");
             });
 
-            bool alternateRow = false;
+            var alternateRow = false;
             foreach (var detail in details)
             {
                 if (detail.UserMembershipId != 2)
                 {
                     var mCrud = new MembershipCrudFactory();
                     var membership = mCrud.RetrieveById<Membership>(invoice.MembershipID ?? 0);
-                    table.Cell().Element(c => DetailCellStyle(c, alternateRow)).Text("Tipo de Membresia: " + membership.Type);
+                    table.Cell().Element(c => DetailCellStyle(c, alternateRow))
+                        .Text("Tipo de Membresia: " + membership.Type);
                 }
                 else
                 {
                     var ptCrud = new PersonalTrainingCrudFactory();
                     var pTraining = ptCrud.RetrieveById<PersonalTraining>(detail.PersonalTrainingId ?? 0);
-                    table.Cell().Element(c => DetailCellStyle(c, alternateRow)).Text("Entrenamiento Personal el dia: " + pTraining.ProgrammedDate);
+                    table.Cell().Element(c => DetailCellStyle(c, alternateRow))
+                        .Text("Entrenamiento Personal el dia: " + pTraining.ProgrammedDate);
                 }
 
-                table.Cell().Element(c => DetailCellStyle(c, alternateRow)).AlignRight().Text($"₡{detail.Price:N}"); ;
+                table.Cell().Element(c => DetailCellStyle(c, alternateRow)).AlignRight().Text($"₡{detail.Price:N}");
+                ;
                 alternateRow = !alternateRow;
             }
 
@@ -193,14 +187,14 @@ public class InvoiceEmailSender
             table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{invoice.Amount:N}");
 
             table.Cell().Element(TotalCellStyle).Text("Descuento");
-            table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{Math.Abs(invoice.Amount - invoice.AmountAfterDiscount):N}");
+            table.Cell().Element(TotalCellStyle).AlignRight()
+                .Text($"₡{Math.Abs(invoice.Amount - invoice.AmountAfterDiscount):N}");
 
             table.Cell().Element(TotalCellStyle).Text("Total");
             table.Cell().Element(TotalCellStyle).AlignRight().Text($"₡{invoice.AmountAfterDiscount:N}");
 
             table.Cell().Element(TotalCellStyle).Text("Metodo de Pago");
             table.Cell().Element(TotalCellStyle).AlignRight().Text(invoice.PaymentMethod);
-
         });
     }
 
@@ -237,6 +231,7 @@ public class InvoiceEmailSender
             .AlignMiddle()
             .DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Grey.Darken3));
     }
+
     private IContainer DetailCellStyle(IContainer container, bool alternate)
     {
         return container
@@ -293,5 +288,5 @@ public class InvoiceEmailSender
         public Invoice Invoice { get; set; }
         public List<Detail> Details { get; set; }
         public User User { get; set; }
-    } 
+    }
 }

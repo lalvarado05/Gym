@@ -1,6 +1,5 @@
 ﻿using DataAccess.DAOs;
 using DTOs;
-using static System.Net.WebRequestMethods;
 
 namespace DataAccess.CRUD;
 

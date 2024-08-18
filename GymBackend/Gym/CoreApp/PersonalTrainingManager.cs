@@ -10,9 +10,7 @@ public class PersonalTrainingManager
         ValidatePersonalTraining(personalTraining);
 
         if (!IsTrainingScheduleValid(personalTraining))
-        {
             throw new Exception("La cita no puede ser programada debido a conflictos de horario o días no laborables.");
-        }
 
         var ptCrud = new PersonalTrainingCrudFactory();
         ptCrud.Create(personalTraining);
@@ -73,15 +71,14 @@ public class PersonalTrainingManager
         var msManager = new UserMembershipManager();
         var lastMembership = msManager.RetrieveNewestByUserId(id);
         var personalTrainings = ptCrud.RetrieveByClientId(id);
-        List<PersonalTraining> payable = new List<PersonalTraining>();
+        var payable = new List<PersonalTraining>();
         foreach (var personalTraining in personalTrainings)
         {
-            DateOnly dateOnly = new DateOnly(personalTraining.ProgrammedDate.Year, personalTraining.ProgrammedDate.Month, personalTraining.ProgrammedDate.Day);
-            DateTime ptDate = new DateTime(dateOnly, personalTraining.TimeOfEntry);
-            if(ptDate>= lastMembership.Created && ptDate< DateTime.Now && personalTraining.IsCancelled == "no" && personalTraining.IsPaid == "no")
-            {
-                payable.Add(personalTraining);
-            }
+            var dateOnly = new DateOnly(personalTraining.ProgrammedDate.Year, personalTraining.ProgrammedDate.Month,
+                personalTraining.ProgrammedDate.Day);
+            var ptDate = new DateTime(dateOnly, personalTraining.TimeOfEntry);
+            if (ptDate >= lastMembership.Created && ptDate < DateTime.Now && personalTraining.IsCancelled == "no" &&
+                personalTraining.IsPaid == "no") payable.Add(personalTraining);
         }
 
         return payable;
@@ -93,63 +90,42 @@ public class PersonalTrainingManager
     private void ValidatePersonalTraining(PersonalTraining personalTraining)
     {
         // Validación: EmployeeId debe ser válido (distinto de cero)
-        if (personalTraining.EmployeeId <= 0)
-        {
-            throw new Exception("Por favor selecciona un entrenador de la tabla.");
-        }
+        if (personalTraining.EmployeeId <= 0) throw new Exception("Por favor selecciona un entrenador de la tabla.");
 
         // Validación: TimeOfEntry y TimeOfExit no deben ser "00:00:00" y TimeOfExit no puede ser mayor a TimeOfEntry
         if (personalTraining.TimeOfEntry == TimeOnly.MinValue || personalTraining.TimeOfExit == TimeOnly.MinValue)
-        {
             throw new Exception("Las horas de entrada y salida deben ser válidas y diferentes a 00:00:00.");
-        }
 
         if (personalTraining.TimeOfExit <= personalTraining.TimeOfEntry)
-        {
             throw new Exception("La hora de salida debe ser mayor que la hora de entrada.");
-        }
 
         // Obtener la fecha y hora actual
-        DateTime currentDateTime = DateTime.Now;
+        var currentDateTime = DateTime.Now;
 
         // Validación: ProgrammedDate debe ser una fecha válida y no en el pasado (mínimo un día en el futuro)
         if (personalTraining.ProgrammedDate <= currentDateTime.AddDays(1))
-        {
             throw new Exception("La fecha programada debe ser al menos un día en el futuro.");
-        }
 
         if (personalTraining.HourlyRate < 2500)
-        {
-            throw new Exception("La tarifa por hora mínima es de ₡2500, por favor ingresa la tarifa acordada con el entrenador.");
-        }
+            throw new Exception(
+                "La tarifa por hora mínima es de ₡2500, por favor ingresa la tarifa acordada con el entrenador.");
     }
 
     private bool IsTrainingScheduleValid(PersonalTraining personalTraining)
     {
-        if (!WorksDayOfWeek(personalTraining))
-        {
-            throw new Exception("El entrenador no trabaja el día programado.");
-        }
+        if (!WorksDayOfWeek(personalTraining)) throw new Exception("El entrenador no trabaja el día programado.");
 
         if (!IsInWorkHours(personalTraining))
-        {
             throw new Exception("El entrenamiento personal está fuera de las horas laborales del entrenador.");
-        }
 
         if (!NoGroupClassInterrupt(personalTraining))
-        {
             throw new Exception("El entrenador da una clase grupal a esta hora.");
-        }
 
         if (!NoMeasureAppointmentInterrupt(personalTraining))
-        {
             throw new Exception("El entrenador ya tiene programada una cita de medición a esta hora.");
-        }
 
         if (!NoPersonalTrainingInterrupt(personalTraining))
-        {
             throw new Exception("El entrenador ya tiene programada una cita de entrenamiento personal a esta hora.");
-        }
 
         return true;
     }
@@ -163,7 +139,6 @@ public class PersonalTrainingManager
         var DayWeekProg = personalTraining.ProgrammedDate.DayOfWeek;
 
         foreach (var day in DaySchedule)
-        {
             if ((day == 'L' && DayWeekProg == DayOfWeek.Monday) ||
                 (day == 'K' && DayWeekProg == DayOfWeek.Tuesday) ||
                 (day == 'M' && DayWeekProg == DayOfWeek.Wednesday) ||
@@ -171,10 +146,7 @@ public class PersonalTrainingManager
                 (day == 'V' && DayWeekProg == DayOfWeek.Friday) ||
                 (day == 'S' && DayWeekProg == DayOfWeek.Saturday) ||
                 (day == 'D' && DayWeekProg == DayOfWeek.Sunday))
-            {
                 return true;
-            }
-        }
         return false;
     }
 
@@ -197,16 +169,19 @@ public class PersonalTrainingManager
         var lstAllGC = gcCrud.RetrieveByUserId(personalTraining.EmployeeId);
         var lstSameDate = lstAllGC.Where(gc => gc.ClassDate.Date == personalTraining.ProgrammedDate.Date).ToList();
 
-        return !lstSameDate.Any(groupClass => IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit, groupClass.StartTime, groupClass.EndTime));
+        return !lstSameDate.Any(groupClass => IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit,
+            groupClass.StartTime, groupClass.EndTime));
     }
 
     public bool NoMeasureAppointmentInterrupt(PersonalTraining personalTraining)
     {
         var mCrud = new MeetingsCrudFactory();
         var lstAllMeetings = mCrud.RetrieveByUserId(personalTraining.EmployeeId);
-        var lstSameDate = lstAllMeetings.Where(meeting => meeting.ProgrammedDate.Date == personalTraining.ProgrammedDate.Date).ToList();
+        var lstSameDate = lstAllMeetings
+            .Where(meeting => meeting.ProgrammedDate.Date == personalTraining.ProgrammedDate.Date).ToList();
 
-        return !lstSameDate.Any(meeting => IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit, meeting.TimeOfEntry, meeting.TimeOfExit));
+        return !lstSameDate.Any(meeting => IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit,
+            meeting.TimeOfEntry, meeting.TimeOfExit));
     }
 
     public bool NoPersonalTrainingInterrupt(PersonalTraining personalTraining)
@@ -215,7 +190,8 @@ public class PersonalTrainingManager
         var lstAllPT = ptCrud.RetrieveByEmployeeId(personalTraining.EmployeeId);
         var lstSameDate = lstAllPT.Where(pt => pt.ProgrammedDate.Date == personalTraining.ProgrammedDate.Date).ToList();
 
-        return !lstSameDate.Any(pt => IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit, pt.TimeOfEntry, pt.TimeOfExit));
+        return !lstSameDate.Any(pt =>
+            IsTimeOverlap(personalTraining.TimeOfEntry, personalTraining.TimeOfExit, pt.TimeOfEntry, pt.TimeOfExit));
     }
 
     private bool IsTimeOverlap(TimeOnly start1, TimeOnly end1, TimeOnly start2, TimeOnly end2)
@@ -226,32 +202,23 @@ public class PersonalTrainingManager
     private void ValidateCancelPersonalTraining(PersonalTraining personalTraining)
     {
         // Validación: Id debe ser válido (distinto de cero)
-        if (personalTraining.Id <= 0)
-        {
-            throw new Exception("Por favor selecciona una cita a cancelar");
-        }
+        if (personalTraining.Id <= 0) throw new Exception("Por favor selecciona una cita a cancelar");
 
         // Obtener la fecha y hora actual
-        DateTime currentDateTime = DateTime.Now;
+        var currentDateTime = DateTime.Now;
 
         // Crear el DateTime completo de la cita usando ProgrammedDate y TimeOfEntry
-        DateTime appointmentDateTime = personalTraining.ProgrammedDate.Add(personalTraining.TimeOfEntry.ToTimeSpan());
+        var appointmentDateTime = personalTraining.ProgrammedDate.Add(personalTraining.TimeOfEntry.ToTimeSpan());
 
         // Validación: Verificar si la cita ya pasó
         if (appointmentDateTime < currentDateTime)
-        {
             throw new Exception("No se puede cancelar una cita que ya ha pasado.");
-        }
 
         // Validación: Verificar si se está cancelando con al menos 24 horas de anticipación
-        DateTime cancellationDeadline = appointmentDateTime.AddHours(-24);
+        var cancellationDeadline = appointmentDateTime.AddHours(-24);
         if (currentDateTime > cancellationDeadline)
-        {
             throw new Exception("La cita debe cancelarse con al menos 24 horas de anticipación.");
-        }
     }
-
-
 
     #endregion
 }

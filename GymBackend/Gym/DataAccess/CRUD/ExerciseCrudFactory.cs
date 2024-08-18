@@ -91,18 +91,16 @@ public class ExerciseCrudFactory : CrudFactory
     {
         var lstExercises = new List<T>();
         var sqlOperation = new SqlOperation { ProcedureName = "RET_EXE_BY_ROUTINE_PR" };
-        
+
         //Agregamos los parametros
         sqlOperation.AddIntParam("@P_RoutineId", routineId);
         var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
         if (lstResults.Count > 0)
-        {
             foreach (var row in lstResults)
             {
                 var exercise = BuildExercise(row);
                 lstExercises.Add((T)Convert.ChangeType(exercise, typeof(T)));
             }
-        }
 
         return lstExercises;
     }
@@ -121,9 +119,7 @@ public class ExerciseCrudFactory : CrudFactory
             Reps = (int)row["reps"],
             Duration = (int)row["duration"]
         };
-            
+
         return exerciseToReturn;
     }
 }
-
-  

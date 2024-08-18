@@ -17,7 +17,6 @@ public class OtpManager
         otpCrud.Create(otp);
         var number = "+506" + tempPhone;
         sms.SendMessage(number, newOTP);
-        
     }
 
     public void Update(string email, int phone, int otp)

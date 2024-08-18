@@ -22,29 +22,26 @@ public class User : BaseDTO
     {
         get
         {
-            DateTime today = DateTime.Today;
-            int age = today.Year - BirthDate.Year;
+            var today = DateTime.Today;
+            var age = today.Year - BirthDate.Year;
 
             // Ajustar la edad si el cumpleaños no ha ocurrido este año todavía
-            if (BirthDate.Date > today.AddYears(-age))
-            {
-                age--;
-            }
+            if (BirthDate.Date > today.AddYears(-age)) age--;
 
             return age;
         }
     }
+
     public DateTime Created { get; set; }
 
     public List<Rol>? ListaRole { get; set; }
 
-    
-    public string? DaysOfWeek {  get; set; }
+
+    public string? DaysOfWeek { get; set; }
 
     public TimeOnly? TimeOfEntry { get; set; }
 
     public TimeOnly? TimeOfExit { get; set; }
 
-    public String? Password { get; set; }
-
+    public string? Password { get; set; }
 }

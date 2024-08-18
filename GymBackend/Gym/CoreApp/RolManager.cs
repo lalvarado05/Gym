@@ -21,15 +21,10 @@ public class RolManager
     public void Delete(int idUsuario, int idRol)
     {
         var uCrud = new UserCrudFactory();
-        if (uCrud.RetrieveById<User>(idUsuario)==null)
-        {
-            throw new Exception("Usuario por eliminar rol no existe");
-        }
+        if (uCrud.RetrieveById<User>(idUsuario) == null) throw new Exception("Usuario por eliminar rol no existe");
 
-        if (AlreadyDeleted(idUsuario,idRol))
-        {
+        if (AlreadyDeleted(idUsuario, idRol))
             throw new Exception("No se puede eliminar por que el usuario no tiene ese rol");
-        }
         var rCrud = new RoleCrudFactory();
         rCrud.DeleteById(idUsuario, idRol);
         var sM = new ScheduleManager();
@@ -58,7 +53,6 @@ public class RolManager
 
     #region Validations
 
-
     public bool AlreadyDeleted(int id, int rolId)
     {
         var rCrud = new RoleCrudFactory();
@@ -71,6 +65,4 @@ public class RolManager
     }
 
     #endregion
-
-
 }
