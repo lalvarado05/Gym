@@ -97,7 +97,7 @@ public class UserGroupClassController : ControllerBase
         try
         {
             var ugcManager = new UserGroupClassManager();
-            List<UserGroupClass> lstugc = ugcManager.RetrieveByGroupClassWithName(groupClassId);
+            var lstugc = ugcManager.RetrieveByGroupClassWithName(groupClassId);
             return Ok(lstugc);
         }
         catch (Exception ex)

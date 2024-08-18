@@ -91,7 +91,7 @@ public class MeasuresController : Controller
         try
         {
             var mm = new MeasuresManager();
-            List<Measures> measures = mm.RetrieveByUserId(id);
+            var measures = mm.RetrieveByUserId(id);
             return Ok(measures);
         }
         catch (Exception ex)

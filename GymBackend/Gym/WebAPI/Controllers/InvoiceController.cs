@@ -99,7 +99,7 @@ public class InvoiceController : ControllerBase
         try
         {
             var im = new InvoiceManager();
-            List<Invoice> invoices = im.RetrieveAllwithDetails();
+            var invoices = im.RetrieveAllwithDetails();
             return Ok(invoices);
         }
         catch (Exception ex)
@@ -115,7 +115,7 @@ public class InvoiceController : ControllerBase
         try
         {
             var im = new InvoiceManager();
-            List<Invoice> invoices = im.RetrieveByClientIdwithDetails(id);
+            var invoices = im.RetrieveByClientIdwithDetails(id);
             return Ok(invoices);
         }
         catch (Exception ex)

@@ -1,7 +1,5 @@
 ﻿using DataAccess.DAOs;
 using DTOs;
-using System;
-using System.Collections.Generic;
 
 namespace DataAccess.CRUD;
 
@@ -23,7 +21,7 @@ public class UserMembershipCrud : CrudFactory
 
         sqlOperation.AddIntParam("P_UserId", userMembership.UserId);
         sqlOperation.AddIntParam("P_MembershipId", userMembership.MembershipId);
-        
+
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
@@ -89,13 +87,13 @@ public class UserMembershipCrud : CrudFactory
 
     public List<UserMembership> RetrieveByUserId(int userId)
     {
-        List<UserMembership> lstUserMemberships = new List<UserMembership>();
+        var lstUserMemberships = new List<UserMembership>();
         var sqlOperation = new SqlOperation
         {
             ProcedureName = "RET_USER_MEMBERSHIP_BY_USERID_PR"
         };
         sqlOperation.AddIntParam("P_UserId", userId);
-        List<Dictionary<string, object>> lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
         if (lstResults.Count > 0)
             foreach (var row in lstResults)
@@ -109,13 +107,13 @@ public class UserMembershipCrud : CrudFactory
 
     public List<UserMembership> RetrieveByUserIdStatusChange(int userId)
     {
-        List<UserMembership> lstUserMemberships = new List<UserMembership>();
+        var lstUserMemberships = new List<UserMembership>();
         var sqlOperation = new SqlOperation
         {
             ProcedureName = "RET_USER_MEMBERSHIP_BY_USERID_STATUS_V_PR"
         };
         sqlOperation.AddIntParam("P_UserId", userId);
-        List<Dictionary<string, object>> lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
         if (lstResults.Count > 0)
             foreach (var row in lstResults)

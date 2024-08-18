@@ -33,42 +33,6 @@ public class PersonalTrainingController : ControllerBase
 
     #endregion
 
-    #region PUT
-
-    [HttpPut]
-    [Route("Update")]
-    public ActionResult Update(PersonalTraining personalTraining)
-    {
-        try
-        {
-            var ptManager = new PersonalTrainingManager();
-            ptManager.Update(personalTraining);
-            return Ok(personalTraining);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    [HttpPut]
-    [Route("Cancel")]
-    public ActionResult Cancel(PersonalTraining personalTraining)
-    {
-        try
-        {
-            var ptManager = new PersonalTrainingManager();
-            ptManager.Cancel(personalTraining);
-            return Ok(personalTraining);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    #endregion
-
     #region DELETE
 
     [HttpDelete]
@@ -122,6 +86,7 @@ public class PersonalTrainingController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
     [HttpGet]
     [Route("RetrieveByClientIdPayable")]
     public ActionResult RetrieveByClientIdPayable(int id)
@@ -129,7 +94,7 @@ public class PersonalTrainingController : ControllerBase
         try
         {
             var ptManager = new PersonalTrainingManager();
-            List<PersonalTraining> personalTraining = ptManager.RetrieveByClientIdPayable(id);
+            var personalTraining = ptManager.RetrieveByClientIdPayable(id);
             return Ok(personalTraining);
         }
         catch (Exception ex)
@@ -138,6 +103,42 @@ public class PersonalTrainingController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    #region PUT
+
+    [HttpPut]
+    [Route("Update")]
+    public ActionResult Update(PersonalTraining personalTraining)
+    {
+        try
+        {
+            var ptManager = new PersonalTrainingManager();
+            ptManager.Update(personalTraining);
+            return Ok(personalTraining);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPut]
+    [Route("Cancel")]
+    public ActionResult Cancel(PersonalTraining personalTraining)
+    {
+        try
+        {
+            var ptManager = new PersonalTrainingManager();
+            ptManager.Cancel(personalTraining);
+            return Ok(personalTraining);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    #endregion
 
     #region GETS
 

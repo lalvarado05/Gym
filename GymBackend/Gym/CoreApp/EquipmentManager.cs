@@ -7,20 +7,10 @@ public class EquipmentManager
 {
     public void Create(Equipment equipment)
     {
-        
         //Validaciones adicionales
-        if (equipment.Name == "empty")
-        {
-            throw new Exception("Por favor ingresa el nombre.");
-        }
-        if (equipment.Location == "empty")
-        {
-            throw new Exception("Por favor ingresa la ubicación.");
-        }
-        if (equipment.Description == "empty")
-        {
-            throw new Exception("Por favor ingresa la descripción.");
-        }
+        if (equipment.Name == "empty") throw new Exception("Por favor ingresa el nombre.");
+        if (equipment.Location == "empty") throw new Exception("Por favor ingresa la ubicación.");
+        if (equipment.Description == "empty") throw new Exception("Por favor ingresa la descripción.");
         var eCrud = new EquipmentCrudFactory();
         eCrud.Create(equipment);
     }
@@ -28,11 +18,8 @@ public class EquipmentManager
     public void Update(Equipment equipment)
     {
         //Validaciones adicionales
-        if (equipment.Id == 0)
-        {
-            throw new Exception("Por favor elige un equipo de la tabla.");
-        }
-       
+        if (equipment.Id == 0) throw new Exception("Por favor elige un equipo de la tabla.");
+
         var eCrud = new EquipmentCrudFactory();
         eCrud.Update(equipment);
     }

@@ -131,7 +131,7 @@ public class GroupClassController : ControllerBase
         try
         {
             var gcManager = new GroupClassManager();
-            List<GroupClass> AvailableClasses = gcManager.RetrieveAvailableWithName();
+            var AvailableClasses = gcManager.RetrieveAvailableWithName();
             return Ok(AvailableClasses);
         }
         catch (Exception ex)

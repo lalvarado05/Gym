@@ -57,9 +57,9 @@ public class DiscountController : ControllerBase
         try
         {
             var dm = new DiscountManager();
-            var discount = new Discount { Id  = id };
+            var discount = new Discount { Id = id };
             dm.Delete(discount);
-            return Ok(new {Id = id});
+            return Ok(new { Id = id });
         }
         catch (Exception ex)
         {

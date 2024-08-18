@@ -33,6 +33,28 @@ public class MeetingsController : ControllerBase
 
     #endregion
 
+    #region DELETE
+
+    [HttpDelete]
+    [Route("Delete")]
+    public ActionResult Delete(int id)
+    {
+        try
+        {
+            var mm = new MeetingsManager();
+            var meeting = mm.RetrieveById(id);
+            if (meeting == null) return NotFound();
+            mm.Delete(meeting);
+            return Ok(meeting);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    #endregion
+
     #region PUT
 
     [HttpPut]
@@ -59,28 +81,6 @@ public class MeetingsController : ControllerBase
         {
             var mm = new MeetingsManager();
             mm.CancelMeeting(meeting);
-            return Ok(meeting);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    #endregion
-
-    #region DELETE
-
-    [HttpDelete]
-    [Route("Delete")]
-    public ActionResult Delete(int id)
-    {
-        try
-        {
-            var mm = new MeetingsManager();
-            var meeting = mm.RetrieveById(id);
-            if (meeting == null) return NotFound();
-            mm.Delete(meeting);
             return Ok(meeting);
         }
         catch (Exception ex)

@@ -12,31 +12,23 @@ public class UserGroupClassManager
         var umManager = new UserMembershipManager();
         var mCrud = new MembershipCrudFactory();
         // Validaciones adicionales
-        GroupClass groupClass = gcCrud.RetrieveById<GroupClass>(userGroupClass.GroupClassId);
+        var groupClass = gcCrud.RetrieveById<GroupClass>(userGroupClass.GroupClassId);
 
-        if (userGroupClass.GroupClassId == 0)
-        {
-            throw new Exception("Por favor elija una clase de la tabla.");
-        }
+        if (userGroupClass.GroupClassId == 0) throw new Exception("Por favor elija una clase de la tabla.");
         if (groupClass.CurrentRegistered == groupClass.MaxCapacity)
-        {
             throw new Exception("Lo sentimos, esta clase esta llena.");
-        }
 
         //Logica para verificar si el usuario ya esta registrado en la clase
-        List<UserGroupClass> alreadyRegistered = ugcCrud.RetrieveByGroupClassId(userGroupClass.GroupClassId);
-        foreach (UserGroupClass check in alreadyRegistered) {
+        var alreadyRegistered = ugcCrud.RetrieveByGroupClassId(userGroupClass.GroupClassId);
+        foreach (var check in alreadyRegistered)
             if (check.ClientId == userGroupClass.ClientId)
-            {
                 throw new Exception("Lo sentimos, usted ya esta registrado a esta clase.");
-            }
-        }
 
         //Logica para ver a cuantas clases se ha registrado 
         var sum = 0;
-        
 
-        List<UserMembership> uMemberships = umManager.RetrieveByUserId(userGroupClass.ClientId);
+
+        var uMemberships = umManager.RetrieveByUserId(userGroupClass.ClientId);
 
         UserMembership Newest = new();
 
@@ -44,34 +36,24 @@ public class UserGroupClassManager
         {
             Newest = uMemberships[0];
             foreach (var uMembership in uMemberships)
-            {
                 if (uMembership.Created > Newest.Created)
-                {
                     Newest = uMembership;
-                }
-            }
         }
 
-        Membership membership = mCrud.RetrieveById<Membership>(Newest.MembershipId);
-        List<UserGroupClass> UserEnlisted = ugcCrud.RetrieveAll<UserGroupClass>();
+        var membership = mCrud.RetrieveById<Membership>(Newest.MembershipId);
+        var UserEnlisted = ugcCrud.RetrieveAll<UserGroupClass>();
 
         if (membership.AmountClassesAllowed == 0)
-        {
-            throw new Exception("Lo sentimos, la membresía básica no tiene acceso a la clases grupales. Mejora tu membresía a Regular o Premium para poder registrarte.");
-        }
+            throw new Exception(
+                "Lo sentimos, la membresía básica no tiene acceso a la clases grupales. Mejora tu membresía a Regular o Premium para poder registrarte.");
 
-        foreach (UserGroupClass check in UserEnlisted) { 
-            if(check.ClientId == userGroupClass.ClientId && check.Created >= Newest.Created)
-            {
+        foreach (var check in UserEnlisted)
+            if (check.ClientId == userGroupClass.ClientId && check.Created >= Newest.Created)
                 sum += 1;
-            }
-        }
 
-        if( sum >= membership.AmountClassesAllowed)
-        {
-            throw new Exception("Lo sentimos, ha llegado al límite de clases mensual. Mejora tu membresía a Premium para poder registrarte a más clases.");
-
-        }  
+        if (sum >= membership.AmountClassesAllowed)
+            throw new Exception(
+                "Lo sentimos, ha llegado al límite de clases mensual. Mejora tu membresía a Premium para poder registrarte a más clases.");
 
         groupClass.CurrentRegistered += 1;
         gcCrud.Update(groupClass);
@@ -89,22 +71,22 @@ public class UserGroupClassManager
         var ugcCrud = new UserGroupClassCrudFactory();
         var gcCrud = new GroupClassCrudFactory();
 
-        GroupClass groupClass = gcCrud.RetrieveById<GroupClass>(userGroupClass.GroupClassId);
+        var groupClass = gcCrud.RetrieveById<GroupClass>(userGroupClass.GroupClassId);
 
         //Verificar si el usuario se encuentra registrado en la clase
-        List<UserGroupClass> alreadyRegistered = ugcCrud.RetrieveByGroupClassId(userGroupClass.GroupClassId);
-        bool isInClass = false;
-        UserGroupClass toDelete = new UserGroupClass();
+        var alreadyRegistered = ugcCrud.RetrieveByGroupClassId(userGroupClass.GroupClassId);
+        var isInClass = false;
+        var toDelete = new UserGroupClass();
 
-        foreach (UserGroupClass check in alreadyRegistered)
-        {
+        foreach (var check in alreadyRegistered)
             if (check.ClientId == userGroupClass.ClientId)
             {
-               isInClass = true;
-                toDelete= check;
+                isInClass = true;
+                toDelete = check;
             }
-        }
-        if (isInClass) {
+
+        if (isInClass)
+        {
             ugcCrud.Delete(toDelete);
             groupClass.CurrentRegistered -= 1;
             gcCrud.Update(groupClass);
@@ -112,12 +94,7 @@ public class UserGroupClassManager
         else
         {
             throw new Exception("Lo sentimos, usted no se encuentra registrado en esta clase.");
-
         }
-
-
-
-
     }
 
     public List<UserGroupClass> RetrieveAll()

@@ -9,20 +9,11 @@ public class MembershipManager
     {
         var meCrud = new MembershipCrudFactory();
 
-        if (!IsValidType(membership))
-        {
-            throw new Exception("Tipo de membresía no válido.");
-        }
+        if (!IsValidType(membership)) throw new Exception("Tipo de membresía no válido.");
 
-        if (!IsValidAmountClassesAllowed(membership))
-        {
-            throw new Exception("Cantidad de clases permitidas no válida.");
-        }
+        if (!IsValidAmountClassesAllowed(membership)) throw new Exception("Cantidad de clases permitidas no válida.");
 
-        if (!IsValidMonthlyCost(membership))
-        {
-            throw new Exception("Costo mensual no válido.");
-        }
+        if (!IsValidMonthlyCost(membership)) throw new Exception("Costo mensual no válido.");
 
         meCrud.Create(membership);
     }
@@ -31,20 +22,11 @@ public class MembershipManager
     {
         var meCrud = new MembershipCrudFactory();
 
-        if (!IsValidType(membership))
-        {
-            throw new Exception("Tipo de membresía no válido.");
-        }
+        if (!IsValidType(membership)) throw new Exception("Tipo de membresía no válido.");
 
-        if (!IsValidAmountClassesAllowed(membership))
-        {
-            throw new Exception("Cantidad de clases permitidas no válida.");
-        }
+        if (!IsValidAmountClassesAllowed(membership)) throw new Exception("Cantidad de clases permitidas no válida.");
 
-        if (!IsValidMonthlyCost(membership))
-        {
-            throw new Exception("Costo mensual no válido.");
-        }
+        if (!IsValidMonthlyCost(membership)) throw new Exception("Costo mensual no válido.");
 
         meCrud.Update(membership);
     }

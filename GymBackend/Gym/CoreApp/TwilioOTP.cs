@@ -24,7 +24,7 @@ public class TwilioOTP
         var messageOptions = new CreateMessageOptions(new PhoneNumber(toPhoneNumber))
         {
             From = new PhoneNumber(_fromPhoneNumber),
-            Body = "Este es tu código de autentificación enviado por Silueta Fitness Club: " + otp 
+            Body = "Este es tu código de autentificación enviado por Silueta Fitness Club: " + otp
         };
 
         var msg = MessageResource.Create(messageOptions);

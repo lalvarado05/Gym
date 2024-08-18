@@ -101,43 +101,6 @@ public class GroupClassCrudFactory : CrudFactory
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
 
-    #region Funciones extras
-
-    public List<GroupClass> RetrieveByUserId(int id)
-    {
-        List<GroupClass> lstGroupClasses = [];
-        var sqlOperation = new SqlOperation { ProcedureName = "RET_GROUP_CLASSES_BYUSERID_PR" };
-        sqlOperation.AddIntParam("P_Id", id);
-        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-        if (lstResults.Count > 0)
-            foreach (var row in lstResults)
-            {
-                var groupClass = BuildGroupClass(row);
-                lstGroupClasses.Add(groupClass);
-            }
-
-        return lstGroupClasses;
-    }
-
-    private GroupClass BuildGroupClass(Dictionary<string, object> row)
-    {
-        var groupClassToReturn = new GroupClass
-
-        {
-            Id = (int)row["id"],
-            EmployeeId = (int)row["employee_id"],
-            ClassName = (string)row["class_name"],
-            MaxCapacity = (int)row["max_capacity"],
-            CurrentRegistered = (int)row["current_registered"],
-            ClassDate = (DateTime)row["class_time"],
-            StartTime = TimeOnly.FromTimeSpan((TimeSpan)row["start_time"]),
-            EndTime = TimeOnly.FromTimeSpan((TimeSpan)row["end_time"])
-        };
-        return groupClassToReturn;
-    }
-
-    #endregion
-
     public List<GroupClass> RetrieveAllWithName()
     {
         var lstGroupClasses = new List<GroupClass>();
@@ -185,4 +148,41 @@ public class GroupClassCrudFactory : CrudFactory
 
         return lstGroupClasses;
     }
+
+    #region Funciones extras
+
+    public List<GroupClass> RetrieveByUserId(int id)
+    {
+        List<GroupClass> lstGroupClasses = [];
+        var sqlOperation = new SqlOperation { ProcedureName = "RET_GROUP_CLASSES_BYUSERID_PR" };
+        sqlOperation.AddIntParam("P_Id", id);
+        var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        if (lstResults.Count > 0)
+            foreach (var row in lstResults)
+            {
+                var groupClass = BuildGroupClass(row);
+                lstGroupClasses.Add(groupClass);
+            }
+
+        return lstGroupClasses;
+    }
+
+    private GroupClass BuildGroupClass(Dictionary<string, object> row)
+    {
+        var groupClassToReturn = new GroupClass
+
+        {
+            Id = (int)row["id"],
+            EmployeeId = (int)row["employee_id"],
+            ClassName = (string)row["class_name"],
+            MaxCapacity = (int)row["max_capacity"],
+            CurrentRegistered = (int)row["current_registered"],
+            ClassDate = (DateTime)row["class_time"],
+            StartTime = TimeOnly.FromTimeSpan((TimeSpan)row["start_time"]),
+            EndTime = TimeOnly.FromTimeSpan((TimeSpan)row["end_time"])
+        };
+        return groupClassToReturn;
+    }
+
+    #endregion
 }

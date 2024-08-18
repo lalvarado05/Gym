@@ -14,21 +14,21 @@ public class UserCrudFactory : CrudFactory
     {
         var user = baseDto as User;
 
-          var sqlOperation = new SqlOperation
-            {
-                ProcedureName = "CRE_USER_PR"
-            };
+        var sqlOperation = new SqlOperation
+        {
+            ProcedureName = "CRE_USER_PR"
+        };
 
-            sqlOperation.AddStringParam("P_Name", user.Name);
-            sqlOperation.AddStringParam("P_LastName", user.LastName);
-            sqlOperation.AddStringParam("P_Phone", user.Phone);
-            sqlOperation.AddStringParam("P_Email", user.Email);
-            sqlOperation.AddStringParam("P_Status", user.Status);
-            sqlOperation.AddStringParam("P_Gender", user.Gender);
-            sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
+        sqlOperation.AddStringParam("P_Name", user.Name);
+        sqlOperation.AddStringParam("P_LastName", user.LastName);
+        sqlOperation.AddStringParam("P_Phone", user.Phone);
+        sqlOperation.AddStringParam("P_Email", user.Email);
+        sqlOperation.AddStringParam("P_Status", user.Status);
+        sqlOperation.AddStringParam("P_Gender", user.Gender);
+        sqlOperation.AddDateTimeParam("P_BirthDate", user.BirthDate);
 
-            // Añadir un parámetro de salida para capturar el ID del nuevo usuario
-            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        // Añadir un parámetro de salida para capturar el ID del nuevo usuario
+        var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
     }
 
 
@@ -40,7 +40,7 @@ public class UserCrudFactory : CrudFactory
         {
             ProcedureName = "DEL_USER_PR"
         };
-      sqlOperation.AddIntParam("P_Id", user.Id);
+        sqlOperation.AddIntParam("P_Id", user.Id);
 
         _sqlDao.ExecuteProcedure(sqlOperation);
     }
@@ -61,10 +61,9 @@ public class UserCrudFactory : CrudFactory
                 var user = BuildUser(row);
                 lstUsers.Add((T)Convert.ChangeType(user, typeof(T)));
             }
-		        return lstUsers;
-    }				
 
-
+        return lstUsers;
+    }
 
 
     public override void Update(BaseDTO baseDto)
@@ -149,44 +148,44 @@ public class UserCrudFactory : CrudFactory
     }
 
     public List<User> RetrieveByRoleWithSchedule(int roleId)
-      {
-          // Crear instructivo para que el dao pueda realizar un create a la base de datos
-          var sqlOperation = new SqlOperation();
+    {
+        // Crear instructivo para que el dao pueda realizar un create a la base de datos
+        var sqlOperation = new SqlOperation();
 
-          sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
-          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
-          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        sqlOperation.ProcedureName = "RET_USER_BYROLE_W_SCHED_PR";
+        sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-          List<User> users = new List<User>();
+        var users = new List<User>();
 
-          foreach (var row in listaResultados)
-          {
-              var readUser = BuildUserWithSchedule(row);
-              users.Add(readUser);
-          }
+        foreach (var row in listaResultados)
+        {
+            var readUser = BuildUserWithSchedule(row);
+            users.Add(readUser);
+        }
 
-          return users;
-      }
+        return users;
+    }
 
     public List<User> RetrieveByRole(int roleId)
-      {
-          // Crear instructivo para que el dao pueda realizar un create a la base de datos
-          var sqlOperation = new SqlOperation();
+    {
+        // Crear instructivo para que el dao pueda realizar un create a la base de datos
+        var sqlOperation = new SqlOperation();
 
-          sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
-          sqlOperation.AddIntParam("P_ROLE_ID", roleId);
-          var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+        sqlOperation.ProcedureName = "RET_USER_BYROLE_PR";
+        sqlOperation.AddIntParam("P_ROLE_ID", roleId);
+        var listaResultados = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
-          List<User> users = new List<User>();
+        var users = new List<User>();
 
-          foreach (var row in listaResultados)
-          {
-              var readUser = BuildUser(row);
-              users.Add(readUser);
-          }
+        foreach (var row in listaResultados)
+        {
+            var readUser = BuildUser(row);
+            users.Add(readUser);
+        }
 
-          return users;
-      }
+        return users;
+    }
 
     public User RetrieveByEmail(string email)
     {
@@ -233,4 +232,3 @@ public class UserCrudFactory : CrudFactory
         return default;
     }
 }
-
